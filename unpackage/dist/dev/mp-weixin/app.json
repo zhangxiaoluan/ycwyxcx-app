@@ -1,20 +1,62 @@
 {
   "pages": [
     "pages/index/index",
-    "pages/message/message",
-    "pages/my/my",
-    "pages/login/login"
+    "pages/login/login",
+    "pages/my/my"
   ],
-  "subPackages": [],
+  "subPackages": [
+    {
+      "root": "subpackages/user",
+      "pages": [
+        "profile/profile",
+        "house-binding/house-binding",
+        "family-members/family-members",
+        "identity-verification/identity-verification"
+      ]
+    },
+    {
+      "root": "subpackages/wallet",
+      "pages": [
+        "wallet/wallet",
+        "points/points",
+        "withdraw/withdraw",
+        "points-mall/points-mall"
+      ]
+    },
+    {
+      "root": "subpackages/tasks",
+      "pages": [
+        "task-list/task-list",
+        "task-detail/task-detail",
+        "task-publish/task-publish"
+      ]
+    },
+    {
+      "root": "subpackages/community",
+      "pages": [
+        "message/message",
+        "notice/notice",
+        "feedback/feedback"
+      ]
+    },
+    {
+      "root": "subpackages/settings",
+      "pages": [
+        "settings/settings",
+        "about/about",
+        "privacy/privacy"
+      ]
+    }
+  ],
   "window": {
-    "navigationBarTextStyle": "white",
-    "navigationBarTitleText": "uni-app",
-    "navigationBarBackgroundColor": "#33569d",
-    "backgroundColor": "#33569d"
+    "navigationBarTextStyle": "black",
+    "navigationBarTitleText": "智慧物业",
+    "navigationBarBackgroundColor": "#ffffff",
+    "backgroundColor": "#ffffff"
   },
   "tabBar": {
-    "color": "#707070",
-    "selectedColor": "#33569d",
+    "color": "#515151",
+    "selectedColor": "#3b5598",
     "borderStyle": "black",
     "backgroundColor": "#ffffff",
     "height": "55px",
@@ -27,12 +69,6 @@
         "text": "首页"
       },
       {
-        "pagePath": "pages/message/message",
-        "iconPath": "/static/image/tabBar/msg.png",
-        "selectedIconPath": "/static/image/tabBar/msg-a.png",
-        "text": "消息"
-      },
-      {
         "pagePath": "pages/my/my",
         "iconPath": "/static/image/tabBar/my.png",
         "selectedIconPath": "/static/image/tabBar/my-a.png",
@@ -40,5 +76,21 @@
       }
     ]
   },
+  "preloadRule": {
+    "pages/index/index": {
+      "network": "all",
+      "packages": [
+        "subpackages/user"
+      ]
+    },
+    "pages/login/login": {
+      "network": "all",
+      "packages": [
+        "subpackages/user"
+      ]
+    }
+  },
+  "lazyCodeLoading": "requiredComponents",
+  "permission": {},
   "usingComponents": {}
 }

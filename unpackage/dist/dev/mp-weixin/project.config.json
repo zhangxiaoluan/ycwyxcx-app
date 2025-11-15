@@ -5,15 +5,15 @@
   },
   "setting": {
     "urlCheck": false,
-    "es6": false,
-    "postcss": false,
-    "minified": false,
+    "es6": true,
+    "postcss": true,
+    "minified": true,
     "newFeature": true,
     "bigPackageSizeSupport": true
   },
   "compileType": "miniprogram",
   "libVersion": "",
-  "appid": "touristappid",
+  "appid": "wx8d760a578b35bf6f",
   "projectname": "police-app",
   "condition": {
     "search": {
@@ -29,15 +29,8 @@
       "list": []
     },
     "miniprogram": {
-      "current": 0,
-      "list": [
-        {
-          "name": "启动页面",
-          "query": "",
-          "id": 0,
-          "pathName": "pages/login/login"
-        }
-      ]
+      "current": -1,
+      "list": []
     }
   }
 }

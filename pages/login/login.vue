@@ -1,210 +1,375 @@
 <template>
   <view class="login-container">
-    <!-- 顶部Logo区域 -->
-    <view class="logo-section">
-      <image class="logo" src="/static/logo.png" mode="aspectFit"></image>
-      <view class="app-name">警务通</view>
-      <view class="slogan">安全 · 高效 · 便捷</view>
+    <!-- 背景装饰 -->
+    <view class="bg-decoration">
+      <view class="bg-shape shape-1"></view>
+      <view class="bg-shape shape-2"></view>
+      <view class="bg-shape shape-3"></view>
     </view>
 
-    <!-- 登录表单区域 -->
-    <view class="form-container">
-
-      <!-- 手机号输入框 -->
-      <view>
-        <view></view>
-        <u-input
-            v-model="phone"
-            color="#ffffff"
-            :border="borderType"
-            placeholder="请输入手机号"
-            keyboard-type="number"
-            maxlength="11"
-            @input="handleInput"
-        ></u-input>
+    <!-- 主要内容区域 -->
+    <view class="login-content">
+      <!-- Logo区域 -->
+      <view class="logo-section">
+        <view class="logo-container">
+          <image src="/static/logo.png" class="logo" mode="aspectFit"></image>
+        </view>
+        <text class="app-title">智慧物业</text>
+        <text class="app-subtitle">智慧物业服务平台</text>
       </view>
 
-      <!-- 密码输入框 -->
-      <u-input
-          v-model="password"
-          color="#ffffff"
-          :border="borderType"
-          placeholder="请输入密码"
-          type="password"
-          @input="handleInput"
-      ></u-input>
+      <!-- 输入区域 -->
+      <view class="input-section">
+        <view class="other-login">
+          <button
+              class="wechat-login-btn"
+              open-type="getUserInfo"
+              @getuserinfo="handleWechatLogin"
+              :disabled="isLoading"
+          >
+            <u-icon name="weixin-fill" size="36" color="#07c160" v-if="!isLoading"></u-icon>
+            <text class="wechat-text" v-if="!isLoading">微信一键登录</text>
+            <u-loading-icon size="36" color="#07c160" v-else></u-loading-icon>
+          </button>
 
-      <!-- 忘记密码和验证码登录链接 -->
-      <view class="form-links">
-        <navigator class="link" @click="goToForgotPassword">忘记密码?</navigator>
-        <navigator class="link" @click="switchToCodeLogin">注册</navigator>
+          <button type="default" open-type="getPhoneNumber" @getphonenumber="HandlePhoneNumber">授权获取手机号</button>
+
+        </view>
+
+        <!-- 用户协议 -->
+        <view class="agreement">
+          <view class="agreement-item">
+            <u-checkbox-group v-model="agreedToTerms" @change="handleTermsChange">
+              <u-checkbox
+                  active-color="#3b5598"
+                  name="agreed"
+                  shape="circle"
+                  size="19"
+              ></u-checkbox>
+            </u-checkbox-group>
+            <text class="agreement-text">
+              我已阅读并同意
+              <text class="link" @click="showUserAgreement">《用户协议》</text>
+              和
+              <text class="link" @click="showPrivacyPolicy">《隐私政策》</text>
+            </text>
+          </view>
+        </view>
       </view>
-
-      <!-- 登录按钮 -->
-      <u-button
-          :loading="loading"
-          class="login-button"
-          color="#ffffff"
-          @click="handleLogin"
-      >
-        登录
-      </u-button>
     </view>
 
-    <!-- 底部版权信息 -->
-    <view class="footer">
-      © 2023 警务通 版权所有
-    </view>
+
   </view>
 </template>
 
 <script>
+// import {sendRequest} from '@/api/request.js'
+
 export default {
+  name: 'Login',
   data() {
     return {
-      // 主题色
-      themeColor: '#2753cd',
-      borderType: 'bottom',
-      // 表单数据
-      phone: '',
-      password: '',
-      // 状态控制
-      loading: false,
-      canLogin: false
-    };
-  },
-  methods: {
-    // 输入处理
-    handleInput() {
-      // 验证手机号和密码是否都已输入
-      this.canLogin = this.phone.length === 11 && this.password.length >= 6;
-    },
-    // 登录处理
-    handleLogin() {
-      if (!this.canLogin) return;
-
-      this.loading = true;
-      // 模拟登录请求
-      setTimeout(() => {
-        this.loading = false;
-        // 登录成功后跳转
-        uni.switchTab({
-          url: '/pages/index/index'
-        });
-        uni.showToast({
-          title: '登录成功',
-          icon: 'success'
-        });
-      }, 1500);
-    },
-    // 跳转到忘记密码页面
-    goToForgotPassword() {
-      uni.navigateTo({
-        url: '/pages/login/forgot-password'
-      });
-    },
-    // 切换到验证码登录
-    switchToCodeLogin() {
-      uni.navigateTo({
-        url: '/pages/login/code-login'
-      });
+      isLoading: false,
+      hasWechatAuth: false,
+      wechatUserInfo: null,
+      phoneNumber: null,
+      agreedToTerms: [], // u-checkbox-group 需要数组格式
+      loginCode: null,
+      showPhoneModal: false, // 控制手机号授权弹窗
+      // 新增表单数据
+      username: '',
+      password: ''
     }
+  },
+  onLoad() {},
+  methods: {
+    // 微信登录处理
+    async handleWechatLogin(e) {
+      console.log('微信登录回调:', e)
+      // 检查是否同意用户协议
+      if (this.agreedToTerms.length === 0) {
+        uni.showToast({ title: '请先同意用户协议', icon: 'none' })
+        return
+      }
+
+      // 检查授权结果
+      if (e.detail.errMsg !== 'getUserInfo:ok') {
+        uni.showToast({ title: '授权失败，请重试', icon: 'none' })
+        return
+      }
+
+      this.isLoading = true
+
+      try {
+        // 保存微信用户信息
+        this.wechatUserInfo = e.detail.userInfo
+        this.hasWechatAuth = true
+
+        uni.reLaunch({ url: '/pages/index/index' })
+
+        uni.showToast({ title: '微信登录成功', icon: 'success' })
+
+        // // 调用后端接口进行微信登录
+        // const result = await this.wechatLoginToServer()
+        //
+        // if (result.success) {
+        //   uni.showToast({ title: '微信登录成功', icon: 'success' })
+        //
+        //   // 显示手机号授权弹窗
+        //   setTimeout(() => {
+        //     this.showPhoneModal = true
+        //   }, 1500)
+        // }
+      } catch (error) {
+        console.error('微信登录失败:', error)
+        uni.showToast({
+          title: '登录失败，请重试',
+          icon: 'none'
+        })
+      } finally {
+        this.isLoading = false
+      }
+    },
+
+    // 授权获取手机号
+    HandlePhoneNumber(e){
+      console.log(e)
+    },
+
+    // 处理用户协议选择
+    handleTermsChange(value) {
+      this.agreedToTerms = value
+    },
+
+    // 显示用户协议
+    showUserAgreement() {
+      uni.showModal({
+        title: '用户协议',
+        content: '这里是用户协议的内容...',
+        showCancel: false
+      })
+    },
+
+    // 显示隐私政策
+    showPrivacyPolicy() {
+      uni.showModal({
+        title: '隐私政策',
+        content: '这里是隐私政策的内容...',
+        showCancel: false
+      })
+    },
+
+
+    // // 跳转到首页
+    // redirectToHome() {
+    //   uni.switchTab({
+    //     url: '/pages/index/index'
+    //   })
+    // }
   }
-};
+}
 </script>
 
 <style lang="scss">
 .login-container {
+  position: relative;
   min-height: 100vh;
-  background: linear-gradient(180deg, #0d3ca1 0%, #030c1f 100%);
-  padding: 0 40rpx;
+  background: linear-gradient(135deg, #ffffff 0%, #ffffff 50%, #7052a454 100%);
   display: flex;
-  flex-direction: column;
-  color: #ffffff;
+  align-items: center;
+  justify-content: center;
+  padding: 40rpx;
+  overflow: hidden;
 
-  .logo-section {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-top: 120rpx;
-    margin-bottom: 80rpx;
+  /* 背景装饰 */
+  .bg-decoration {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    pointer-events: none;
+    overflow: hidden;
 
-    .logo {
-      width: 180rpx;
-      height: 180rpx;
-      margin-bottom: 30rpx;
+    .bg-shape {
+      position: absolute;
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border-radius: 50%;
     }
 
-    .app-name {
-      font-size: 40rpx;
-      font-weight: bold;
-      margin-bottom: 10rpx;
+    .shape-1 {
+      width: 300rpx;
+      height: 300rpx;
+      top: -150rpx;
+      right: -150rpx;
+      background: radial-gradient(circle, rgba(108, 115, 211, 0.3), rgba(108, 115, 211, 0.1));
+      animation: float-1 8s ease-in-out infinite;
     }
 
-    .slogan {
-      font-size: 24rpx;
+    .shape-2 {
+      width: 200rpx;
+      height: 200rpx;
+      bottom: 100rpx;
+      left: -100rpx;
+      background: radial-gradient(circle, rgba(112, 82, 164, 0.3), rgba(112, 82, 164, 0.1));
+      animation: float-2 10s ease-in-out infinite;
     }
-  }
 
-  .form-container {
-    padding: 30rpx;
+    .shape-3 {
+      width: 150rpx;
+      height: 150rpx;
+      top: 40%;
+      right: 50rpx;
+      background: radial-gradient(circle, rgba(59, 85, 152, 0.2), rgba(59, 85, 152, 0.05));
+      animation: float-3 12s ease-in-out infinite;
+    }
 
-    ::v-deep .u-input {
-      margin-bottom: 60rpx;
-      padding: 20rpx 10px !important;
-      border-color: #c1c4cb !important;
-
-      .u-input__content {
+    @keyframes float-1 {
+      0%, 100% {
+        transform: translateY(0) rotate(0deg);
+      }
+      50% {
+        transform: translateY(-30rpx) rotate(180deg);
       }
     }
 
-    .form-links {
-      display: flex;
-      justify-content: space-between;
-      margin-bottom: 40rpx;
-      color: #ffffff;
+    @keyframes float-2 {
+      0%, 100% {
+        transform: translateX(0) translateY(0);
+      }
+      50% {
+        transform: translateX(20rpx) translateY(-20rpx);
+      }
+    }
 
-      uni-navigator {
+    @keyframes float-3 {
+      0%, 100% {
+        transform: scale(1) rotate(0deg);
+      }
+      50% {
+        transform: scale(1.1) rotate(90deg);
+      }
+    }
+  }
+
+  /* 主要内容区域 */
+  .login-content {
+    width: 100%;
+    max-width: 700rpx;
+    padding: 0;
+    position: relative;
+
+    /* Logo区域 */
+    .logo-section {
+      text-align: center;
+      color: #fff;
+
+      .logo-container {
+        width: 120rpx;
+        height: 120rpx;
+        margin: 0 auto 20rpx;
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 25rpx;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        backdrop-filter: blur(10px);
+
+        .logo {
+          width: 80rpx;
+          height: 80rpx;
+        }
+
+      }
+
+      .app-title {
+        display: block;
+        font-size: 44rpx;
+        font-weight: 700;
+        margin-bottom: 12rpx;
+        letter-spacing: 2rpx;
+        color: #3b5598;
+      }
+
+      .app-subtitle {
+        display: block;
         font-size: 26rpx;
-        color: #b0b5c1;
+        opacity: 0.8;
+        color: rgba(78, 78, 78, 0.4);
+      }
+
+
+    }
+
+    /* 输入区域 */
+    .input-section {
+      padding: 50rpx 40rpx 40rpx;
+
+
+      /* 其他登录方式 */
+      .other-login {
+        margin-bottom: 40rpx;
+
+
+        ::v-deep .wechat-login-btn {
+          width: 100%;
+          height: 85rpx;
+          background: #fff;
+          border: 1px solid;
+          border-radius: 100rpx;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: #07c160;
+          font-size: 30rpx;
+          font-weight: 500;
+          transition: all 0.3s ease;
+
+          &:active {
+            background: #f8f9fa;
+            border-color: #07c160;
+            transform: translateY(2rpx);
+          }
+
+          &[disabled] {
+            opacity: 0.6;
+            transform: none;
+          }
+        }
+
+        .wechat-text {
+          margin-left: 16rpx;
+        }
+      }
+
+      /* 用户协议 */
+      .agreement {
+        display: flex;
+        align-items: center;
+        justify-content: space-evenly;
+        .agreement-item {
+          display: flex;
+          align-items: flex-start;
+          justify-content: center;
+        }
+
+        .agreement-text {
+          font-size: 24rpx;
+          color: #666;
+          line-height: 1.5;
+          flex: 1;
+          padding-top: 2rpx;
+        }
+
+        .link {
+          color: #3b5598;
+          margin: 0 4rpx;
+          touch-action: manipulation;
+        }
       }
     }
-
-
-    .login-button {
-      height: 90rpx;
-      font-size: 32rpx;
-      font-weight: 500;
-      background: #ffffff;
-      border-radius: 5px;
-      color: #071332 !important;
-    }
   }
-}
 
-
-//.form-container::before {
-//  content: '';
-//  position: absolute;
-//  top: -50%;
-//  left: -50%;
-//  width: 200%;
-//  height: 200%;
-//  background: radial-gradient(circle at center, rgba(51, 86, 157, 0.2) 0%, rgba(39, 83, 205, 0) 70%);
-//  z-index: 0;
-//}
-//
-//.form-container > * {
-//  position: relative;
-//  z-index: 1;
-//}
-
-
-.footer {
-  text-align: center;
-  margin-top: auto;
-  margin-bottom: 40rpx;
-  font-size: 24rpx;
-  color: #999;
 }
 </style>

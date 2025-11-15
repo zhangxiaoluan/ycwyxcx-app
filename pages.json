@@ -1,73 +1,198 @@
 {
-	"pages": [{
-			"path": "pages/index/index",
-			"style": {
-				"navigationBarTitleText": "首页",
-				"enablePullDownRefresh": true
-			}
-		},
-		{
-			"path": "pages/message/message",
-			"style": {
-				"navigationBarTitleText": "消息"
-			}
-		},
-		{
-			"path": "pages/my/my",
-			"style": {
-				"navigationBarTitleText": "我的"
-			}
-		},
-		{
-			"path": "pages/login/login",
-			"style": {
-				"navigationBarTitleText": "登录",
-				"navigationStyle": "custom"
-			}
-		}
-	],
-	"globalStyle": {
-		"navigationBarTextStyle": "white",
-		"navigationBarTitleText": "uni-app",
-		"navigationBarBackgroundColor": "#33569d",
-		"backgroundColor": "#33569d"
-	},
-	"tabBar": {
-		"color": "#707070",
-		"selectedColor": "#33569d",
-		"borderStyle": "black",
-		"backgroundColor": "#ffffff",
-		"height": "55px",
-		"fontSize": "12px",
-		"list": [{
-				"pagePath": "pages/index/index",
-				"iconPath": "/static/image/tabBar/home.png",
-				"selectedIconPath": "/static/image/tabBar/home-a.png",
-				"text": "首页"
-			},
-			{
-				"pagePath": "pages/message/message",
-				"iconPath": "/static/image/tabBar/msg.png",
-				"selectedIconPath": "/static/image/tabBar/msg-a.png",
-				"text": "消息"
-			},
-			{
-				"pagePath": "pages/my/my",
-				"iconPath": "/static/image/tabBar/my.png",
-				"selectedIconPath": "/static/image/tabBar/my-a.png",
-				"text": "我的"
-			}
-		]
-	},
-	"uniIdRouter": {},
-	"condition" : { //模式配置，仅开发期间生效
-		"current": 0, //当前激活的模式(list 的索引项)
-		"list": [
-			{
-				"name": "启动页面", //模式名称
-				"path": "pages/login/login", //启动页面，必选
-				"query": "" //启动参数，在页面的onLoad函数里面得到
-			}
-		]
-	}
+  "pages": [
+    {
+      "path": "pages/index/index",
+      "style": {
+        "navigationBarTitleText": "首页",
+        "enablePullDownRefresh": true,
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/login/login",
+      "style": {
+        "navigationBarTitleText": "登录",
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/my/my",
+      "style": {
+        "navigationBarTitleText": "我的",
+        "navigationStyle": "custom"
+      }
+    }
+  ],
+  "subpackages": [
+    {
+      "root": "subpackages/user",
+      "pages": [
+        {
+          "path": "profile/profile",
+          "style": {
+            "navigationBarTitleText": "个人资料"
+          }
+        },
+        {
+          "path": "house-binding/house-binding",
+          "style": {
+            "navigationBarTitleText": "房屋信息绑定"
+          }
+        },
+        {
+          "path": "family-members/family-members",
+          "style": {
+            "navigationBarTitleText": "家庭成员管理"
+          }
+        },
+        {
+          "path": "identity-verification/identity-verification",
+          "style": {
+            "navigationBarTitleText": "实名认证"
+          }
+        }
+      ]
+    },
+    {
+      "root": "subpackages/wallet",
+      "pages": [
+        {
+          "path": "wallet/wallet",
+          "style": {
+            "navigationBarTitleText": "电子钱包"
+          }
+        },
+        {
+          "path": "points/points",
+          "style": {
+            "navigationBarTitleText": "积分管理"
+          }
+        },
+        {
+          "path": "withdraw/withdraw",
+          "style": {
+            "navigationBarTitleText": "提现"
+          }
+        },
+        {
+          "path": "points-mall/points-mall",
+          "style": {
+            "navigationBarTitleText": "积分商城"
+          }
+        }
+      ]
+    },
+    {
+      "root": "subpackages/tasks",
+      "pages": [
+        {
+          "path": "task-list/task-list",
+          "style": {
+            "navigationBarTitleText": "我的任务"
+          }
+        },
+        {
+          "path": "task-detail/task-detail",
+          "style": {
+            "navigationBarTitleText": "任务详情"
+          }
+        },
+        {
+          "path": "task-publish/task-publish",
+          "style": {
+            "navigationBarTitleText": "发布任务"
+          }
+        }
+      ]
+    },
+    {
+      "root": "subpackages/community",
+      "pages": [
+        {
+          "path": "message/message",
+          "style": {
+            "navigationBarTitleText": "消息"
+          }
+        },
+        {
+          "path": "notice/notice",
+          "style": {
+            "navigationBarTitleText": "公告通知"
+          }
+        },
+        {
+          "path": "feedback/feedback",
+          "style": {
+            "navigationBarTitleText": "意见反馈"
+          }
+        }
+      ]
+    },
+    {
+      "root": "subpackages/settings",
+      "pages": [
+        {
+          "path": "settings/settings",
+          "style": {
+            "navigationBarTitleText": "设置"
+          }
+        },
+        {
+          "path": "about/about",
+          "style": {
+            "navigationBarTitleText": "关于我们"
+          }
+        },
+        {
+          "path": "privacy/privacy",
+          "style": {
+            "navigationBarTitleText": "隐私政策"
+          }
+        }
+      ]
+    }
+  ],
+  "preloadRule": {
+    "pages/index/index": {
+      "network": "all",
+      "packages": [
+        "subpackages/user"
+      ]
+    },
+    "pages/login/login": {
+      "network": "all",
+      "packages": [
+        "subpackages/user"
+      ]
+    }
+  },
+  "globalStyle": {
+    "navigationBarTextStyle": "black",
+    "navigationBarTitleText": "智慧物业",
+    "navigationBarBackgroundColor": "#ffffff",
+    "backgroundColor": "#ffffff"
+  },
+  "tabBar": {
+    "color": "#515151",
+    "selectedColor": "#3b5598",
+    "borderStyle": "black",
+    "backgroundColor": "#ffffff",
+    "height": "55px",
+    "fontSize": "12px",
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "iconPath": "/static/image/tabBar/home.png",
+        "selectedIconPath": "/static/image/tabBar/home-a.png",
+        "text": "首页"
+      },
+      {
+        "pagePath": "pages/my/my",
+        "iconPath": "/static/image/tabBar/my.png",
+        "selectedIconPath": "/static/image/tabBar/my-a.png",
+        "text": "我的"
+      }
+    ]
+  },
+  "uniIdRouter": {}
 }
