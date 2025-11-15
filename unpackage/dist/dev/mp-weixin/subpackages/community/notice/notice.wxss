@@ -1,0 +1,295 @@
+@charset "UTF-8";
+/**
+ * 这里是uni-app内置的常用样式变量
+ *
+ * uni-app 官方扩展插件及插件市场（https://ext.dcloud.net.cn）上很多三方插件均使用了这些样式变量
+ * 如果你是插件开发者，建议你使用scss预处理，并在插件代码中直接使用这些变量（无需 import 这个文件），方便用户通过搭积木的方式开发整体风格一致的App
+ *
+ */
+/**
+ * 如果你是App开发者（插件使用者），你可以通过修改这些变量来定制自己的插件主题，实现自定义主题功能
+ *
+ * 如果你的项目同样使用了scss预处理，你也可以直接在你的 scss 代码中使用如下变量，同时无需 import 这个文件
+ */
+/* 颜色变量 */
+/* 行为相关颜色 */
+/* 文字基本颜色 */
+/* 背景颜色 */
+/* 边框颜色 */
+/* 尺寸变量 */
+/* 文字尺寸 */
+/* 图片尺寸 */
+/* Border Radius */
+/* 水平间距 */
+/* 垂直间距 */
+/* 透明度 */
+/* 文章场景相关 */
+.notice-page {
+  background: #f5f5f5;
+  min-height: 100vh;
+}
+.notice-page .header {
+  background: #3b5598;
+  padding: 40rpx 30rpx;
+  color: white;
+}
+.notice-page .header .title {
+  font-size: 36rpx;
+  font-weight: 600;
+  margin-bottom: 20rpx;
+}
+.notice-page .header .search-box {
+  display: flex;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 20rpx;
+  padding: 15rpx 20rpx;
+}
+.notice-page .header .search-box .search-input {
+  flex: 1;
+  font-size: 26rpx;
+  color: white;
+  margin-left: 15rpx;
+}
+.notice-page .header .search-box .search-input::-webkit-input-placeholder {
+  color: rgba(255, 255, 255, 0.7);
+}
+.notice-page .header .search-box .search-input::placeholder {
+  color: rgba(255, 255, 255, 0.7);
+}
+.notice-page .content {
+  padding: 30rpx;
+}
+.notice-page .content .notice-tabs {
+  background: white;
+  border-radius: 16rpx;
+  padding: 20rpx;
+  margin-bottom: 30rpx;
+  display: flex;
+}
+.notice-page .content .notice-tabs .tab-item {
+  flex: 1;
+  text-align: center;
+  padding: 15rpx 0;
+  position: relative;
+}
+.notice-page .content .notice-tabs .tab-item text {
+  font-size: 26rpx;
+  color: #666;
+  transition: color 0.3s;
+}
+.notice-page .content .notice-tabs .tab-item.active text {
+  color: #3b5598;
+  font-weight: 600;
+}
+.notice-page .content .notice-tabs .tab-item.active::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  -webkit-transform: translateX(-50%);
+          transform: translateX(-50%);
+  width: 40rpx;
+  height: 4rpx;
+  background: #3b5598;
+  border-radius: 2rpx;
+}
+.notice-page .content .notice-tabs .tab-item .badge {
+  position: absolute;
+  top: 10rpx;
+  right: 50%;
+  -webkit-transform: translateX(20rpx);
+          transform: translateX(20rpx);
+  background: #f5222d;
+  color: white;
+  font-size: 20rpx;
+  padding: 2rpx 8rpx;
+  border-radius: 12rpx;
+  min-width: 24rpx;
+  text-align: center;
+}
+.notice-page .content .notice-list .notice-item {
+  background: white;
+  border-radius: 12rpx;
+  padding: 25rpx;
+  margin-bottom: 20rpx;
+  position: relative;
+  transition: -webkit-transform 0.2s;
+  transition: transform 0.2s;
+  transition: transform 0.2s, -webkit-transform 0.2s;
+}
+.notice-page .content .notice-list .notice-item:active {
+  -webkit-transform: scale(0.98);
+          transform: scale(0.98);
+}
+.notice-page .content .notice-list .notice-item .notice-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15rpx;
+}
+.notice-page .content .notice-list .notice-item .notice-header .notice-type {
+  display: flex;
+  align-items: center;
+  padding: 6rpx 12rpx;
+  border-radius: 12rpx;
+  font-size: 22rpx;
+  color: white;
+}
+.notice-page .content .notice-list .notice-item .notice-header .notice-type text {
+  margin-left: 6rpx;
+}
+.notice-page .content .notice-list .notice-item .notice-header .notice-type.property {
+  background: #3b5598;
+}
+.notice-page .content .notice-list .notice-item .notice-header .notice-type.community {
+  background: #07c160;
+}
+.notice-page .content .notice-list .notice-item .notice-header .notice-type.emergency {
+  background: #f5222d;
+}
+.notice-page .content .notice-list .notice-item .notice-header .notice-time {
+  font-size: 22rpx;
+  color: #999;
+}
+.notice-page .content .notice-list .notice-item .notice-content {
+  margin-bottom: 15rpx;
+}
+.notice-page .content .notice-list .notice-item .notice-content .notice-title {
+  display: block;
+  font-size: 28rpx;
+  color: #333;
+  font-weight: 500;
+  margin-bottom: 8rpx;
+  line-height: 1.4;
+}
+.notice-page .content .notice-list .notice-item .notice-content .notice-summary {
+  font-size: 24rpx;
+  color: #666;
+  line-height: 1.5;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.notice-page .content .notice-list .notice-item .notice-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.notice-page .content .notice-list .notice-item .notice-footer .notice-meta {
+  display: flex;
+  gap: 20rpx;
+}
+.notice-page .content .notice-list .notice-item .notice-footer .notice-meta .publisher, .notice-page .content .notice-list .notice-item .notice-footer .notice-meta .view-count {
+  display: flex;
+  align-items: center;
+  font-size: 22rpx;
+  color: #999;
+}
+.notice-page .content .notice-list .notice-item .notice-footer .notice-meta .publisher u-icon, .notice-page .content .notice-list .notice-item .notice-footer .notice-meta .view-count u-icon {
+  margin-right: 6rpx;
+}
+.notice-page .content .notice-list .notice-item .notice-footer .unread-dot {
+  width: 12rpx;
+  height: 12rpx;
+  background: #f5222d;
+  border-radius: 50%;
+}
+.notice-page .content .notice-list .notice-item .emergency-badge {
+  position: absolute;
+  top: -8rpx;
+  right: -8rpx;
+  background: #f5222d;
+  color: white;
+  font-size: 20rpx;
+  padding: 4rpx 12rpx;
+  border-radius: 12rpx;
+}
+.notice-page .content .empty-state {
+  text-align: center;
+  padding: 100rpx 30rpx;
+}
+.notice-page .content .empty-state .empty-icon {
+  font-size: 120rpx;
+  margin-bottom: 30rpx;
+}
+.notice-page .content .empty-state .empty-text {
+  display: block;
+  font-size: 32rpx;
+  color: #333;
+  margin-bottom: 10rpx;
+  font-weight: 600;
+}
+.notice-page .content .empty-state .empty-desc {
+  display: block;
+  font-size: 26rpx;
+  color: #999;
+}
+.notice-page .notice-detail {
+  max-height: 60vh;
+  padding: 20rpx;
+}
+.notice-page .notice-detail .detail-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20rpx;
+  padding-bottom: 15rpx;
+  border-bottom: 1rpx solid #f0f0f0;
+}
+.notice-page .notice-detail .detail-header .detail-type {
+  display: flex;
+  align-items: center;
+  padding: 6rpx 12rpx;
+  border-radius: 12rpx;
+  font-size: 22rpx;
+  color: white;
+}
+.notice-page .notice-detail .detail-header .detail-type text {
+  margin-left: 6rpx;
+}
+.notice-page .notice-detail .detail-header .detail-type.property {
+  background: #3b5598;
+}
+.notice-page .notice-detail .detail-header .detail-type.community {
+  background: #07c160;
+}
+.notice-page .notice-detail .detail-header .detail-type.emergency {
+  background: #f5222d;
+}
+.notice-page .notice-detail .detail-header .detail-time {
+  font-size: 22rpx;
+  color: #999;
+}
+.notice-page .notice-detail .detail-content {
+  margin-bottom: 20rpx;
+}
+.notice-page .notice-detail .detail-content .detail-text {
+  font-size: 26rpx;
+  color: #333;
+  line-height: 1.8;
+  white-space: pre-line;
+}
+.notice-page .notice-detail .detail-images {
+  margin-bottom: 20rpx;
+}
+.notice-page .notice-detail .detail-images .detail-image {
+  width: 100%;
+  border-radius: 8rpx;
+  margin-bottom: 15rpx;
+}
+.notice-page .notice-detail .detail-images .detail-image:last-child {
+  margin-bottom: 0;
+}
+.notice-page .notice-detail .detail-footer {
+  padding-top: 15rpx;
+  border-top: 1rpx solid #f0f0f0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.notice-page .notice-detail .detail-footer .detail-publisher, .notice-page .notice-detail .detail-footer .detail-views {
+  font-size: 22rpx;
+  color: #999;
+}

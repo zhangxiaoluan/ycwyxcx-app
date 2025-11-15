@@ -1,0 +1,213 @@
+@charset "UTF-8";
+/**
+ * 这里是uni-app内置的常用样式变量
+ *
+ * uni-app 官方扩展插件及插件市场（https://ext.dcloud.net.cn）上很多三方插件均使用了这些样式变量
+ * 如果你是插件开发者，建议你使用scss预处理，并在插件代码中直接使用这些变量（无需 import 这个文件），方便用户通过搭积木的方式开发整体风格一致的App
+ *
+ */
+/**
+ * 如果你是App开发者（插件使用者），你可以通过修改这些变量来定制自己的插件主题，实现自定义主题功能
+ *
+ * 如果你的项目同样使用了scss预处理，你也可以直接在你的 scss 代码中使用如下变量，同时无需 import 这个文件
+ */
+/* 颜色变量 */
+/* 行为相关颜色 */
+/* 文字基本颜色 */
+/* 背景颜色 */
+/* 边框颜色 */
+/* 尺寸变量 */
+/* 文字尺寸 */
+/* 图片尺寸 */
+/* Border Radius */
+/* 水平间距 */
+/* 垂直间距 */
+/* 透明度 */
+/* 文章场景相关 */
+.identity-verification-page {
+  background: #f5f5f5;
+  min-height: 100vh;
+}
+.identity-verification-page .content {
+  padding: 30rpx;
+}
+.identity-verification-page .content .verification-status {
+  background: white;
+  border-radius: 16rpx;
+  padding: 60rpx 30rpx;
+  text-align: center;
+  margin-bottom: 30rpx;
+}
+.identity-verification-page .content .verification-status.verified .status-icon .u-icon {
+  color: #07c160 !important;
+  justify-content: center;
+}
+.identity-verification-page .content .verification-status.verified .status-text {
+  color: #07c160;
+}
+.identity-verification-page .content .verification-status .status-icon {
+  margin-bottom: 20rpx;
+}
+.identity-verification-page .content .verification-status .status-icon .u-icon {
+  color: #07c160 !important;
+  justify-content: center;
+}
+.identity-verification-page .content .verification-status .status-text {
+  display: block;
+  font-size: 32rpx;
+  font-weight: 600;
+  color: #8c1a11;
+  margin-bottom: 10rpx;
+}
+.identity-verification-page .content .verification-status .status-desc {
+  font-size: 26rpx;
+  color: #999;
+}
+.identity-verification-page .content .verification-form {
+  background: white;
+  border-radius: 16rpx;
+  padding: 40rpx 30rpx;
+}
+.identity-verification-page .content .verification-form .form-title {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 30rpx;
+  display: flex;
+  align-items: center;
+}
+.identity-verification-page .content .verification-form .form-title .required {
+  color: #f5222d;
+  margin-left: 4rpx;
+}
+.identity-verification-page .content .verification-form .form-title .required-text {
+  font-size: 24rpx;
+  color: #999;
+  font-weight: normal;
+  margin-left: 10rpx;
+}
+.identity-verification-page .content .verification-form .form-item {
+  margin-bottom: 30rpx;
+}
+.identity-verification-page .content .verification-form .form-item .form-label {
+  display: block;
+  font-size: 28rpx;
+  color: #333;
+  margin-bottom: 15rpx;
+  font-weight: 500;
+}
+.identity-verification-page .content .verification-form .form-item .form-label .required {
+  color: #f5222d;
+  margin-left: 4rpx;
+}
+.identity-verification-page .content .verification-form .form-item .form-input {
+  height: 80rpx;
+  border: 1rpx solid #e0e0e0;
+  border-radius: 8rpx;
+  padding: 0 20rpx;
+  font-size: 28rpx;
+  background: #fafafa;
+}
+.identity-verification-page .content .verification-form .upload-section {
+  margin-bottom: 30rpx;
+}
+.identity-verification-page .content .verification-form .upload-section .upload-title {
+  font-size: 28rpx;
+  color: #333;
+  margin-bottom: 20rpx;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+}
+.identity-verification-page .content .verification-form .upload-section .upload-title .required {
+  color: #f5222d;
+  margin-left: 4rpx;
+}
+.identity-verification-page .content .verification-form .upload-section .upload-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20rpx;
+}
+.identity-verification-page .content .verification-form .upload-section .upload-grid .upload-item {
+  border: 2rpx dashed #d9d9d9;
+  border-radius: 12rpx;
+  padding: 20rpx;
+  text-align: center;
+  transition: border-color 0.3s;
+}
+.identity-verification-page .content .verification-form .upload-section .upload-grid .upload-item:active {
+  border-color: #3b5598;
+}
+.identity-verification-page .content .verification-form .upload-section .upload-grid .upload-item .preview-image {
+  width: 100%;
+  height: 200rpx;
+  border-radius: 8rpx;
+}
+.identity-verification-page .content .verification-form .upload-section .upload-grid .upload-item .upload-placeholder .u-icon {
+  justify-content: center;
+}
+.identity-verification-page .content .verification-form .upload-section .upload-grid .upload-item .upload-placeholder .upload-text {
+  display: block;
+  font-size: 24rpx;
+  color: #999;
+  margin-top: 16rpx;
+}
+.identity-verification-page .content .verification-form .agreement {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 40rpx;
+}
+.identity-verification-page .content .verification-form .agreement checkbox-group {
+  margin-right: 15rpx;
+}
+.identity-verification-page .content .verification-form .agreement .agreement-text {
+  font-size: 24rpx;
+  color: #666;
+  line-height: 1.5;
+  flex: 1;
+}
+.identity-verification-page .content .verification-form .agreement .agreement-text .link-a {
+  color: #3b5598;
+}
+.identity-verification-page .content .verification-form .submit-btn {
+  width: 100%;
+  height: 80rpx;
+  background: #3b5598;
+  color: white;
+  border: none;
+  border-radius: 8rpx;
+  font-size: 30rpx;
+  font-weight: 600;
+}
+.identity-verification-page .content .verification-form .submit-btn:disabled {
+  background: #ccc;
+}
+.identity-verification-page .content .verified-info {
+  background: white;
+  border-radius: 16rpx;
+  padding: 40rpx 30rpx;
+}
+.identity-verification-page .content .verified-info .info-card {
+  background: #f8f9fa;
+  border-radius: 12rpx;
+  padding: 30rpx;
+}
+.identity-verification-page .content .verified-info .info-card .info-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15rpx 0;
+  border-bottom: 1rpx solid #e0e0e0;
+}
+.identity-verification-page .content .verified-info .info-card .info-item:last-child {
+  border-bottom: none;
+}
+.identity-verification-page .content .verified-info .info-card .info-item .info-label {
+  font-size: 28rpx;
+  color: #666;
+}
+.identity-verification-page .content .verified-info .info-card .info-item .info-value {
+  font-size: 28rpx;
+  color: #333;
+  font-weight: 500;
+}

@@ -1,0 +1,312 @@
+@charset "UTF-8";
+/**
+ * 这里是uni-app内置的常用样式变量
+ *
+ * uni-app 官方扩展插件及插件市场（https://ext.dcloud.net.cn）上很多三方插件均使用了这些样式变量
+ * 如果你是插件开发者，建议你使用scss预处理，并在插件代码中直接使用这些变量（无需 import 这个文件），方便用户通过搭积木的方式开发整体风格一致的App
+ *
+ */
+/**
+ * 如果你是App开发者（插件使用者），你可以通过修改这些变量来定制自己的插件主题，实现自定义主题功能
+ *
+ * 如果你的项目同样使用了scss预处理，你也可以直接在你的 scss 代码中使用如下变量，同时无需 import 这个文件
+ */
+/* 颜色变量 */
+/* 行为相关颜色 */
+/* 文字基本颜色 */
+/* 背景颜色 */
+/* 边框颜色 */
+/* 尺寸变量 */
+/* 文字尺寸 */
+/* 图片尺寸 */
+/* Border Radius */
+/* 水平间距 */
+/* 垂直间距 */
+/* 透明度 */
+/* 文章场景相关 */
+.task-detail-page {
+  background: #f5f5f5;
+  min-height: 100vh;
+  padding-bottom: 120rpx;
+}
+.task-detail-page .header {
+  background: #3b5598;
+  padding: 40rpx 30rpx;
+  color: white;
+}
+.task-detail-page .header .title {
+  font-size: 36rpx;
+  font-weight: 600;
+}
+.task-detail-page .content {
+  padding: 30rpx;
+}
+.task-detail-page .content .status-card {
+  background: white;
+  border-radius: 16rpx;
+  padding: 30rpx;
+  margin-bottom: 30rpx;
+  border-left: 6rpx solid #3b5598;
+}
+.task-detail-page .content .status-card.completed {
+  border-left-color: #52c41a;
+}
+.task-detail-page .content .status-card.cancelled {
+  border-left-color: #f5222d;
+}
+.task-detail-page .content .status-card .status-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20rpx;
+}
+.task-detail-page .content .status-card .status-header .task-type {
+  display: flex;
+  align-items: center;
+  padding: 8rpx 16rpx;
+  border-radius: 16rpx;
+  font-size: 24rpx;
+  color: white;
+}
+.task-detail-page .content .status-card .status-header .task-type text {
+  margin-left: 8rpx;
+}
+.task-detail-page .content .status-card .status-header .task-type.repair {
+  background: #ff6b35;
+}
+.task-detail-page .content .status-card .status-header .task-type.cleaning {
+  background: #07c160;
+}
+.task-detail-page .content .status-card .status-header .task-type.delivery {
+  background: #3b5598;
+}
+.task-detail-page .content .status-card .status-header .task-type.other {
+  background: #9c27b0;
+}
+.task-detail-page .content .status-card .status-header .task-status {
+  display: flex;
+  align-items: center;
+}
+.task-detail-page .content .status-card .status-header .task-status text {
+  margin-left: 6rpx;
+  font-size: 24rpx;
+  font-weight: 500;
+}
+.task-detail-page .content .status-card .task-title {
+  font-size: 32rpx;
+  color: #333;
+  font-weight: 600;
+  line-height: 1.4;
+}
+.task-detail-page .content .info-section, .task-detail-page .content .reward-section, .task-detail-page .content .publisher-section, .task-detail-page .content .assignee-section, .task-detail-page .content .progress-section, .task-detail-page .content .attachments-section {
+  background: white;
+  border-radius: 16rpx;
+  padding: 30rpx;
+  margin-bottom: 20rpx;
+}
+.task-detail-page .content .info-section .section-title, .task-detail-page .content .reward-section .section-title, .task-detail-page .content .publisher-section .section-title, .task-detail-page .content .assignee-section .section-title, .task-detail-page .content .progress-section .section-title, .task-detail-page .content .attachments-section .section-title {
+  font-size: 28rpx;
+  color: #333;
+  font-weight: 600;
+  margin-bottom: 20rpx;
+  position: relative;
+  padding-left: 20rpx;
+}
+.task-detail-page .content .info-section .section-title::before, .task-detail-page .content .reward-section .section-title::before, .task-detail-page .content .publisher-section .section-title::before, .task-detail-page .content .assignee-section .section-title::before, .task-detail-page .content .progress-section .section-title::before, .task-detail-page .content .attachments-section .section-title::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 50%;
+  -webkit-transform: translateY(-50%);
+          transform: translateY(-50%);
+  width: 6rpx;
+  height: 24rpx;
+  background: #3b5598;
+  border-radius: 3rpx;
+}
+.task-detail-page .content .info-section .task-description, .task-detail-page .content .reward-section .task-description, .task-detail-page .content .publisher-section .task-description, .task-detail-page .content .assignee-section .task-description, .task-detail-page .content .progress-section .task-description, .task-detail-page .content .attachments-section .task-description {
+  font-size: 26rpx;
+  color: #666;
+  line-height: 1.6;
+}
+.task-detail-page .content .info-section .requirements-list .requirement-item, .task-detail-page .content .reward-section .requirements-list .requirement-item, .task-detail-page .content .publisher-section .requirements-list .requirement-item, .task-detail-page .content .assignee-section .requirements-list .requirement-item, .task-detail-page .content .progress-section .requirements-list .requirement-item, .task-detail-page .content .attachments-section .requirements-list .requirement-item {
+  display: block;
+  font-size: 26rpx;
+  color: #666;
+  line-height: 1.6;
+  margin-bottom: 10rpx;
+}
+.task-detail-page .content .info-section .requirements-list .requirement-item:last-child, .task-detail-page .content .reward-section .requirements-list .requirement-item:last-child, .task-detail-page .content .publisher-section .requirements-list .requirement-item:last-child, .task-detail-page .content .assignee-section .requirements-list .requirement-item:last-child, .task-detail-page .content .progress-section .requirements-list .requirement-item:last-child, .task-detail-page .content .attachments-section .requirements-list .requirement-item:last-child {
+  margin-bottom: 0;
+}
+.task-detail-page .content .info-section .info-grid .info-item, .task-detail-page .content .reward-section .info-grid .info-item, .task-detail-page .content .publisher-section .info-grid .info-item, .task-detail-page .content .assignee-section .info-grid .info-item, .task-detail-page .content .progress-section .info-grid .info-item, .task-detail-page .content .attachments-section .info-grid .info-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15rpx 0;
+  border-bottom: 1rpx solid #f0f0f0;
+}
+.task-detail-page .content .info-section .info-grid .info-item:last-child, .task-detail-page .content .reward-section .info-grid .info-item:last-child, .task-detail-page .content .publisher-section .info-grid .info-item:last-child, .task-detail-page .content .assignee-section .info-grid .info-item:last-child, .task-detail-page .content .progress-section .info-grid .info-item:last-child, .task-detail-page .content .attachments-section .info-grid .info-item:last-child {
+  border-bottom: none;
+}
+.task-detail-page .content .info-section .info-grid .info-item .info-label, .task-detail-page .content .reward-section .info-grid .info-item .info-label, .task-detail-page .content .publisher-section .info-grid .info-item .info-label, .task-detail-page .content .assignee-section .info-grid .info-item .info-label, .task-detail-page .content .progress-section .info-grid .info-item .info-label, .task-detail-page .content .attachments-section .info-grid .info-item .info-label {
+  font-size: 26rpx;
+  color: #666;
+}
+.task-detail-page .content .info-section .info-grid .info-item .info-value, .task-detail-page .content .reward-section .info-grid .info-item .info-value, .task-detail-page .content .publisher-section .info-grid .info-item .info-value, .task-detail-page .content .assignee-section .info-grid .info-item .info-value, .task-detail-page .content .progress-section .info-grid .info-item .info-value, .task-detail-page .content .attachments-section .info-grid .info-item .info-value {
+  font-size: 26rpx;
+  color: #333;
+  font-weight: 500;
+}
+.task-detail-page .content .info-section .info-grid .info-item .info-value.deadline, .task-detail-page .content .reward-section .info-grid .info-item .info-value.deadline, .task-detail-page .content .publisher-section .info-grid .info-item .info-value.deadline, .task-detail-page .content .assignee-section .info-grid .info-item .info-value.deadline, .task-detail-page .content .progress-section .info-grid .info-item .info-value.deadline, .task-detail-page .content .attachments-section .info-grid .info-item .info-value.deadline {
+  color: #ff6b35;
+}
+.task-detail-page .content .reward-section .reward-info .reward-amount {
+  display: flex;
+  align-items: baseline;
+  margin-bottom: 10rpx;
+}
+.task-detail-page .content .reward-section .reward-info .reward-amount .reward-value {
+  font-size: 36rpx;
+  color: #ff6b35;
+  font-weight: 700;
+}
+.task-detail-page .content .reward-section .reward-info .reward-amount .reward-type {
+  font-size: 24rpx;
+  color: #ff6b35;
+  margin-left: 8rpx;
+}
+.task-detail-page .content .reward-section .reward-info .reward-desc {
+  font-size: 24rpx;
+  color: #999;
+  line-height: 1.5;
+}
+.task-detail-page .content .publisher-section .publisher-info, .task-detail-page .content .publisher-section .assignee-info, .task-detail-page .content .assignee-section .publisher-info, .task-detail-page .content .assignee-section .assignee-info {
+  display: flex;
+  align-items: center;
+}
+.task-detail-page .content .publisher-section .publisher-info .publisher-avatar, .task-detail-page .content .publisher-section .publisher-info .assignee-avatar, .task-detail-page .content .publisher-section .assignee-info .publisher-avatar, .task-detail-page .content .publisher-section .assignee-info .assignee-avatar, .task-detail-page .content .assignee-section .publisher-info .publisher-avatar, .task-detail-page .content .assignee-section .publisher-info .assignee-avatar, .task-detail-page .content .assignee-section .assignee-info .publisher-avatar, .task-detail-page .content .assignee-section .assignee-info .assignee-avatar {
+  width: 80rpx;
+  height: 80rpx;
+  border-radius: 50%;
+  margin-right: 20rpx;
+}
+.task-detail-page .content .publisher-section .publisher-info .publisher-details, .task-detail-page .content .publisher-section .publisher-info .assignee-details, .task-detail-page .content .publisher-section .assignee-info .publisher-details, .task-detail-page .content .publisher-section .assignee-info .assignee-details, .task-detail-page .content .assignee-section .publisher-info .publisher-details, .task-detail-page .content .assignee-section .publisher-info .assignee-details, .task-detail-page .content .assignee-section .assignee-info .publisher-details, .task-detail-page .content .assignee-section .assignee-info .assignee-details {
+  flex: 1;
+}
+.task-detail-page .content .publisher-section .publisher-info .publisher-details .publisher-name, .task-detail-page .content .publisher-section .publisher-info .publisher-details .assignee-name, .task-detail-page .content .publisher-section .publisher-info .assignee-details .publisher-name, .task-detail-page .content .publisher-section .publisher-info .assignee-details .assignee-name, .task-detail-page .content .publisher-section .assignee-info .publisher-details .publisher-name, .task-detail-page .content .publisher-section .assignee-info .publisher-details .assignee-name, .task-detail-page .content .publisher-section .assignee-info .assignee-details .publisher-name, .task-detail-page .content .publisher-section .assignee-info .assignee-details .assignee-name, .task-detail-page .content .assignee-section .publisher-info .publisher-details .publisher-name, .task-detail-page .content .assignee-section .publisher-info .publisher-details .assignee-name, .task-detail-page .content .assignee-section .publisher-info .assignee-details .publisher-name, .task-detail-page .content .assignee-section .publisher-info .assignee-details .assignee-name, .task-detail-page .content .assignee-section .assignee-info .publisher-details .publisher-name, .task-detail-page .content .assignee-section .assignee-info .publisher-details .assignee-name, .task-detail-page .content .assignee-section .assignee-info .assignee-details .publisher-name, .task-detail-page .content .assignee-section .assignee-info .assignee-details .assignee-name {
+  display: block;
+  font-size: 28rpx;
+  color: #333;
+  font-weight: 500;
+  margin-bottom: 6rpx;
+}
+.task-detail-page .content .publisher-section .publisher-info .publisher-details .publisher-rating, .task-detail-page .content .publisher-section .publisher-info .publisher-details .assignee-rating, .task-detail-page .content .publisher-section .publisher-info .assignee-details .publisher-rating, .task-detail-page .content .publisher-section .publisher-info .assignee-details .assignee-rating, .task-detail-page .content .publisher-section .assignee-info .publisher-details .publisher-rating, .task-detail-page .content .publisher-section .assignee-info .publisher-details .assignee-rating, .task-detail-page .content .publisher-section .assignee-info .assignee-details .publisher-rating, .task-detail-page .content .publisher-section .assignee-info .assignee-details .assignee-rating, .task-detail-page .content .assignee-section .publisher-info .publisher-details .publisher-rating, .task-detail-page .content .assignee-section .publisher-info .publisher-details .assignee-rating, .task-detail-page .content .assignee-section .publisher-info .assignee-details .publisher-rating, .task-detail-page .content .assignee-section .publisher-info .assignee-details .assignee-rating, .task-detail-page .content .assignee-section .assignee-info .publisher-details .publisher-rating, .task-detail-page .content .assignee-section .assignee-info .publisher-details .assignee-rating, .task-detail-page .content .assignee-section .assignee-info .assignee-details .publisher-rating, .task-detail-page .content .assignee-section .assignee-info .assignee-details .assignee-rating {
+  font-size: 24rpx;
+  color: #999;
+}
+.task-detail-page .content .publisher-section .publisher-info .contact-btn, .task-detail-page .content .publisher-section .assignee-info .contact-btn, .task-detail-page .content .assignee-section .publisher-info .contact-btn, .task-detail-page .content .assignee-section .assignee-info .contact-btn {
+  display: flex;
+  align-items: center;
+  background: #f0f0f0;
+  border: none;
+  border-radius: 20rpx;
+  padding: 12rpx 20rpx;
+  font-size: 24rpx;
+  color: #3b5598;
+}
+.task-detail-page .content .publisher-section .publisher-info .contact-btn text, .task-detail-page .content .publisher-section .assignee-info .contact-btn text, .task-detail-page .content .assignee-section .publisher-info .contact-btn text, .task-detail-page .content .assignee-section .assignee-info .contact-btn text {
+  margin-left: 6rpx;
+}
+.task-detail-page .content .progress-section .progress-info {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20rpx;
+}
+.task-detail-page .content .progress-section .progress-info .progress-bar {
+  flex: 1;
+  height: 8rpx;
+  background: #f0f0f0;
+  border-radius: 4rpx;
+  margin-right: 20rpx;
+  overflow: hidden;
+}
+.task-detail-page .content .progress-section .progress-info .progress-bar .progress-fill {
+  height: 100%;
+  background: #3b5598;
+  border-radius: 4rpx;
+  transition: width 0.3s ease;
+}
+.task-detail-page .content .progress-section .progress-info .progress-text {
+  font-size: 26rpx;
+  color: #3b5598;
+  font-weight: 600;
+}
+.task-detail-page .content .progress-section .progress-updates .update-item {
+  margin-bottom: 15rpx;
+}
+.task-detail-page .content .progress-section .progress-updates .update-item .update-time {
+  display: block;
+  font-size: 22rpx;
+  color: #999;
+  margin-bottom: 6rpx;
+}
+.task-detail-page .content .progress-section .progress-updates .update-item .update-content {
+  font-size: 24rpx;
+  color: #666;
+  line-height: 1.5;
+}
+.task-detail-page .content .progress-section .progress-updates .update-item:last-child {
+  margin-bottom: 0;
+}
+.task-detail-page .content .attachments-section .images-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 15rpx;
+}
+.task-detail-page .content .attachments-section .images-grid .task-image {
+  width: 100%;
+  height: 150rpx;
+  border-radius: 8rpx;
+}
+.task-detail-page .action-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: white;
+  padding: 20rpx 30rpx;
+  border-top: 1rpx solid #f0f0f0;
+  display: flex;
+  gap: 20rpx;
+}
+.task-detail-page .action-bar .action-btn {
+  flex: 1;
+  height: 80rpx;
+  border-radius: 8rpx;
+  font-size: 28rpx;
+  font-weight: 600;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.task-detail-page .action-bar .action-btn text {
+  margin-left: 8rpx;
+}
+.task-detail-page .action-bar .action-btn.cancel {
+  background: #f0f0f0;
+  color: #666;
+}
+.task-detail-page .action-bar .action-btn.accept {
+  background: #07c160;
+  color: white;
+}
+.task-detail-page .action-bar .action-btn.complete {
+  background: #3b5598;
+  color: white;
+}
+.task-detail-page .action-bar .action-btn.contact {
+  background: #ff6b35;
+  color: white;
+}

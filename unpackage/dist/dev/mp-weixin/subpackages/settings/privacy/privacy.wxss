@@ -1,0 +1,171 @@
+@charset "UTF-8";
+/**
+ * 这里是uni-app内置的常用样式变量
+ *
+ * uni-app 官方扩展插件及插件市场（https://ext.dcloud.net.cn）上很多三方插件均使用了这些样式变量
+ * 如果你是插件开发者，建议你使用scss预处理，并在插件代码中直接使用这些变量（无需 import 这个文件），方便用户通过搭积木的方式开发整体风格一致的App
+ *
+ */
+/**
+ * 如果你是App开发者（插件使用者），你可以通过修改这些变量来定制自己的插件主题，实现自定义主题功能
+ *
+ * 如果你的项目同样使用了scss预处理，你也可以直接在你的 scss 代码中使用如下变量，同时无需 import 这个文件
+ */
+/* 颜色变量 */
+/* 行为相关颜色 */
+/* 文字基本颜色 */
+/* 背景颜色 */
+/* 边框颜色 */
+/* 尺寸变量 */
+/* 文字尺寸 */
+/* 图片尺寸 */
+/* Border Radius */
+/* 水平间距 */
+/* 垂直间距 */
+/* 透明度 */
+/* 文章场景相关 */
+.privacy-page {
+  background: #f5f5f5;
+  min-height: 100vh;
+}
+.privacy-page .content {
+  padding: 35rpx;
+}
+.privacy-page .content .privacy-section, .privacy-page .content .policy-section {
+  background: white;
+  border-radius: 16rpx;
+  padding: 30rpx;
+  margin-bottom: 30rpx;
+}
+.privacy-page .content .privacy-section .section-title, .privacy-page .content .policy-section .section-title {
+  font-size: 28rpx;
+  color: #333;
+  font-weight: 600;
+  margin-bottom: 25rpx;
+  position: relative;
+  padding-left: 20rpx;
+}
+.privacy-page .content .privacy-section .section-title::before, .privacy-page .content .policy-section .section-title::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 50%;
+  -webkit-transform: translateY(-50%);
+          transform: translateY(-50%);
+  width: 6rpx;
+  height: 24rpx;
+  background: #3b5598;
+  border-radius: 3rpx;
+}
+.privacy-page .content .privacy-section .privacy-list .privacy-item, .privacy-page .content .policy-section .privacy-list .privacy-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20rpx 0;
+  border-bottom: 1rpx solid #f0f0f0;
+}
+.privacy-page .content .privacy-section .privacy-list .privacy-item:last-child, .privacy-page .content .policy-section .privacy-list .privacy-item:last-child {
+  border-bottom: none;
+}
+.privacy-page .content .privacy-section .privacy-list .privacy-item .privacy-info, .privacy-page .content .policy-section .privacy-list .privacy-item .privacy-info {
+  flex: 1;
+  margin-right: 20rpx;
+}
+.privacy-page .content .privacy-section .privacy-list .privacy-item .privacy-info .privacy-main, .privacy-page .content .policy-section .privacy-list .privacy-item .privacy-info .privacy-main {
+  display: flex;
+  align-items: center;
+  margin-bottom: 8rpx;
+}
+.privacy-page .content .privacy-section .privacy-list .privacy-item .privacy-info .privacy-main .privacy-text, .privacy-page .content .policy-section .privacy-list .privacy-item .privacy-info .privacy-main .privacy-text {
+  font-size: 26rpx;
+  color: #333;
+  margin-left: 15rpx;
+}
+.privacy-page .content .privacy-section .privacy-list .privacy-item .privacy-info .privacy-desc, .privacy-page .content .policy-section .privacy-list .privacy-item .privacy-info .privacy-desc {
+  font-size: 22rpx;
+  color: #999;
+  line-height: 1.4;
+  margin-left: 35rpx;
+}
+.privacy-page .content .privacy-section .privacy-list .privacy-item .privacy-selector, .privacy-page .content .policy-section .privacy-list .privacy-item .privacy-selector {
+  display: flex;
+  align-items: center;
+}
+.privacy-page .content .privacy-section .privacy-list .privacy-item .privacy-selector .selector-text, .privacy-page .content .policy-section .privacy-list .privacy-item .privacy-selector .selector-text {
+  font-size: 24rpx;
+  color: #666;
+  margin-right: 10rpx;
+}
+.privacy-page .content .privacy-section .privacy-list .privacy-item .permission-status, .privacy-page .content .policy-section .privacy-list .privacy-item .permission-status {
+  display: flex;
+  align-items: center;
+}
+.privacy-page .content .privacy-section .privacy-list .privacy-item .permission-status text, .privacy-page .content .policy-section .privacy-list .privacy-item .permission-status text {
+  font-size: 24rpx;
+  color: #999;
+  margin-right: 10rpx;
+}
+.privacy-page .content .privacy-section .privacy-list .privacy-item .permission-status text.granted, .privacy-page .content .policy-section .privacy-list .privacy-item .permission-status text.granted {
+  color: #52c41a;
+}
+.privacy-page .content .privacy-section .privacy-list .privacy-item switch, .privacy-page .content .policy-section .privacy-list .privacy-item switch {
+  -webkit-transform: scale(0.8);
+          transform: scale(0.8);
+}
+.privacy-page .content .policy-section .policy-content .policy-title {
+  display: block;
+  font-size: 26rpx;
+  color: #333;
+  font-weight: 600;
+  margin-bottom: 15rpx;
+}
+.privacy-page .content .policy-section .policy-content .policy-summary {
+  display: block;
+  font-size: 24rpx;
+  color: #666;
+  line-height: 1.6;
+  margin-bottom: 25rpx;
+}
+.privacy-page .content .policy-section .policy-content .policy-links .policy-link {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15rpx 0;
+  border-bottom: 1rpx solid #f0f0f0;
+  transition: background-color 0.2s;
+}
+.privacy-page .content .policy-section .policy-content .policy-links .policy-link:last-child {
+  border-bottom: none;
+}
+.privacy-page .content .policy-section .policy-content .policy-links .policy-link:active {
+  background-color: #f8f9fa;
+  margin: 0 -10rpx;
+  padding-left: 10rpx;
+  padding-right: 10rpx;
+  border-radius: 8rpx;
+}
+.privacy-page .content .policy-section .policy-content .policy-links .policy-link text {
+  font-size: 24rpx;
+  color: #3b5598;
+}
+.privacy-page .content .action-section {
+  display: flex;
+  gap: 20rpx;
+}
+.privacy-page .content .action-section .action-btn {
+  flex: 1;
+  height: 70rpx;
+  border-radius: 8rpx;
+  font-size: 26rpx;
+  font-weight: 600;
+  border: none;
+}
+.privacy-page .content .action-section .action-btn.secondary {
+  background: white;
+  color: #666;
+  border: 1rpx solid #e0e0e0;
+}
+.privacy-page .content .action-section .action-btn.danger {
+  background: #f5222d;
+  color: white;
+}
