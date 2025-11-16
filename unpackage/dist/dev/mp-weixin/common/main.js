@@ -109,6 +109,9 @@ var _default = {
   },
   onHide: function onHide() {
     console.log("App Hide");
+  },
+  onUnload: function onUnload() {
+    console.log("App Unload");
   }
 };
 exports.default = _default;

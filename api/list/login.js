@@ -3,7 +3,7 @@ import { sendRequest, sendUpload } from '../request'
 // 登录
 export function Login(params) {
   const json = {
-    url: '/app/auth/login',
+    url: '/app/auth/wechat/login',
     method: 'post',
     data: params
   }

@@ -9,6 +9,9 @@
 		onHide: function() {
 			console.log("App Hide");
 		},
+    onUnload: function() {
+      console.log("App Unload");
+    }
 	};
 </script>
 

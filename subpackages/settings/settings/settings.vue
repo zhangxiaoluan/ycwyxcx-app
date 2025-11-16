@@ -343,14 +343,12 @@ export default {
           if (res.confirm) {
             // 清除用户信息
             try {
-              uni.removeStorageSync('user_info')
-              uni.removeStorageSync('auth_token')
+              uni.removeStorageSync('wyToken')
+              // uni.removeStorageSync('auth_token')
             } catch (e) {
               console.error('清除用户信息失败', e)
             }
-
             uni.showToast({ title: '已退出登录', icon: 'success' })
-
             // 跳转到登录页
             setTimeout(() => {
               uni.reLaunch({ url: '/pages/login/login' })

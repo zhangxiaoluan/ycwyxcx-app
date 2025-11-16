@@ -23,17 +23,20 @@
         <view class="other-login">
           <button
               class="wechat-login-btn"
-              open-type="getUserInfo"
-              @getuserinfo="handleWechatLogin"
+              open-type="getPhoneNumber"
+              @getphonenumber="HandlePhoneNumber"
               :disabled="isLoading"
+              v-if="agreedToTerms.length !== 0 && !userForm.cellphone && !userForm.openid"
           >
             <u-icon name="weixin-fill" size="36" color="#07c160" v-if="!isLoading"></u-icon>
             <text class="wechat-text" v-if="!isLoading">微信一键登录</text>
             <u-loading-icon size="36" color="#07c160" v-else></u-loading-icon>
           </button>
 
-          <button type="default" open-type="getPhoneNumber" @getphonenumber="HandlePhoneNumber">授权获取手机号</button>
-
+          <button v-else class="wechat-login-btn" @click="HandlePhoneNumber">
+            <u-icon name="weixin-fill" size="36" color="#07c160"></u-icon>
+            <text class="wechat-text">微信一键登录</text>
+          </button>
         </view>
 
         <!-- 用户协议 -->
@@ -63,77 +66,88 @@
 </template>
 
 <script>
-// import {sendRequest} from '@/api/request.js'
-
+import {decryptPhoneNumber, getUserDetail} from "./auth";
+import {Login} from "../../api/list/login";
 export default {
   name: 'Login',
   data() {
     return {
+      // 用户协议
+      agreedToTerms: [],
       isLoading: false,
-      hasWechatAuth: false,
-      wechatUserInfo: null,
-      phoneNumber: null,
-      agreedToTerms: [], // u-checkbox-group 需要数组格式
-      loginCode: null,
-      showPhoneModal: false, // 控制手机号授权弹窗
-      // 新增表单数据
-      username: '',
-      password: ''
+      userForm: uni.getStorageSync('wyUserInfo') || {
+        openid: null,
+        cellphone: null,
+        nickName: null,
+        // "code": "string",
+        // "nickName": "string",
+        // "avatarUrl": "string",
+        // "gender": 0,
+        // "city": "string",
+        // "province": "string",
+        // "country": "string",
+        // "language": "string",
+        // "cellphone": "string"
+      },
     }
   },
-  onLoad() {},
+  onLoad() {
+    console.log(this.userForm)
+  },
   methods: {
-    // 微信登录处理
-    async handleWechatLogin(e) {
-      console.log('微信登录回调:', e)
-      // 检查是否同意用户协议
+    // 授权获取手机号
+    HandlePhoneNumber(e) {
+      let detail = e.detail || {}
+      // 是否阅读协议
       if (this.agreedToTerms.length === 0) {
-        uni.showToast({ title: '请先同意用户协议', icon: 'none' })
-        return
+        return uni.showToast({title: '请先同意用户协议', icon: 'none'})
       }
 
-      // 检查授权结果
-      if (e.detail.errMsg !== 'getUserInfo:ok') {
-        uni.showToast({ title: '授权失败，请重试', icon: 'none' })
-        return
+      // 用户已经授权了直接登录
+      if (this.userForm.cellphone && this.userForm.openid) {
+        return  this.toLogin()
       }
 
+      // 用户第一次没有授权先去授权在登录
+      let code = detail.code
+      if (code) {
+        this.getUserAuth(code)
+      }
+    },
+
+    // 获取用户信息
+    getUserAuth(code){
+      let $that = this
       this.isLoading = true
-
       try {
-        // 保存微信用户信息
-        this.wechatUserInfo = e.detail.userInfo
-        this.hasWechatAuth = true
-
-        uni.reLaunch({ url: '/pages/index/index' })
-
-        uni.showToast({ title: '微信登录成功', icon: 'success' })
-
-        // // 调用后端接口进行微信登录
-        // const result = await this.wechatLoginToServer()
-        //
-        // if (result.success) {
-        //   uni.showToast({ title: '微信登录成功', icon: 'success' })
-        //
-        //   // 显示手机号授权弹窗
-        //   setTimeout(() => {
-        //     this.showPhoneModal = true
-        //   }, 1500)
-        // }
-      } catch (error) {
-        console.error('微信登录失败:', error)
-        uni.showToast({
-          title: '登录失败，请重试',
-          icon: 'none'
+        decryptPhoneNumber(code).then(res => {
+          let phoneNumber = res.phoneNumber
+          uni.login({
+            provider: 'weixin',
+            onlyAuthorize: true,
+            success: function (loginRes) {
+              getUserDetail(loginRes.code).then(res => {
+                let wyUserInfo = { ...res, cellphone: phoneNumber  }
+                uni.setStorageSync('wyUserInfo', wyUserInfo)
+                $that.userForm = wyUserInfo
+                $that.toLogin()
+              })
+            }
+          });
         })
-      } finally {
+      } catch (err) {
         this.isLoading = false
       }
     },
 
-    // 授权获取手机号
-    HandlePhoneNumber(e){
-      console.log(e)
+    // 登录请求后台接口
+    toLogin(){
+      Login(this.userForm).then(res => {
+        let token = res.token || ''
+        uni.setStorageSync('wyToken', token)
+        this.redirectToHome()
+        this.isLoading = false
+      })
     },
 
     // 处理用户协议选择
@@ -160,12 +174,10 @@ export default {
     },
 
 
-    // // 跳转到首页
-    // redirectToHome() {
-    //   uni.switchTab({
-    //     url: '/pages/index/index'
-    //   })
-    // }
+    // 跳转到首页
+    redirectToHome() {
+      uni.switchTab({ url: '/pages/index/index' })
+    }
   }
 }
 </script>
@@ -348,6 +360,7 @@ export default {
         display: flex;
         align-items: center;
         justify-content: space-evenly;
+
         .agreement-item {
           display: flex;
           align-items: flex-start;

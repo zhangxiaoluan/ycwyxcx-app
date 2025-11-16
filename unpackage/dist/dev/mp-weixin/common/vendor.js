@@ -19341,9 +19341,686 @@ exports.default = _default;
 /* 178 */,
 /* 179 */,
 /* 180 */,
-/* 181 */,
-/* 182 */,
-/* 183 */,
+/* 181 */
+/*!*********************************************************************************!*\
+  !*** /Users/salvater/web/kai-nan/zhi-hui-wu-ye/ycwyxcx-app/pages/login/auth.js ***!
+  \*********************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/* WEBPACK VAR INJECTION */(function(uni) {
+
+var _interopRequireDefault = __webpack_require__(/*! @babel/runtime/helpers/interopRequireDefault */ 4);
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.wechatLogin = exports.refreshToken = exports.logout = exports.getUserInfo = exports.getUserDetail = exports.getCurrentUser = exports.getAuth = exports.decryptPhoneNumber = exports.checkLoginStatus = exports.bindPhoneNumber = void 0;
+var _regenerator = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/regenerator */ 56));
+var _defineProperty2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/defineProperty */ 11));
+var _asyncToGenerator2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ 58));
+var _request = __webpack_require__(/*! @/api/request */ 182);
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { (0, _defineProperty2.default)(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
+var Appid = 'wx8d760a578b35bf6f';
+var secret = 'caf01628e9fa8394ae3004546abbf904';
+
+/**
+ * 解密手机号
+ */
+var decryptPhoneNumber = function decryptPhoneNumber(code) {
+  return new Promise(function (resolve, reject) {
+    (0, _request.wxSendRequest)({
+      url: 'https://api.weixin.qq.com/cgi-bin/token',
+      method: 'GET',
+      data: {
+        grant_type: 'client_credential',
+        appid: Appid,
+        secret: secret
+      }
+    }).then( /*#__PURE__*/function () {
+      var _ref = (0, _asyncToGenerator2.default)( /*#__PURE__*/_regenerator.default.mark(function _callee(res) {
+        var access_token, response;
+        return _regenerator.default.wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                access_token = res.access_token;
+                _context.next = 3;
+                return (0, _request.wxSendRequest)({
+                  url: "https://api.weixin.qq.com/wxa/business/getuserphonenumber?access_token=".concat(access_token),
+                  method: 'POST',
+                  data: {
+                    code: code
+                  }
+                });
+              case 3:
+                response = _context.sent;
+                resolve(response.phone_info);
+              case 5:
+              case "end":
+                return _context.stop();
+            }
+          }
+        }, _callee);
+      }));
+      return function (_x) {
+        return _ref.apply(this, arguments);
+      };
+    }());
+  });
+};
+
+// 获取用户信息
+exports.decryptPhoneNumber = decryptPhoneNumber;
+var getUserDetail = function getUserDetail(code) {
+  return new Promise(function (resolve, reject) {
+    var url = "https://api.weixin.qq.com/sns/jscode2session?appid=".concat(Appid, "&secret=").concat(secret, "&js_code=").concat(code, "&grant_type=authorization_code");
+    uni.getUserInfo({
+      provider: 'weixin',
+      success: function success(infoRes) {
+        var userInfo = infoRes.userInfo || {};
+        (0, _request.wxSendRequest)({
+          url: url,
+          method: 'GET'
+        }).then( /*#__PURE__*/function () {
+          var _ref2 = (0, _asyncToGenerator2.default)( /*#__PURE__*/_regenerator.default.mark(function _callee2(res) {
+            return _regenerator.default.wrap(function _callee2$(_context2) {
+              while (1) {
+                switch (_context2.prev = _context2.next) {
+                  case 0:
+                    resolve(_objectSpread(_objectSpread({}, userInfo), res));
+                  case 1:
+                  case "end":
+                    return _context2.stop();
+                }
+              }
+            }, _callee2);
+          }));
+          return function (_x2) {
+            return _ref2.apply(this, arguments);
+          };
+        }());
+      }
+    });
+  });
+};
+
+/**
+ * 微信登录
+ * @param {Object} userInfo - 用户信息
+ * @returns {Promise}
+ */
+exports.getUserDetail = getUserDetail;
+var wechatLogin = function wechatLogin(userInfo) {
+  return new Promise(function (resolve, reject) {
+    uni.login({
+      provider: 'weixin',
+      success: function () {
+        var _success = (0, _asyncToGenerator2.default)( /*#__PURE__*/_regenerator.default.mark(function _callee3(loginRes) {
+          var response, mockData;
+          return _regenerator.default.wrap(function _callee3$(_context3) {
+            while (1) {
+              switch (_context3.prev = _context3.next) {
+                case 0:
+                  if (!loginRes.code) {
+                    _context3.next = 15;
+                    break;
+                  }
+                  _context3.prev = 1;
+                  _context3.next = 4;
+                  return sendRequest({
+                    url: '/api/auth/wechat-login',
+                    method: 'POST',
+                    data: {
+                      code: loginRes.code,
+                      userInfo: userInfo
+                    }
+                  });
+                case 4:
+                  response = _context3.sent;
+                  if (response.code === 200) {
+                    // 保存登录信息
+                    uni.setStorageSync('token', response.data.token);
+                    uni.setStorageSync('userInfo', response.data.userInfo);
+                    resolve(response.data);
+                  } else {
+                    reject(new Error(response.message || '登录失败'));
+                  }
+                  _context3.next = 13;
+                  break;
+                case 8:
+                  _context3.prev = 8;
+                  _context3.t0 = _context3["catch"](1);
+                  // 如果后端未实现，使用模拟登录
+                  console.warn('后端接口未实现，使用模拟登录');
+                  mockData = mockLogin(userInfo, loginRes.code);
+                  resolve(mockData);
+                case 13:
+                  _context3.next = 16;
+                  break;
+                case 15:
+                  reject(new Error('获取登录凭证失败'));
+                case 16:
+                case "end":
+                  return _context3.stop();
+              }
+            }
+          }, _callee3, null, [[1, 8]]);
+        }));
+        function success(_x3) {
+          return _success.apply(this, arguments);
+        }
+        return success;
+      }(),
+      fail: reject
+    });
+  });
+};
+
+/**
+ * 获取用户信息
+ * @returns {Promise}
+ */
+exports.wechatLogin = wechatLogin;
+var getUserInfo = function getUserInfo() {
+  return new Promise(function (resolve, reject) {
+    uni.getUserInfo({
+      provider: 'weixin',
+      success: resolve,
+      fail: reject
+    });
+  });
+};
+
+/**
+ * 绑定手机号
+ * @param {string} phoneNumber - 手机号
+ * @returns {Promise}
+ */
+exports.getUserInfo = getUserInfo;
+var bindPhoneNumber = function bindPhoneNumber(phoneNumber) {
+  return sendRequest({
+    url: '/api/auth/bind-phone',
+    method: 'POST',
+    data: {
+      phoneNumber: phoneNumber
+    }
+  }).catch(function () {
+    // 模拟绑定成功
+    return Promise.resolve({
+      code: 200,
+      message: '绑定成功'
+    });
+  });
+};
+
+/**
+ * 检查登录状态
+ * @returns {boolean}
+ */
+exports.bindPhoneNumber = bindPhoneNumber;
+var checkLoginStatus = function checkLoginStatus() {
+  var token = uni.getStorageSync('token');
+  var userInfo = uni.getStorageSync('userInfo');
+  return !!(token && userInfo);
+};
+
+/**
+ * 获取当前用户信息
+ * @returns {Object|null}
+ */
+exports.checkLoginStatus = checkLoginStatus;
+var getCurrentUser = function getCurrentUser() {
+  return uni.getStorageSync('userInfo') || null;
+};
+
+/**
+ * 退出登录
+ */
+exports.getCurrentUser = getCurrentUser;
+var logout = function logout() {
+  try {
+    // 清除本地存储
+    uni.removeStorageSync('token');
+    uni.removeStorageSync('userInfo');
+
+    // 跳转到登录页
+    uni.reLaunch({
+      url: '/pages/login/login'
+    });
+    uni.showToast({
+      title: '已退出登录',
+      icon: 'success'
+    });
+  } catch (error) {
+    console.error('退出登录失败:', error);
+  }
+};
+
+/**
+ * 模拟登录（用于开发测试）
+ * @param {Object} userInfo - 用户信息
+ * @param {string} code - 登录凭证
+ * @returns {Object}
+ */
+exports.logout = logout;
+function mockLogin(userInfo, code) {
+  var mockData = {
+    token: 'mock_token_' + Date.now(),
+    userInfo: _objectSpread(_objectSpread({}, userInfo), {}, {
+      id: Date.now(),
+      phoneNumber: null,
+      // 初始未绑定手机号
+      loginTime: new Date().toISOString(),
+      lastLoginTime: new Date().toISOString()
+    })
+  };
+
+  // 保存到本地存储
+  uni.setStorageSync('token', mockData.token);
+  uni.setStorageSync('userInfo', mockData.userInfo);
+  return mockData;
+}
+
+/**
+ * 刷新token
+ * @returns {Promise}
+ */
+var refreshToken = function refreshToken() {
+  return new Promise( /*#__PURE__*/function () {
+    var _ref3 = (0, _asyncToGenerator2.default)( /*#__PURE__*/_regenerator.default.mark(function _callee4(resolve, reject) {
+      var userInfo, loginRes, response, newToken;
+      return _regenerator.default.wrap(function _callee4$(_context4) {
+        while (1) {
+          switch (_context4.prev = _context4.next) {
+            case 0:
+              _context4.prev = 0;
+              userInfo = getCurrentUser();
+              if (userInfo) {
+                _context4.next = 5;
+                break;
+              }
+              reject(new Error('用户未登录'));
+              return _context4.abrupt("return");
+            case 5:
+              _context4.next = 7;
+              return new Promise(function (resolve, reject) {
+                uni.login({
+                  provider: 'weixin',
+                  success: resolve,
+                  fail: reject
+                });
+              });
+            case 7:
+              loginRes = _context4.sent;
+              if (!loginRes.code) {
+                _context4.next = 23;
+                break;
+              }
+              _context4.prev = 9;
+              _context4.next = 12;
+              return sendRequest({
+                url: '/api/auth/refresh-token',
+                method: 'POST',
+                data: {
+                  code: loginRes.code,
+                  oldToken: uni.getStorageSync('token')
+                }
+              });
+            case 12:
+              response = _context4.sent;
+              if (response.code === 200) {
+                uni.setStorageSync('token', response.data.token);
+                resolve(response.data);
+              } else {
+                // 如果刷新失败，可能需要重新登录
+                logout();
+                reject(new Error('Token已过期，请重新登录'));
+              }
+              _context4.next = 21;
+              break;
+            case 16:
+              _context4.prev = 16;
+              _context4.t0 = _context4["catch"](9);
+              // 模拟刷新成功
+              newToken = 'refreshed_token_' + Date.now();
+              uni.setStorageSync('token', newToken);
+              resolve({
+                token: newToken
+              });
+            case 21:
+              _context4.next = 24;
+              break;
+            case 23:
+              reject(new Error('获取登录凭证失败'));
+            case 24:
+              _context4.next = 29;
+              break;
+            case 26:
+              _context4.prev = 26;
+              _context4.t1 = _context4["catch"](0);
+              reject(_context4.t1);
+            case 29:
+            case "end":
+              return _context4.stop();
+          }
+        }
+      }, _callee4, null, [[0, 26], [9, 16]]);
+    }));
+    return function (_x4, _x5) {
+      return _ref3.apply(this, arguments);
+    };
+  }());
+};
+
+// 兼容旧版本的授权方法
+exports.refreshToken = refreshToken;
+var getAuth = function getAuth() {
+  uni.login({
+    provider: 'weixin',
+    success: function success(loginRes) {
+      console.log('获取登录凭证:', loginRes);
+      // 获取用户信息
+      uni.getUserInfo({
+        provider: 'weixin',
+        success: function success(infoRes) {
+          console.log('用户昵称为：' + infoRes.userInfo.nickName);
+        }
+      });
+    }
+  });
+};
+exports.getAuth = getAuth;
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"]))
+
+/***/ }),
+/* 182 */
+/*!****************************************************************************!*\
+  !*** /Users/salvater/web/kai-nan/zhi-hui-wu-ye/ycwyxcx-app/api/request.js ***!
+  \****************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/* WEBPACK VAR INJECTION */(function(uni) {
+
+var _interopRequireDefault = __webpack_require__(/*! @babel/runtime/helpers/interopRequireDefault */ 4);
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.wxSendRequest = exports.sendUploads = exports.sendUpload = exports.sendRequest = exports.default = void 0;
+var _regenerator = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/regenerator */ 56));
+var _asyncToGenerator2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ 58));
+var _defineProperty2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/defineProperty */ 11));
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { (0, _defineProperty2.default)(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
+var BASE_URL = 'http://81.71.98.7:8802';
+var sendRequest = function sendRequest(target, config) {
+  if (!target.url) throw new Error('url地址不能为空');
+  var result = null;
+  var method = target.method.toUpperCase();
+  switch (method) {
+    case 'POST':
+    case 'GET':
+    case 'PUT':
+      result = target.data;
+      break;
+    case 'DELETE':
+      target.url = target.url + '/' + target.data;
+      break;
+  }
+  return new Promise(function (resolve, reject) {
+    var json = _objectSpread({
+      url: BASE_URL + target.url,
+      data: result,
+      method: method
+    }, config);
+    return uni.request(_objectSpread(_objectSpread({}, json), {}, {
+      success: function success(res) {
+        if (res.statusCode === 500) {
+          uni.showToast({
+            title: res.data || '服务器响应超时',
+            icon: 'none'
+          });
+          setTimeout(function () {
+            uni.reLaunch({
+              url: '/pages/err-page/home/home'
+            });
+          }, 500);
+        }
+        var data = res.data;
+        var code = Number(data.code);
+        var result = data.result || {};
+        switch (code) {
+          case 500:
+            uni.showToast({
+              icon: 'none',
+              title: data.message || '系统错误'
+            });
+            reject(data);
+            break;
+          case 200:
+            resolve(result);
+            break;
+          case 401:
+            uni.showToast({
+              title: data.message,
+              icon: 'none'
+            });
+            // setTimeout(function () {
+            //     uni.reLaunch({url: '/pages/single-login/single-login'})
+            // }, 500)
+            break;
+        }
+      },
+      fail: function fail(err) {
+        uni.showToast({
+          title: '请求数据异常',
+          icon: 'none'
+        });
+        throw new Error(err.errMsg);
+      }
+    }));
+  });
+};
+
+// 微信接口请求
+exports.sendRequest = sendRequest;
+var wxSendRequest = function wxSendRequest(target, config) {
+  if (!target.url) throw new Error('url地址不能为空');
+  var result = null;
+  var method = target.method.toUpperCase();
+  switch (method) {
+    case 'POST':
+    case 'GET':
+    case 'PUT':
+      result = target.data;
+      break;
+    case 'DELETE':
+      target.url = target.url + '/' + target.data;
+      break;
+  }
+  return new Promise(function (resolve, reject) {
+    var json = _objectSpread({
+      url: target.url,
+      data: result,
+      method: method
+    }, config);
+    return uni.request(_objectSpread(_objectSpread({}, json), {}, {
+      success: function success(res) {
+        var data = res.data;
+        resolve(data);
+      },
+      fail: function fail(err) {
+        uni.showToast({
+          title: '请求数据异常',
+          icon: 'none'
+        });
+        throw new Error(err.errMsg);
+      }
+    }));
+  });
+};
+
+// 上传图片
+exports.wxSendRequest = wxSendRequest;
+var sendUpload = /*#__PURE__*/function () {
+  var _ref = (0, _asyncToGenerator2.default)( /*#__PURE__*/_regenerator.default.mark(function _callee(url, filePath, file) {
+    return _regenerator.default.wrap(function _callee$(_context) {
+      while (1) {
+        switch (_context.prev = _context.next) {
+          case 0:
+            return _context.abrupt("return", new Promise(function (resolve, reject) {
+              uni.uploadFile({
+                url: url,
+                filePath: filePath,
+                file: file,
+                name: 'file',
+                success: function success(res) {
+                  var data = JSON.parse(res.data);
+                  resolve(data);
+                },
+                fail: function fail(err) {
+                  console.log('err', err);
+                  reject(err);
+                }
+              });
+            }));
+          case 1:
+          case "end":
+            return _context.stop();
+        }
+      }
+    }, _callee);
+  }));
+  return function sendUpload(_x, _x2, _x3) {
+    return _ref.apply(this, arguments);
+  };
+}();
+
+// 上传图片(多个)
+exports.sendUpload = sendUpload;
+var sendUploads = /*#__PURE__*/function () {
+  var _ref2 = (0, _asyncToGenerator2.default)( /*#__PURE__*/_regenerator.default.mark(function _callee2(url, fileList) {
+    return _regenerator.default.wrap(function _callee2$(_context2) {
+      while (1) {
+        switch (_context2.prev = _context2.next) {
+          case 0:
+            return _context2.abrupt("return", new Promise(function (resolve, reject) {
+              uni.uploadFile({
+                url: url,
+                files: fileList,
+                success: function success(res) {
+                  var data = JSON.parse(res.data);
+                  resolve(data);
+                },
+                fail: function fail(err) {
+                  console.log('err', err);
+                  reject(err);
+                }
+              });
+            }));
+          case 1:
+          case "end":
+            return _context2.stop();
+        }
+      }
+    }, _callee2);
+  }));
+  return function sendUploads(_x4, _x5) {
+    return _ref2.apply(this, arguments);
+  };
+}();
+exports.sendUploads = sendUploads;
+var _default = {
+  sendRequest: sendRequest,
+  sendUpload: sendUpload,
+  sendUploads: sendUploads
+};
+exports.default = _default;
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"]))
+
+/***/ }),
+/* 183 */
+/*!*******************************************************************************!*\
+  !*** /Users/salvater/web/kai-nan/zhi-hui-wu-ye/ycwyxcx-app/api/list/login.js ***!
+  \*******************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.Login = Login;
+exports.authLogin = authLogin;
+exports.loginWithoutPwd = loginWithoutPwd;
+exports.setPassword = setPassword;
+exports.setUser = setUser;
+exports.userMe = userMe;
+var _request = __webpack_require__(/*! ../request */ 182);
+// 登录
+function Login(params) {
+  var json = {
+    url: '/app/auth/wechat/login',
+    method: 'post',
+    data: params
+  };
+  return (0, _request.sendRequest)(json);
+}
+
+// 登出
+function authLogin() {
+  var json = {
+    url: '/app/auth/logout',
+    method: 'post'
+  };
+  return (0, _request.sendRequest)(json);
+}
+
+// 修改登录密码
+function setPassword(params) {
+  var json = {
+    url: '/app/auth/change/password',
+    method: 'post',
+    data: params
+  };
+  return (0, _request.sendRequest)(json);
+}
+
+// 查询当前登录用户信息
+function userMe() {
+  var json = {
+    url: '/app/system/user/me',
+    method: 'get'
+  };
+  return (0, _request.sendRequest)(json);
+}
+
+// 修改用户信息
+function setUser(params) {
+  var json = {
+    url: '/app/system/user/',
+    method: 'put',
+    data: params
+  };
+  return (0, _request.sendRequest)(json);
+}
+
+// 对接电信单点登录
+function loginWithoutPwd(params) {
+  var json = {
+    url: '/app/auth/loginWithoutPwd',
+    method: 'get',
+    data: params
+  };
+  return (0, _request.sendRequest)(json);
+}
+
+/***/ }),
 /* 184 */,
 /* 185 */,
 /* 186 */,
@@ -19484,7 +20161,10 @@ exports.default = _default;
 /* 321 */,
 /* 322 */,
 /* 323 */,
-/* 324 */
+/* 324 */,
+/* 325 */,
+/* 326 */,
+/* 327 */
 /*!*************************************************************************************************************!*\
   !*** /Users/salvater/web/kai-nan/zhi-hui-wu-ye/ycwyxcx-app/uni_modules/uview-ui/components/u-icon/icons.js ***!
   \*************************************************************************************************************/
@@ -19715,7 +20395,7 @@ var _default = {
 exports.default = _default;
 
 /***/ }),
-/* 325 */
+/* 328 */
 /*!*************************************************************************************************************!*\
   !*** /Users/salvater/web/kai-nan/zhi-hui-wu-ye/ycwyxcx-app/uni_modules/uview-ui/components/u-icon/props.js ***!
   \*************************************************************************************************************/
@@ -19822,14 +20502,14 @@ exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"]))
 
 /***/ }),
-/* 326 */,
-/* 327 */,
-/* 328 */,
 /* 329 */,
 /* 330 */,
 /* 331 */,
 /* 332 */,
-/* 333 */
+/* 333 */,
+/* 334 */,
+/* 335 */,
+/* 336 */
 /*!*********************************************************************************************************************!*\
   !*** /Users/salvater/web/kai-nan/zhi-hui-wu-ye/ycwyxcx-app/uni_modules/uview-ui/components/u-loading-icon/props.js ***!
   \*********************************************************************************************************************/
@@ -19906,14 +20586,14 @@ exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"]))
 
 /***/ }),
-/* 334 */,
-/* 335 */,
-/* 336 */,
 /* 337 */,
 /* 338 */,
 /* 339 */,
 /* 340 */,
-/* 341 */
+/* 341 */,
+/* 342 */,
+/* 343 */,
+/* 344 */
 /*!***********************************************************************************************************************!*\
   !*** /Users/salvater/web/kai-nan/zhi-hui-wu-ye/ycwyxcx-app/uni_modules/uview-ui/components/u-checkbox-group/props.js ***!
   \***********************************************************************************************************************/
@@ -20010,14 +20690,14 @@ exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"]))
 
 /***/ }),
-/* 342 */,
-/* 343 */,
-/* 344 */,
 /* 345 */,
 /* 346 */,
 /* 347 */,
 /* 348 */,
-/* 349 */
+/* 349 */,
+/* 350 */,
+/* 351 */,
+/* 352 */
 /*!*****************************************************************************************************************!*\
   !*** /Users/salvater/web/kai-nan/zhi-hui-wu-ye/ycwyxcx-app/uni_modules/uview-ui/components/u-checkbox/props.js ***!
   \*****************************************************************************************************************/
@@ -20104,14 +20784,14 @@ exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"]))
 
 /***/ }),
-/* 350 */,
-/* 351 */,
-/* 352 */,
 /* 353 */,
 /* 354 */,
 /* 355 */,
 /* 356 */,
-/* 357 */
+/* 357 */,
+/* 358 */,
+/* 359 */,
+/* 360 */
 /*!**************************************************************************************************************!*\
   !*** /Users/salvater/web/kai-nan/zhi-hui-wu-ye/ycwyxcx-app/uni_modules/uview-ui/components/u-modal/props.js ***!
   \**************************************************************************************************************/
@@ -20218,14 +20898,14 @@ exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"]))
 
 /***/ }),
-/* 358 */,
-/* 359 */,
-/* 360 */,
 /* 361 */,
 /* 362 */,
 /* 363 */,
 /* 364 */,
-/* 365 */
+/* 365 */,
+/* 366 */,
+/* 367 */,
+/* 368 */
 /*!**************************************************************************************************************!*\
   !*** /Users/salvater/web/kai-nan/zhi-hui-wu-ye/ycwyxcx-app/uni_modules/uview-ui/components/u-popup/props.js ***!
   \**************************************************************************************************************/
@@ -20322,14 +21002,14 @@ exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"]))
 
 /***/ }),
-/* 366 */,
-/* 367 */,
-/* 368 */,
 /* 369 */,
 /* 370 */,
 /* 371 */,
 /* 372 */,
-/* 373 */
+/* 373 */,
+/* 374 */,
+/* 375 */,
+/* 376 */
 /*!*************************************************************************************************************!*\
   !*** /Users/salvater/web/kai-nan/zhi-hui-wu-ye/ycwyxcx-app/uni_modules/uview-ui/components/u-line/props.js ***!
   \*************************************************************************************************************/
@@ -20380,14 +21060,14 @@ exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"]))
 
 /***/ }),
-/* 374 */,
-/* 375 */,
-/* 376 */,
 /* 377 */,
 /* 378 */,
 /* 379 */,
 /* 380 */,
-/* 381 */
+/* 381 */,
+/* 382 */,
+/* 383 */,
+/* 384 */
 /*!****************************************************************************************************************!*\
   !*** /Users/salvater/web/kai-nan/zhi-hui-wu-ye/ycwyxcx-app/uni_modules/uview-ui/components/u-overlay/props.js ***!
   \****************************************************************************************************************/
@@ -20429,14 +21109,14 @@ exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"]))
 
 /***/ }),
-/* 382 */,
-/* 383 */,
-/* 384 */,
 /* 385 */,
 /* 386 */,
 /* 387 */,
 /* 388 */,
-/* 389 */
+/* 389 */,
+/* 390 */,
+/* 391 */,
+/* 392 */
 /*!*******************************************************************************************************************!*\
   !*** /Users/salvater/web/kai-nan/zhi-hui-wu-ye/ycwyxcx-app/uni_modules/uview-ui/components/u-transition/props.js ***!
   \*******************************************************************************************************************/
@@ -20478,7 +21158,7 @@ exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"]))
 
 /***/ }),
-/* 390 */
+/* 393 */
 /*!************************************************************************************************************************!*\
   !*** /Users/salvater/web/kai-nan/zhi-hui-wu-ye/ycwyxcx-app/uni_modules/uview-ui/components/u-transition/transition.js ***!
   \************************************************************************************************************************/
@@ -20495,7 +21175,7 @@ Object.defineProperty(exports, "__esModule", {
 exports.default = void 0;
 var _regenerator = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/regenerator */ 56));
 var _asyncToGenerator2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ 58));
-var _nvueAniMap = _interopRequireDefault(__webpack_require__(/*! ./nvue.ani-map.js */ 391));
+var _nvueAniMap = _interopRequireDefault(__webpack_require__(/*! ./nvue.ani-map.js */ 394));
 // 定义一个一定时间后自动成功的promise，让调用nextTick方法处，进入下一个then方法
 var nextTick = function nextTick() {
   return new Promise(function (resolve) {
@@ -20587,7 +21267,7 @@ var _default = {
 exports.default = _default;
 
 /***/ }),
-/* 391 */
+/* 394 */
 /*!**************************************************************************************************************************!*\
   !*** /Users/salvater/web/kai-nan/zhi-hui-wu-ye/ycwyxcx-app/uni_modules/uview-ui/components/u-transition/nvue.ani-map.js ***!
   \**************************************************************************************************************************/
@@ -20780,14 +21460,14 @@ var _default = {
 exports.default = _default;
 
 /***/ }),
-/* 392 */,
-/* 393 */,
-/* 394 */,
 /* 395 */,
 /* 396 */,
 /* 397 */,
 /* 398 */,
-/* 399 */
+/* 399 */,
+/* 400 */,
+/* 401 */,
+/* 402 */
 /*!*******************************************************************************************************************!*\
   !*** /Users/salvater/web/kai-nan/zhi-hui-wu-ye/ycwyxcx-app/uni_modules/uview-ui/components/u-status-bar/props.js ***!
   \*******************************************************************************************************************/
@@ -20813,14 +21493,14 @@ exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"]))
 
 /***/ }),
-/* 400 */,
-/* 401 */,
-/* 402 */,
 /* 403 */,
 /* 404 */,
 /* 405 */,
 /* 406 */,
-/* 407 */
+/* 407 */,
+/* 408 */,
+/* 409 */,
+/* 410 */
 /*!********************************************************************************************************************!*\
   !*** /Users/salvater/web/kai-nan/zhi-hui-wu-ye/ycwyxcx-app/uni_modules/uview-ui/components/u-safe-bottom/props.js ***!
   \********************************************************************************************************************/

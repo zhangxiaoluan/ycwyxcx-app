@@ -5,11 +5,11 @@
 		<view class="user-header">
 			<view class="user-info" @click="goToProfile">
 				<view class="avatar-wrapper">
-					<image :src="userInfo.avatar || '/static/logo.png'" class="avatar" mode="scaleToFill"></image>
+					<image :src="userInfo.avatarUrl || '/static/logo.png'" class="avatar" mode="scaleToFill"></image>
 				</view>
 				<view class="user-details">
-					<text class="username">{{ userInfo.nickname || '点击设置昵称' }}</text>
-					<text class="user-id">ID: {{ userInfo.userId || '100001' }}</text>
+					<text class="username">{{ userInfo.nickName || '点击设置昵称' }}</text>
+					<text class="user-id">手机号: {{ userInfo.cellphone || '100001' }}</text>
 				</view>
 			</view>
 
@@ -124,23 +124,23 @@
 			return {
 				statusBarHeight: 0,
 				navBarHeight: 0,
-
-				userInfo: {
-					avatar: '',
-					nickname: '',
-					userId: '100001',
-					isVerified: false,
-					houseVerified: false,
-					familyCount: 0,
-					points: 1250,
-					balance: '88.50',
-					orderCount: 12
-				},
+        userInfo: uni.getStorageSync('wyUserInfo') || {
+          avatar: null,
+          nickname: null,
+          userId: null,
+          // isVerified: false,
+          // houseVerified: false,
+          // familyCount: 0,
+          // points: 1250,
+          // balance: '88.50',
+          // orderCount: 12
+        },
 				hasSignedToday: false
 			}
 		},
 		onLoad() {
 			this.getStatusBarHeight()
+      console.log('userInfo', this.userInfo)
 		},
 		onShow() {},
 		methods: {
