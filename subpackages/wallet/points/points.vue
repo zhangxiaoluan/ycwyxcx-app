@@ -5,7 +5,7 @@
       <view class="points-card">
         <view class="points-info">
           <text class="points-label">当前积分</text>
-          <text class="points-amount">{{ currentPoints }}</text>
+          <text class="points-amount">{{ points.totalPoints }}</text>
         </view>
         <view class="points-actions">
           <button class="action-btn earn" @click="goToEarnPoints">赚积分</button>
@@ -40,19 +40,20 @@
         </view>
 
         <view class="points-list">
-          <view class="points-item" v-for="(item, index) in filteredPoints" :key="index">
+          <view class="points-item" v-for="(item, index) in pointsList" :key="index">
             <view class="points-info">
-              <text class="points-title">{{ item.title }}</text>
-              <text class="points-time">{{ item.time }}</text>
+              <text class="points-title">{{ item.typeName }}</text>
+              <text class="points-time">{{ item.createdAt }}</text>
             </view>
-            <text class="points-amount" :class="item.type">
-              {{ item.type === 'earn' ? '+' : '-' }}{{ item.amount }}
+            <text class="points-amount">
+              <text class="earn" v-if="item.points >0">+{{ item.points }}</text>
+              <text class="spend" v-else>-{{ item.points }}</text>
             </text>
           </view>
         </view>
       </view>
 
-      <view class="section">
+      <view class="section" v-if="false">
         <text class="section-title">积分任务</text>
         <view class="tasks-grid">
           <view class="task-card" v-for="task in tasks" :key="task.id" @click="doTask(task)">
@@ -72,9 +73,14 @@
 </template>
 
 <script>
+import {signInfo, signRecords} from "../../../api/list/login";
+
 export default {
   data() {
     return {
+      pointsList: [],
+      points: [{ usedPoints: 0 }],
+
       currentPoints: 1250,
       currentTab: 'all',
       pointsRecords: [
@@ -155,11 +161,31 @@ export default {
       if (this.currentTab === 'all') {
         return this.pointsRecords
       }
-      return this.pointsRecords.filter(record => record.type === this.currentTab)
+      return this.pointsRecords.filter(record => record.type === this.cuSrrentTab)
     }
   },
+  onLoad() {
+    this.getSignRecords()
+    this.getSignInfo()
+  },
   methods: {
-    switchTab(tab) {
+    // 获取签到积分
+    getSignRecords(){
+      signRecords().then(res=>{
+        this.pointsList = res.records || []
+        console.log(res)
+      })
+    },
+
+    // 用户积分
+    getSignInfo(){
+      signInfo().then(res=>{
+        this.points = res || {}
+        console.log(res)
+      })
+    },
+
+    switchTab(tab){
       this.currentTab = tab
     },
 
@@ -401,11 +427,11 @@ export default {
             font-size: 30rpx;
             font-weight: 600;
 
-            &.earn {
+            .earn {
               color: #07c160;
             }
 
-            &.spend {
+            .spend {
               color: #f5222d;
             }
           }

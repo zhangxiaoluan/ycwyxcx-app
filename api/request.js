@@ -8,6 +8,7 @@ const BASE_URL = 'http://81.71.98.7:8802'
 
 
 export const sendRequest = (target, config) => {
+    let token = uni.getStorageSync('token')
     if (!target.url) throw new Error('url地址不能为空')
     let result = null
     let method = target.method.toUpperCase()
@@ -26,10 +27,17 @@ export const sendRequest = (target, config) => {
             url: BASE_URL + target.url,
             data: result,
             method: method,
+			header: {
+                // #ifdef MP-WEIXIN
+                Cookie: `satoken=${token}`
+                // #endif
+			},
             ...config
         }
         return uni.request({
             ...json,
+			withCredentials: true,
+			enableCookie: true,
             success: function (res) {
                 if (res.statusCode === 500) {
                     uni.showToast({title: res.data || '服务器响应超时', icon: 'none'})
@@ -50,9 +58,9 @@ export const sendRequest = (target, config) => {
                         break
                     case 401:
                         uni.showToast({title: data.message, icon: 'none'})
-                        // setTimeout(function () {
-                        //     uni.reLaunch({url: '/pages/single-login/single-login'})
-                        // }, 500)
+                        setTimeout(function () {
+                            uni.reLaunch({url: '/pages/login/login'})
+                        }, 500)
                         break
                 }
             },

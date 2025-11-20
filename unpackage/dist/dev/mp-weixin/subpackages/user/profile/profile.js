@@ -184,13 +184,52 @@ exports.default = void 0;
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 var _default = {
   data: function data() {
     return {
       userInfo: {
         avatar: '/static/logo.png',
         nickname: '',
-        gender: '',
+        gender: 'male',
         birthday: ''
       }
     };
@@ -203,16 +242,12 @@ var _default = {
       // 加载用户信息
       console.log('加载用户信息');
     },
-    chooseAvatar: function chooseAvatar() {
-      var _this = this;
-      uni.chooseImage({
-        count: 1,
-        sizeType: ['compressed'],
-        sourceType: ['album', 'camera'],
-        success: function success(res) {
-          _this.userInfo.avatar = res.tempFilePaths[0];
-        }
-      });
+    chooseavatar: function chooseavatar(e) {
+      var detail = e.detail || {};
+      // 处理微信选择头像
+      if (detail.avatarUrl) {
+        this.userInfo.avatar = e.detail.avatarUrl;
+      }
     },
     onGenderChange: function onGenderChange(e) {
       this.userInfo.gender = e.detail.value;

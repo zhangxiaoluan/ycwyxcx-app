@@ -10,6 +10,58 @@ export function Login(params) {
   return sendRequest(json)
 }
 
+// 查询当前登录用户信息
+export function userMe() {
+  const json = {
+    url: '/app/system/user/me',
+    method: 'get'
+  }
+  return sendRequest(json)
+}
+
+// 签到
+export function sign() {
+    const json = {
+        url: '/app/points/sign',
+        method: 'post'
+    }
+    return sendRequest(json)
+}
+
+// 签到状态
+export function signStatus() {
+    const json = {
+        url: '/app/points/sign/status',
+        method: 'get'
+    }
+    return sendRequest(json)
+}
+
+
+// 积分信息i
+export function signInfo() {
+    const json = {
+        url: '/app/points/info',
+        method: 'get'
+    }
+    return sendRequest(json)
+}
+
+
+// 积分信息i
+export function signRecords() {
+    const json = {
+        url: '/app/points/records',
+        method: 'get'
+    }
+    return sendRequest(json)
+}
+
+
+
+
+
+
 // 登出
 export function authLogin() {
   const json = {
@@ -29,14 +81,7 @@ export function setPassword(params) {
   return sendRequest(json)
 }
 
-// 查询当前登录用户信息
-export function userMe() {
-  const json = {
-    url: '/app/system/user/me',
-    method: 'get'
-  }
-  return sendRequest(json)
-}
+
 
 // 修改用户信息
 export function setUser(params) {

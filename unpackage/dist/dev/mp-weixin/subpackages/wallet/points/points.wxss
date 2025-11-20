@@ -152,10 +152,10 @@
   font-size: 30rpx;
   font-weight: 600;
 }
-.points-page .content .section .points-list .points-item .points-amount.earn {
+.points-page .content .section .points-list .points-item .points-amount .earn {
   color: #07c160;
 }
-.points-page .content .section .points-list .points-item .points-amount.spend {
+.points-page .content .section .points-list .points-item .points-amount .spend {
   color: #f5222d;
 }
 .points-page .content .section .tasks-grid {

@@ -19333,15 +19333,349 @@ exports.default = _default;
 /* 170 */,
 /* 171 */,
 /* 172 */,
-/* 173 */,
-/* 174 */,
+/* 173 */
+/*!*******************************************************************************!*\
+  !*** /Users/salvater/web/kai-nan/zhi-hui-wu-ye/ycwyxcx-app/api/list/login.js ***!
+  \*******************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.Login = Login;
+exports.authLogin = authLogin;
+exports.loginWithoutPwd = loginWithoutPwd;
+exports.setPassword = setPassword;
+exports.setUser = setUser;
+exports.sign = sign;
+exports.signInfo = signInfo;
+exports.signRecords = signRecords;
+exports.signStatus = signStatus;
+exports.userMe = userMe;
+var _request = __webpack_require__(/*! ../request */ 174);
+// 登录
+function Login(params) {
+  var json = {
+    url: '/app/auth/wechat/login',
+    method: 'post',
+    data: params
+  };
+  return (0, _request.sendRequest)(json);
+}
+
+// 查询当前登录用户信息
+function userMe() {
+  var json = {
+    url: '/app/system/user/me',
+    method: 'get'
+  };
+  return (0, _request.sendRequest)(json);
+}
+
+// 签到
+function sign() {
+  var json = {
+    url: '/app/points/sign',
+    method: 'post'
+  };
+  return (0, _request.sendRequest)(json);
+}
+
+// 签到状态
+function signStatus() {
+  var json = {
+    url: '/app/points/sign/status',
+    method: 'get'
+  };
+  return (0, _request.sendRequest)(json);
+}
+
+// 积分信息i
+function signInfo() {
+  var json = {
+    url: '/app/points/info',
+    method: 'get'
+  };
+  return (0, _request.sendRequest)(json);
+}
+
+// 积分信息i
+function signRecords() {
+  var json = {
+    url: '/app/points/records',
+    method: 'get'
+  };
+  return (0, _request.sendRequest)(json);
+}
+
+// 登出
+function authLogin() {
+  var json = {
+    url: '/app/auth/logout',
+    method: 'post'
+  };
+  return (0, _request.sendRequest)(json);
+}
+
+// 修改登录密码
+function setPassword(params) {
+  var json = {
+    url: '/app/auth/change/password',
+    method: 'post',
+    data: params
+  };
+  return (0, _request.sendRequest)(json);
+}
+
+// 修改用户信息
+function setUser(params) {
+  var json = {
+    url: '/app/system/user/',
+    method: 'put',
+    data: params
+  };
+  return (0, _request.sendRequest)(json);
+}
+
+// 对接电信单点登录
+function loginWithoutPwd(params) {
+  var json = {
+    url: '/app/auth/loginWithoutPwd',
+    method: 'get',
+    data: params
+  };
+  return (0, _request.sendRequest)(json);
+}
+
+/***/ }),
+/* 174 */
+/*!****************************************************************************!*\
+  !*** /Users/salvater/web/kai-nan/zhi-hui-wu-ye/ycwyxcx-app/api/request.js ***!
+  \****************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/* WEBPACK VAR INJECTION */(function(uni) {
+
+var _interopRequireDefault = __webpack_require__(/*! @babel/runtime/helpers/interopRequireDefault */ 4);
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.wxSendRequest = exports.sendUploads = exports.sendUpload = exports.sendRequest = exports.default = void 0;
+var _regenerator = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/regenerator */ 56));
+var _asyncToGenerator2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ 58));
+var _defineProperty2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/defineProperty */ 11));
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { (0, _defineProperty2.default)(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
+var BASE_URL = 'http://81.71.98.7:8802';
+var sendRequest = function sendRequest(target, config) {
+  var token = uni.getStorageSync('token');
+  if (!target.url) throw new Error('url地址不能为空');
+  var result = null;
+  var method = target.method.toUpperCase();
+  switch (method) {
+    case 'POST':
+    case 'GET':
+    case 'PUT':
+      result = target.data;
+      break;
+    case 'DELETE':
+      target.url = target.url + '/' + target.data;
+      break;
+  }
+  return new Promise(function (resolve, reject) {
+    var json = _objectSpread({
+      url: BASE_URL + target.url,
+      data: result,
+      method: method,
+      header: {
+        Cookie: "satoken=".concat(token)
+      }
+    }, config);
+    return uni.request(_objectSpread(_objectSpread({}, json), {}, {
+      withCredentials: true,
+      enableCookie: true,
+      success: function success(res) {
+        if (res.statusCode === 500) {
+          uni.showToast({
+            title: res.data || '服务器响应超时',
+            icon: 'none'
+          });
+          setTimeout(function () {
+            uni.reLaunch({
+              url: '/pages/err-page/home/home'
+            });
+          }, 500);
+        }
+        var data = res.data;
+        var code = Number(data.code);
+        var result = data.result || {};
+        switch (code) {
+          case 500:
+            uni.showToast({
+              icon: 'none',
+              title: data.message || '系统错误'
+            });
+            reject(data);
+            break;
+          case 200:
+            resolve(result);
+            break;
+          case 401:
+            uni.showToast({
+              title: data.message,
+              icon: 'none'
+            });
+            setTimeout(function () {
+              uni.reLaunch({
+                url: '/pages/login/login'
+              });
+            }, 500);
+            break;
+        }
+      },
+      fail: function fail(err) {
+        uni.showToast({
+          title: '请求数据异常',
+          icon: 'none'
+        });
+        throw new Error(err.errMsg);
+      }
+    }));
+  });
+};
+
+// 微信接口请求
+exports.sendRequest = sendRequest;
+var wxSendRequest = function wxSendRequest(target, config) {
+  if (!target.url) throw new Error('url地址不能为空');
+  var result = null;
+  var method = target.method.toUpperCase();
+  switch (method) {
+    case 'POST':
+    case 'GET':
+    case 'PUT':
+      result = target.data;
+      break;
+    case 'DELETE':
+      target.url = target.url + '/' + target.data;
+      break;
+  }
+  return new Promise(function (resolve, reject) {
+    var json = _objectSpread({
+      url: target.url,
+      data: result,
+      method: method
+    }, config);
+    return uni.request(_objectSpread(_objectSpread({}, json), {}, {
+      success: function success(res) {
+        var data = res.data;
+        resolve(data);
+      },
+      fail: function fail(err) {
+        uni.showToast({
+          title: '请求数据异常',
+          icon: 'none'
+        });
+        throw new Error(err.errMsg);
+      }
+    }));
+  });
+};
+
+// 上传图片
+exports.wxSendRequest = wxSendRequest;
+var sendUpload = /*#__PURE__*/function () {
+  var _ref = (0, _asyncToGenerator2.default)( /*#__PURE__*/_regenerator.default.mark(function _callee(url, filePath, file) {
+    return _regenerator.default.wrap(function _callee$(_context) {
+      while (1) {
+        switch (_context.prev = _context.next) {
+          case 0:
+            return _context.abrupt("return", new Promise(function (resolve, reject) {
+              uni.uploadFile({
+                url: url,
+                filePath: filePath,
+                file: file,
+                name: 'file',
+                success: function success(res) {
+                  var data = JSON.parse(res.data);
+                  resolve(data);
+                },
+                fail: function fail(err) {
+                  console.log('err', err);
+                  reject(err);
+                }
+              });
+            }));
+          case 1:
+          case "end":
+            return _context.stop();
+        }
+      }
+    }, _callee);
+  }));
+  return function sendUpload(_x, _x2, _x3) {
+    return _ref.apply(this, arguments);
+  };
+}();
+
+// 上传图片(多个)
+exports.sendUpload = sendUpload;
+var sendUploads = /*#__PURE__*/function () {
+  var _ref2 = (0, _asyncToGenerator2.default)( /*#__PURE__*/_regenerator.default.mark(function _callee2(url, fileList) {
+    return _regenerator.default.wrap(function _callee2$(_context2) {
+      while (1) {
+        switch (_context2.prev = _context2.next) {
+          case 0:
+            return _context2.abrupt("return", new Promise(function (resolve, reject) {
+              uni.uploadFile({
+                url: url,
+                files: fileList,
+                success: function success(res) {
+                  var data = JSON.parse(res.data);
+                  resolve(data);
+                },
+                fail: function fail(err) {
+                  console.log('err', err);
+                  reject(err);
+                }
+              });
+            }));
+          case 1:
+          case "end":
+            return _context2.stop();
+        }
+      }
+    }, _callee2);
+  }));
+  return function sendUploads(_x4, _x5) {
+    return _ref2.apply(this, arguments);
+  };
+}();
+exports.sendUploads = sendUploads;
+var _default = {
+  sendRequest: sendRequest,
+  sendUpload: sendUpload,
+  sendUploads: sendUploads
+};
+exports.default = _default;
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"]))
+
+/***/ }),
 /* 175 */,
 /* 176 */,
 /* 177 */,
 /* 178 */,
 /* 179 */,
 /* 180 */,
-/* 181 */
+/* 181 */,
+/* 182 */,
+/* 183 */
 /*!*********************************************************************************!*\
   !*** /Users/salvater/web/kai-nan/zhi-hui-wu-ye/ycwyxcx-app/pages/login/auth.js ***!
   \*********************************************************************************/
@@ -19359,7 +19693,7 @@ exports.wechatLogin = exports.refreshToken = exports.logout = exports.getUserInf
 var _regenerator = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/regenerator */ 56));
 var _defineProperty2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/defineProperty */ 11));
 var _asyncToGenerator2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ 58));
-var _request = __webpack_require__(/*! @/api/request */ 182);
+var _request = __webpack_require__(/*! @/api/request */ 174);
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { (0, _defineProperty2.default)(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
 var Appid = 'wx8d760a578b35bf6f';
@@ -19735,292 +20069,6 @@ exports.getAuth = getAuth;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"]))
 
 /***/ }),
-/* 182 */
-/*!****************************************************************************!*\
-  !*** /Users/salvater/web/kai-nan/zhi-hui-wu-ye/ycwyxcx-app/api/request.js ***!
-  \****************************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-/* WEBPACK VAR INJECTION */(function(uni) {
-
-var _interopRequireDefault = __webpack_require__(/*! @babel/runtime/helpers/interopRequireDefault */ 4);
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.wxSendRequest = exports.sendUploads = exports.sendUpload = exports.sendRequest = exports.default = void 0;
-var _regenerator = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/regenerator */ 56));
-var _asyncToGenerator2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ 58));
-var _defineProperty2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/defineProperty */ 11));
-function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { (0, _defineProperty2.default)(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
-var BASE_URL = 'http://81.71.98.7:8802';
-var sendRequest = function sendRequest(target, config) {
-  if (!target.url) throw new Error('url地址不能为空');
-  var result = null;
-  var method = target.method.toUpperCase();
-  switch (method) {
-    case 'POST':
-    case 'GET':
-    case 'PUT':
-      result = target.data;
-      break;
-    case 'DELETE':
-      target.url = target.url + '/' + target.data;
-      break;
-  }
-  return new Promise(function (resolve, reject) {
-    var json = _objectSpread({
-      url: BASE_URL + target.url,
-      data: result,
-      method: method
-    }, config);
-    return uni.request(_objectSpread(_objectSpread({}, json), {}, {
-      success: function success(res) {
-        if (res.statusCode === 500) {
-          uni.showToast({
-            title: res.data || '服务器响应超时',
-            icon: 'none'
-          });
-          setTimeout(function () {
-            uni.reLaunch({
-              url: '/pages/err-page/home/home'
-            });
-          }, 500);
-        }
-        var data = res.data;
-        var code = Number(data.code);
-        var result = data.result || {};
-        switch (code) {
-          case 500:
-            uni.showToast({
-              icon: 'none',
-              title: data.message || '系统错误'
-            });
-            reject(data);
-            break;
-          case 200:
-            resolve(result);
-            break;
-          case 401:
-            uni.showToast({
-              title: data.message,
-              icon: 'none'
-            });
-            // setTimeout(function () {
-            //     uni.reLaunch({url: '/pages/single-login/single-login'})
-            // }, 500)
-            break;
-        }
-      },
-      fail: function fail(err) {
-        uni.showToast({
-          title: '请求数据异常',
-          icon: 'none'
-        });
-        throw new Error(err.errMsg);
-      }
-    }));
-  });
-};
-
-// 微信接口请求
-exports.sendRequest = sendRequest;
-var wxSendRequest = function wxSendRequest(target, config) {
-  if (!target.url) throw new Error('url地址不能为空');
-  var result = null;
-  var method = target.method.toUpperCase();
-  switch (method) {
-    case 'POST':
-    case 'GET':
-    case 'PUT':
-      result = target.data;
-      break;
-    case 'DELETE':
-      target.url = target.url + '/' + target.data;
-      break;
-  }
-  return new Promise(function (resolve, reject) {
-    var json = _objectSpread({
-      url: target.url,
-      data: result,
-      method: method
-    }, config);
-    return uni.request(_objectSpread(_objectSpread({}, json), {}, {
-      success: function success(res) {
-        var data = res.data;
-        resolve(data);
-      },
-      fail: function fail(err) {
-        uni.showToast({
-          title: '请求数据异常',
-          icon: 'none'
-        });
-        throw new Error(err.errMsg);
-      }
-    }));
-  });
-};
-
-// 上传图片
-exports.wxSendRequest = wxSendRequest;
-var sendUpload = /*#__PURE__*/function () {
-  var _ref = (0, _asyncToGenerator2.default)( /*#__PURE__*/_regenerator.default.mark(function _callee(url, filePath, file) {
-    return _regenerator.default.wrap(function _callee$(_context) {
-      while (1) {
-        switch (_context.prev = _context.next) {
-          case 0:
-            return _context.abrupt("return", new Promise(function (resolve, reject) {
-              uni.uploadFile({
-                url: url,
-                filePath: filePath,
-                file: file,
-                name: 'file',
-                success: function success(res) {
-                  var data = JSON.parse(res.data);
-                  resolve(data);
-                },
-                fail: function fail(err) {
-                  console.log('err', err);
-                  reject(err);
-                }
-              });
-            }));
-          case 1:
-          case "end":
-            return _context.stop();
-        }
-      }
-    }, _callee);
-  }));
-  return function sendUpload(_x, _x2, _x3) {
-    return _ref.apply(this, arguments);
-  };
-}();
-
-// 上传图片(多个)
-exports.sendUpload = sendUpload;
-var sendUploads = /*#__PURE__*/function () {
-  var _ref2 = (0, _asyncToGenerator2.default)( /*#__PURE__*/_regenerator.default.mark(function _callee2(url, fileList) {
-    return _regenerator.default.wrap(function _callee2$(_context2) {
-      while (1) {
-        switch (_context2.prev = _context2.next) {
-          case 0:
-            return _context2.abrupt("return", new Promise(function (resolve, reject) {
-              uni.uploadFile({
-                url: url,
-                files: fileList,
-                success: function success(res) {
-                  var data = JSON.parse(res.data);
-                  resolve(data);
-                },
-                fail: function fail(err) {
-                  console.log('err', err);
-                  reject(err);
-                }
-              });
-            }));
-          case 1:
-          case "end":
-            return _context2.stop();
-        }
-      }
-    }, _callee2);
-  }));
-  return function sendUploads(_x4, _x5) {
-    return _ref2.apply(this, arguments);
-  };
-}();
-exports.sendUploads = sendUploads;
-var _default = {
-  sendRequest: sendRequest,
-  sendUpload: sendUpload,
-  sendUploads: sendUploads
-};
-exports.default = _default;
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"]))
-
-/***/ }),
-/* 183 */
-/*!*******************************************************************************!*\
-  !*** /Users/salvater/web/kai-nan/zhi-hui-wu-ye/ycwyxcx-app/api/list/login.js ***!
-  \*******************************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.Login = Login;
-exports.authLogin = authLogin;
-exports.loginWithoutPwd = loginWithoutPwd;
-exports.setPassword = setPassword;
-exports.setUser = setUser;
-exports.userMe = userMe;
-var _request = __webpack_require__(/*! ../request */ 182);
-// 登录
-function Login(params) {
-  var json = {
-    url: '/app/auth/wechat/login',
-    method: 'post',
-    data: params
-  };
-  return (0, _request.sendRequest)(json);
-}
-
-// 登出
-function authLogin() {
-  var json = {
-    url: '/app/auth/logout',
-    method: 'post'
-  };
-  return (0, _request.sendRequest)(json);
-}
-
-// 修改登录密码
-function setPassword(params) {
-  var json = {
-    url: '/app/auth/change/password',
-    method: 'post',
-    data: params
-  };
-  return (0, _request.sendRequest)(json);
-}
-
-// 查询当前登录用户信息
-function userMe() {
-  var json = {
-    url: '/app/system/user/me',
-    method: 'get'
-  };
-  return (0, _request.sendRequest)(json);
-}
-
-// 修改用户信息
-function setUser(params) {
-  var json = {
-    url: '/app/system/user/',
-    method: 'put',
-    data: params
-  };
-  return (0, _request.sendRequest)(json);
-}
-
-// 对接电信单点登录
-function loginWithoutPwd(params) {
-  var json = {
-    url: '/app/auth/loginWithoutPwd',
-    method: 'get',
-    data: params
-  };
-  return (0, _request.sendRequest)(json);
-}
-
-/***/ }),
 /* 184 */,
 /* 185 */,
 /* 186 */,
@@ -20037,7 +20085,80 @@ function loginWithoutPwd(params) {
 /* 197 */,
 /* 198 */,
 /* 199 */,
-/* 200 */,
+/* 200 */
+/*!***************************************************************************************!*\
+  !*** /Users/salvater/web/kai-nan/zhi-hui-wu-ye/ycwyxcx-app/api/list/house-binding.js ***!
+  \***************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.getBuildings = getBuildings;
+exports.getCommunities = getCommunities;
+exports.getRooms = getRooms;
+exports.houseBindings = houseBindings;
+exports.submitHouseBinding = submitHouseBinding;
+var _request = __webpack_require__(/*! ../request */ 174);
+// 绑定记录
+function houseBindings(params) {
+  var json = {
+    url: '/app/property/binding/my-bindings',
+    method: 'post',
+    data: params
+  };
+  return (0, _request.sendRequest)(json);
+}
+
+// 获取小区列表
+function getCommunities() {
+  var json = {
+    url: '/app/property/selection/communities',
+    method: 'get'
+  };
+  return (0, _request.sendRequest)(json);
+}
+
+// 获取楼栋列表
+function getBuildings(communityId) {
+  var json = {
+    url: '/app/property/selection/buildings',
+    method: 'get',
+    data: {
+      communityId: communityId
+    }
+  };
+  return (0, _request.sendRequest)(json);
+}
+
+// 获取房间列表
+function getRooms(communityId, buildingId) {
+  var json = {
+    url: '/app/property/selection/rooms',
+    method: 'get',
+    data: {
+      communityId: communityId,
+      buildingId: buildingId
+    }
+  };
+  return (0, _request.sendRequest)(json);
+}
+
+// 提交房屋绑定
+function submitHouseBinding(params) {
+  var json = {
+    url: '/app/property/binding/apply',
+    method: 'post',
+    data: params
+  };
+  return (0, _request.sendRequest)(json);
+}
+
+/***/ }),
 /* 201 */,
 /* 202 */,
 /* 203 */,
@@ -20164,7 +20285,8 @@ function loginWithoutPwd(params) {
 /* 324 */,
 /* 325 */,
 /* 326 */,
-/* 327 */
+/* 327 */,
+/* 328 */
 /*!*************************************************************************************************************!*\
   !*** /Users/salvater/web/kai-nan/zhi-hui-wu-ye/ycwyxcx-app/uni_modules/uview-ui/components/u-icon/icons.js ***!
   \*************************************************************************************************************/
@@ -20395,7 +20517,7 @@ var _default = {
 exports.default = _default;
 
 /***/ }),
-/* 328 */
+/* 329 */
 /*!*************************************************************************************************************!*\
   !*** /Users/salvater/web/kai-nan/zhi-hui-wu-ye/ycwyxcx-app/uni_modules/uview-ui/components/u-icon/props.js ***!
   \*************************************************************************************************************/
@@ -20502,14 +20624,14 @@ exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"]))
 
 /***/ }),
-/* 329 */,
 /* 330 */,
 /* 331 */,
 /* 332 */,
 /* 333 */,
 /* 334 */,
 /* 335 */,
-/* 336 */
+/* 336 */,
+/* 337 */
 /*!*********************************************************************************************************************!*\
   !*** /Users/salvater/web/kai-nan/zhi-hui-wu-ye/ycwyxcx-app/uni_modules/uview-ui/components/u-loading-icon/props.js ***!
   \*********************************************************************************************************************/
@@ -20586,14 +20708,14 @@ exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"]))
 
 /***/ }),
-/* 337 */,
 /* 338 */,
 /* 339 */,
 /* 340 */,
 /* 341 */,
 /* 342 */,
 /* 343 */,
-/* 344 */
+/* 344 */,
+/* 345 */
 /*!***********************************************************************************************************************!*\
   !*** /Users/salvater/web/kai-nan/zhi-hui-wu-ye/ycwyxcx-app/uni_modules/uview-ui/components/u-checkbox-group/props.js ***!
   \***********************************************************************************************************************/
@@ -20690,14 +20812,14 @@ exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"]))
 
 /***/ }),
-/* 345 */,
 /* 346 */,
 /* 347 */,
 /* 348 */,
 /* 349 */,
 /* 350 */,
 /* 351 */,
-/* 352 */
+/* 352 */,
+/* 353 */
 /*!*****************************************************************************************************************!*\
   !*** /Users/salvater/web/kai-nan/zhi-hui-wu-ye/ycwyxcx-app/uni_modules/uview-ui/components/u-checkbox/props.js ***!
   \*****************************************************************************************************************/
@@ -20784,14 +20906,14 @@ exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"]))
 
 /***/ }),
-/* 353 */,
 /* 354 */,
 /* 355 */,
 /* 356 */,
 /* 357 */,
 /* 358 */,
 /* 359 */,
-/* 360 */
+/* 360 */,
+/* 361 */
 /*!**************************************************************************************************************!*\
   !*** /Users/salvater/web/kai-nan/zhi-hui-wu-ye/ycwyxcx-app/uni_modules/uview-ui/components/u-modal/props.js ***!
   \**************************************************************************************************************/
@@ -20898,14 +21020,14 @@ exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"]))
 
 /***/ }),
-/* 361 */,
 /* 362 */,
 /* 363 */,
 /* 364 */,
 /* 365 */,
 /* 366 */,
 /* 367 */,
-/* 368 */
+/* 368 */,
+/* 369 */
 /*!**************************************************************************************************************!*\
   !*** /Users/salvater/web/kai-nan/zhi-hui-wu-ye/ycwyxcx-app/uni_modules/uview-ui/components/u-popup/props.js ***!
   \**************************************************************************************************************/
@@ -21002,14 +21124,14 @@ exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"]))
 
 /***/ }),
-/* 369 */,
 /* 370 */,
 /* 371 */,
 /* 372 */,
 /* 373 */,
 /* 374 */,
 /* 375 */,
-/* 376 */
+/* 376 */,
+/* 377 */
 /*!*************************************************************************************************************!*\
   !*** /Users/salvater/web/kai-nan/zhi-hui-wu-ye/ycwyxcx-app/uni_modules/uview-ui/components/u-line/props.js ***!
   \*************************************************************************************************************/
@@ -21060,14 +21182,14 @@ exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"]))
 
 /***/ }),
-/* 377 */,
 /* 378 */,
 /* 379 */,
 /* 380 */,
 /* 381 */,
 /* 382 */,
 /* 383 */,
-/* 384 */
+/* 384 */,
+/* 385 */
 /*!****************************************************************************************************************!*\
   !*** /Users/salvater/web/kai-nan/zhi-hui-wu-ye/ycwyxcx-app/uni_modules/uview-ui/components/u-overlay/props.js ***!
   \****************************************************************************************************************/
@@ -21109,14 +21231,14 @@ exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"]))
 
 /***/ }),
-/* 385 */,
 /* 386 */,
 /* 387 */,
 /* 388 */,
 /* 389 */,
 /* 390 */,
 /* 391 */,
-/* 392 */
+/* 392 */,
+/* 393 */
 /*!*******************************************************************************************************************!*\
   !*** /Users/salvater/web/kai-nan/zhi-hui-wu-ye/ycwyxcx-app/uni_modules/uview-ui/components/u-transition/props.js ***!
   \*******************************************************************************************************************/
@@ -21158,7 +21280,7 @@ exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"]))
 
 /***/ }),
-/* 393 */
+/* 394 */
 /*!************************************************************************************************************************!*\
   !*** /Users/salvater/web/kai-nan/zhi-hui-wu-ye/ycwyxcx-app/uni_modules/uview-ui/components/u-transition/transition.js ***!
   \************************************************************************************************************************/
@@ -21175,7 +21297,7 @@ Object.defineProperty(exports, "__esModule", {
 exports.default = void 0;
 var _regenerator = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/regenerator */ 56));
 var _asyncToGenerator2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ 58));
-var _nvueAniMap = _interopRequireDefault(__webpack_require__(/*! ./nvue.ani-map.js */ 394));
+var _nvueAniMap = _interopRequireDefault(__webpack_require__(/*! ./nvue.ani-map.js */ 395));
 // 定义一个一定时间后自动成功的promise，让调用nextTick方法处，进入下一个then方法
 var nextTick = function nextTick() {
   return new Promise(function (resolve) {
@@ -21267,7 +21389,7 @@ var _default = {
 exports.default = _default;
 
 /***/ }),
-/* 394 */
+/* 395 */
 /*!**************************************************************************************************************************!*\
   !*** /Users/salvater/web/kai-nan/zhi-hui-wu-ye/ycwyxcx-app/uni_modules/uview-ui/components/u-transition/nvue.ani-map.js ***!
   \**************************************************************************************************************************/
@@ -21460,14 +21582,14 @@ var _default = {
 exports.default = _default;
 
 /***/ }),
-/* 395 */,
 /* 396 */,
 /* 397 */,
 /* 398 */,
 /* 399 */,
 /* 400 */,
 /* 401 */,
-/* 402 */
+/* 402 */,
+/* 403 */
 /*!*******************************************************************************************************************!*\
   !*** /Users/salvater/web/kai-nan/zhi-hui-wu-ye/ycwyxcx-app/uni_modules/uview-ui/components/u-status-bar/props.js ***!
   \*******************************************************************************************************************/
@@ -21493,14 +21615,14 @@ exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"]))
 
 /***/ }),
-/* 403 */,
 /* 404 */,
 /* 405 */,
 /* 406 */,
 /* 407 */,
 /* 408 */,
 /* 409 */,
-/* 410 */
+/* 410 */,
+/* 411 */
 /*!********************************************************************************************************************!*\
   !*** /Users/salvater/web/kai-nan/zhi-hui-wu-ye/ycwyxcx-app/uni_modules/uview-ui/components/u-safe-bottom/props.js ***!
   \********************************************************************************************************************/

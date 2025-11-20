@@ -68,6 +68,7 @@
 <script>
 import {decryptPhoneNumber, getUserDetail} from "./auth";
 import {Login} from "../../api/list/login";
+
 export default {
   name: 'Login',
   data() {
@@ -79,33 +80,56 @@ export default {
         openid: null,
         cellphone: null,
         nickName: null,
-        // "code": "string",
-        // "nickName": "string",
-        // "avatarUrl": "string",
-        // "gender": 0,
-        // "city": "string",
-        // "province": "string",
-        // "country": "string",
-        // "language": "string",
-        // "cellphone": "string"
       },
+      testCathH5: {
+        "nickName": "微信用户",
+        "gender": 0,
+        "language": "",
+        "city": "",
+        "province": "",
+        "country": "",
+        "avatarUrl": "https://thirdwx.qlogo.cn/mmopen/vi_32/POgEwh4mIHO4nibH0KlMECNjjGxQUq24ZEaGT4poC6icRiccVGKSyXwibcPq4BWmiaIGuG1icwxaQX6grC9VemZoJ8rg/132",
+        "session_key": "LxvA8kyhjwKImPNOhMqbkw==",
+        "openid": "oEctd16R4FFa6wLIjqOlnq1SA_xU",
+        "cellphone": "18009501501",
+        "id": "1990064316522438657",
+        "name": "微信用户",
+        "email": null,
+        "emailVerifiedAt": null,
+        "deptId": null,
+        "deptName": null,
+        "employeeNumber": null,
+        "qywUserid": null,
+        "loginName": "wx_oEctd16R",
+        "region": null,
+        "regionId": null,
+        "subCompany": null,
+        "avatar": "https://thirdwx.qlogo.cn/mmopen/vi_32/POgEwh4mIHO4nibH0KlMECNjjGxQUq24ZEaGT4poC6icRiccVGKSyXwibcPq4BWmiaIGuG1icwxaQX6grC9VemZoJ8rg/132",
+        "subCompanyId": null
+      }
     }
   },
   onLoad() {
-    console.log(this.userForm)
+    // todo 自定义缓存
+    // #ifdef H5 | WEB
+    uni.setStorageSync('wyUserInfo', this.testCathH5);
+    // #endif
   },
   methods: {
     // 授权获取手机号
     HandlePhoneNumber(e) {
       let detail = e.detail || {}
+
       // 是否阅读协议
       if (this.agreedToTerms.length === 0) {
         return uni.showToast({title: '请先同意用户协议', icon: 'none'})
       }
 
+      console.log(this.userForm)
+
       // 用户已经授权了直接登录
       if (this.userForm.cellphone && this.userForm.openid) {
-        return  this.toLogin()
+        return this.toLogin()
       }
 
       // 用户第一次没有授权先去授权在登录
@@ -116,7 +140,7 @@ export default {
     },
 
     // 获取用户信息
-    getUserAuth(code){
+    getUserAuth(code) {
       let $that = this
       this.isLoading = true
       try {
@@ -127,7 +151,7 @@ export default {
             onlyAuthorize: true,
             success: function (loginRes) {
               getUserDetail(loginRes.code).then(res => {
-                let wyUserInfo = { ...res, cellphone: phoneNumber  }
+                let wyUserInfo = {...res, cellphone: phoneNumber}
                 uni.setStorageSync('wyUserInfo', wyUserInfo)
                 $that.userForm = wyUserInfo
                 $that.toLogin()
@@ -141,12 +165,18 @@ export default {
     },
 
     // 登录请求后台接口
-    toLogin(){
+    toLogin() {
+      let $that = this
       Login(this.userForm).then(res => {
         let token = res.token || ''
-        uni.setStorageSync('wyToken', token)
-        this.redirectToHome()
-        this.isLoading = false
+        uni.setStorage({
+          key: 'token',
+          data: token,
+          success: function () {
+            $that.redirectToHome()
+            $that.isLoading = false
+          }
+        })
       })
     },
 
@@ -176,7 +206,7 @@ export default {
 
     // 跳转到首页
     redirectToHome() {
-      uni.switchTab({ url: '/pages/index/index' })
+      uni.switchTab({url: '/pages/index/index'})
     }
   }
 }

@@ -27,70 +27,134 @@
 .profile-page {
   background: #f5f5f5;
   min-height: 100vh;
+  padding: 30rpx;
 }
 .profile-page .content {
   background: white;
-  padding: 35rpx;
+  border-radius: 20rpx;
+  overflow: hidden;
+  padding: 0 20rpx;
 }
-.profile-page .content .form-item {
-  border-bottom: 1px solid #f2f2f2;
-  padding: 0 0 25rpx 0;
-  margin-bottom: 40rpx;
+.profile-page .content .cell-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 30rpx;
+  border-bottom: 1rpx solid #e5e5e5;
+  background: white;
+  transition: background-color 0.2s;
 }
-.profile-page .content .form-item .label {
-  display: block;
-  font-size: 28rpx;
+.profile-page .content .cell-item:active {
+  background: #f5f5f5;
+}
+.profile-page .content .cell-item:last-child {
+  border-bottom: none;
+}
+.profile-page .content .cell-item .cell-left {
+  flex-shrink: 0;
+}
+.profile-page .content .cell-item .cell-left .cell-title {
+  font-size: 32rpx;
   color: #333;
-  margin-bottom: 20rpx;
   font-weight: 500;
 }
-.profile-page .content .form-item .avatar-section {
+.profile-page .content .cell-item .cell-right {
+  flex: 1;
   display: flex;
   align-items: center;
+  justify-content: flex-end;
+  margin-left: 30rpx;
 }
-.profile-page .content .form-item .avatar-section .avatar {
+.profile-page .content .cell-item .cell-right .avatar-wrapper {
+  position: relative;
   width: 120rpx;
   height: 120rpx;
+}
+.profile-page .content .cell-item .cell-right .avatar-wrapper .avatar-image {
+  width: 100%;
+  height: 100%;
   border-radius: 60rpx;
-  margin-right: 20rpx;
+  overflow: hidden;
 }
-.profile-page .content .form-item .avatar-section .change-text {
-  color: #3b5598;
-  font-size: 26rpx;
-}
-.profile-page .content .form-item .input {
+.profile-page .content .cell-item .cell-right .avatar-wrapper .avatar-hidden-btn {
+  position: absolute;
+  top: 0;
+  left: 0;
   width: 100%;
-  height: 80rpx;
-  border-radius: 8rpx;
-  padding: 0 20rpx;
-  font-size: 28rpx;
+  height: 100%;
+  opacity: 0;
+  z-index: 10;
+  border: 1px solid red;
 }
-.profile-page .content .form-item .radio-item {
-  display: inline-flex;
-  align-items: center;
-  margin-right: 40rpx;
+.profile-page .content .cell-item .cell-right .cell-input {
+  text-align: right;
+  font-size: 30rpx;
+  color: #333;
+  flex: 1;
+  min-height: 40rpx;
 }
-.profile-page .content .form-item .radio-item text {
-  margin-left: 10rpx;
-  font-size: 28rpx;
+.profile-page .content .cell-item .cell-right .cell-input::-webkit-input-placeholder {
+  color: #999;
+  font-size: 30rpx;
 }
-.profile-page .content .form-item .picker {
-  width: 100%;
-  height: 80rpx;
-  border-radius: 8rpx;
-  padding: 0 20rpx;
-  font-size: 28rpx;
+.profile-page .content .cell-item .cell-right .cell-input::placeholder {
+  color: #999;
+  font-size: 30rpx;
+}
+.profile-page .content .cell-item .cell-right .gender-group {
+  display: flex;
+  gap: 40rpx;
+}
+.profile-page .content .cell-item .cell-right .gender-group .radio-item {
   display: flex;
   align-items: center;
+}
+.profile-page .content .cell-item .cell-right .gender-group .radio-item text {
+  margin-left: 10rpx;
+  font-size: 30rpx;
   color: #333;
 }
-.profile-page .content .save-btn {
+.profile-page .content .cell-item .cell-right .cell-picker {
+  display: flex;
+  align-items: center;
+}
+.profile-page .content .cell-item .cell-right .cell-picker .cell-text {
+  font-size: 30rpx;
+  color: #333;
+}
+.profile-page .content .cell-item .cell-right .cell-picker .cell-text.placeholder {
+  color: #999;
+}
+.profile-page .content .cell-item .cell-right .cell-picker .cell-arrow {
+  margin-left: 16rpx;
+  font-size: 28rpx;
+  color: #c8c9cc;
+  font-weight: bold;
+}
+.profile-page .content .cell-item .cell-right .cell-arrow {
+  margin-left: 16rpx;
+  font-size: 28rpx;
+  color: #c8c9cc;
+  font-weight: bold;
+}
+.profile-page .content .btn-container {
+  padding: 60rpx 30rpx 40rpx;
+}
+.profile-page .content .btn-container .save-btn {
   background: #3b5598;
   color: white;
   border: none;
-  border-radius: 8rpx;
+  border-radius: 12rpx;
   height: 80rpx;
   font-size: 30rpx;
   font-weight: 600;
-  margin-top: 20rpx;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.profile-page .content .btn-container .save-btn:active {
+  background: #2d4a7d;
+  -webkit-transform: scale(0.9);
+          transform: scale(0.9);
 }
