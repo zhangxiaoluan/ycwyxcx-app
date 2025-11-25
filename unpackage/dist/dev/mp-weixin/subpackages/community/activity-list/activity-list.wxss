@@ -1,0 +1,194 @@
+@charset "UTF-8";
+/**
+ * 这里是uni-app内置的常用样式变量
+ *
+ * uni-app 官方扩展插件及插件市场（https://ext.dcloud.net.cn）上很多三方插件均使用了这些样式变量
+ * 如果你是插件开发者，建议你使用scss预处理，并在插件代码中直接使用这些变量（无需 import 这个文件），方便用户通过搭积木的方式开发整体风格一致的App
+ *
+ */
+/**
+ * 如果你是App开发者（插件使用者），你可以通过修改这些变量来定制自己的插件主题，实现自定义主题功能
+ *
+ * 如果你的项目同样使用了scss预处理，你也可以直接在你的 scss 代码中使用如下变量，同时无需 import 这个文件
+ */
+/* 颜色变量 */
+/* 行为相关颜色 */
+/* 文字基本颜色 */
+/* 背景颜色 */
+/* 边框颜色 */
+/* 尺寸变量 */
+/* 文字尺寸 */
+/* 图片尺寸 */
+/* Border Radius */
+/* 水平间距 */
+/* 垂直间距 */
+/* 透明度 */
+/* 文章场景相关 */
+.activity-list-page.data-v-71eb4dc3 {
+  min-height: 100vh;
+  background-color: #f5f5f5;
+}
+.page-header.data-v-71eb4dc3 {
+  background: linear-gradient(135deg, #3b5598 0%, #5a7dd8 100%);
+  padding: 40rpx 30rpx 30rpx;
+  color: white;
+}
+.page-header .page-title.data-v-71eb4dc3 {
+  font-size: 32rpx;
+  font-weight: 600;
+  display: block;
+  margin-bottom: 10rpx;
+}
+.page-header .page-subtitle.data-v-71eb4dc3 {
+  font-size: 24rpx;
+  opacity: 0.9;
+}
+.filter-section.data-v-71eb4dc3 {
+  background: white;
+  padding: 20rpx 30rpx;
+  margin-bottom: 20rpx;
+}
+.filter-section .filter-scroll.data-v-71eb4dc3 {
+  white-space: nowrap;
+}
+.filter-section .filter-item.data-v-71eb4dc3 {
+  display: inline-block;
+  padding: 12rpx 24rpx;
+  margin-right: 20rpx;
+  background-color: #f0f0f0;
+  border-radius: 25rpx;
+  font-size: 26rpx;
+  color: #666;
+  transition: all 0.3s;
+}
+.filter-section .filter-item.active.data-v-71eb4dc3 {
+  background-color: #3b5598;
+  color: white;
+}
+.filter-section .filter-item.data-v-71eb4dc3:last-child {
+  margin-right: 0;
+}
+.activity-list.data-v-71eb4dc3 {
+  padding: 0 30rpx;
+}
+.activity-list .activity-item.data-v-71eb4dc3 {
+  background: white;
+  border-radius: 16rpx;
+  margin-bottom: 20rpx;
+  overflow: hidden;
+  box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.1);
+}
+.activity-list .activity-image.data-v-71eb4dc3 {
+  position: relative;
+  height: 300rpx;
+}
+.activity-list .activity-image .activity-cover.data-v-71eb4dc3 {
+  width: 100%;
+  height: 100%;
+}
+.activity-list .activity-image .activity-status.data-v-71eb4dc3 {
+  position: absolute;
+  top: 20rpx;
+  right: 20rpx;
+  padding: 8rpx 16rpx;
+  border-radius: 20rpx;
+  font-size: 22rpx;
+  color: white;
+}
+.activity-list .activity-image .activity-status.signing.data-v-71eb4dc3 {
+  background-color: #07c160;
+}
+.activity-list .activity-image .activity-status.ongoing.data-v-71eb4dc3 {
+  background-color: #3b5598;
+}
+.activity-list .activity-image .activity-status.completed.data-v-71eb4dc3 {
+  background-color: #999;
+}
+.activity-list .activity-image .activity-status.cancelled.data-v-71eb4dc3 {
+  background-color: #ff4d4f;
+}
+.activity-list .activity-content.data-v-71eb4dc3 {
+  padding: 24rpx;
+}
+.activity-list .activity-content .activity-title.data-v-71eb4dc3 {
+  font-size: 30rpx;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 16rpx;
+  display: block;
+}
+.activity-list .activity-content .activity-info.data-v-71eb4dc3 {
+  display: flex;
+  margin-bottom: 20rpx;
+}
+.activity-list .activity-content .activity-info .info-item.data-v-71eb4dc3 {
+  display: flex;
+  align-items: center;
+  margin-right: 40rpx;
+}
+.activity-list .activity-content .activity-info .info-item .info-text.data-v-71eb4dc3 {
+  font-size: 24rpx;
+  color: #666;
+  margin-left: 8rpx;
+}
+.activity-list .activity-content .activity-participants.data-v-71eb4dc3 {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.activity-list .activity-content .activity-participants .participant-avatars.data-v-71eb4dc3 {
+  display: flex;
+  align-items: center;
+}
+.activity-list .activity-content .activity-participants .participant-avatars .participant-avatar.data-v-71eb4dc3 {
+  width: 48rpx;
+  height: 48rpx;
+  border-radius: 50%;
+  margin-right: -12rpx;
+  border: 2rpx solid white;
+}
+.activity-list .activity-content .activity-participants .participant-avatars .more-count.data-v-71eb4dc3 {
+  width: 48rpx;
+  height: 48rpx;
+  border-radius: 50%;
+  background-color: #f0f0f0;
+  border: 2rpx solid white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20rpx;
+  color: #666;
+  margin-left: 8rpx;
+}
+.activity-list .activity-content .activity-participants .participant-count.data-v-71eb4dc3 {
+  font-size: 24rpx;
+  color: #666;
+}
+.empty-state.data-v-71eb4dc3 {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 100rpx 30rpx;
+}
+.empty-state .empty-text.data-v-71eb4dc3 {
+  font-size: 28rpx;
+  color: #666;
+  margin: 20rpx 0 10rpx;
+}
+.empty-state .empty-desc.data-v-71eb4dc3 {
+  font-size: 24rpx;
+  color: #999;
+}
+.loading-section.data-v-71eb4dc3 {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 80rpx 30rpx;
+}
+.loading-section .loading-text.data-v-71eb4dc3 {
+  font-size: 26rpx;
+  color: #666;
+  margin-top: 20rpx;
+}
