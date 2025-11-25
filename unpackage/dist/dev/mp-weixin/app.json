@@ -10,6 +10,7 @@
       "pages": [
         "profile/profile",
         "house-binding/house-binding",
+        "house-binding/house-bindings",
         "family-members/family-members",
         "identity-verification/identity-verification"
       ]
@@ -36,7 +37,9 @@
       "pages": [
         "message/message",
         "notice/notice",
-        "feedback/feedback"
+        "feedback/feedback",
+        "activity-list/index",
+        "activity-list/apublish"
       ]
     },
     {

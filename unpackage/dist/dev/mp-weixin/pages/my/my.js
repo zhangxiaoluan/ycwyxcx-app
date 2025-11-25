@@ -101,7 +101,7 @@ var components
 try {
   components = {
     uIcon: function () {
-      return Promise.all(/*! import() | uni_modules/uview-ui/components/u-icon/u-icon */[__webpack_require__.e("common/vendor"), __webpack_require__.e("uni_modules/uview-ui/components/u-icon/u-icon")]).then(__webpack_require__.bind(null, /*! @/uni_modules/uview-ui/components/u-icon/u-icon.vue */ 323))
+      return Promise.all(/*! import() | uni_modules/uview-ui/components/u-icon/u-icon */[__webpack_require__.e("common/vendor"), __webpack_require__.e("uni_modules/uview-ui/components/u-icon/u-icon")]).then(__webpack_require__.bind(null, /*! @/uni_modules/uview-ui/components/u-icon/u-icon.vue */ 331))
     },
   }
 } catch (e) {
@@ -280,7 +280,7 @@ var _default = {
     // 房屋信息绑定
     goToHouseBinding: function goToHouseBinding() {
       uni.navigateTo({
-        url: '/subpackages/user/house-binding/house-binding'
+        url: '/subpackages/user/house-binding/house-bindings'
       });
     },
     // 家庭成员管理
@@ -305,6 +305,12 @@ var _default = {
     goToPoints: function goToPoints() {
       uni.navigateTo({
         url: '/subpackages/wallet/points/points'
+      });
+    },
+    // 积分商城
+    goToShopping: function goToShopping() {
+      uni.navigateTo({
+        url: '/subpackages/wallet/points-mall/points-mall'
       });
     },
     // 我的任务

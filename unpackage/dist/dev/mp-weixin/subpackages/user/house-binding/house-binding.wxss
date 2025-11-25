@@ -109,3 +109,32 @@
   -webkit-transform: scale(0.98);
           transform: scale(0.98);
 }
+.house-binding-page .fab-container {
+  position: fixed;
+  bottom: 40rpx;
+  left: 50%;
+  -webkit-transform: translateX(-50%);
+          transform: translateX(-50%);
+  z-index: 1000;
+}
+.house-binding-page .fab-container .fab-button {
+  background: #3b5598;
+  color: white;
+  border: none;
+  border-radius: 50rpx;
+  height: 90rpx;
+  padding: 0 40rpx;
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+  box-shadow: 0 4rpx 20rpx rgba(59, 85, 152, 0.3);
+  font-size: 28rpx;
+  font-weight: 600;
+}
+.house-binding-page .fab-container .fab-button .fab-icon {
+  font-size: 36rpx;
+  line-height: 1;
+}
+.house-binding-page .fab-container .fab-button .fab-text {
+  line-height: 1;
+}

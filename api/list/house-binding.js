@@ -4,11 +4,24 @@ import { sendRequest, sendUpload } from '../request'
 export function houseBindings(params) {
     const json = {
         url: '/app/property/binding/my-bindings',
-        method: 'post',
+        method: 'get',
         data: params
     }
     return sendRequest(json)
 }
+
+
+// 解除绑定
+export function houseBindingsDel(bindingId) {
+    const json = {
+        url: '/app/property/binding/unbind/' + bindingId,
+        method: 'post'
+    }
+    return sendRequest(json)
+}
+
+
+
 
 // 获取小区列表
 export function getCommunities() {
@@ -48,3 +61,4 @@ export function submitHouseBinding(params) {
     }
     return sendRequest(json)
 }
+

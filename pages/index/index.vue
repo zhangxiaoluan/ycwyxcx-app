@@ -379,22 +379,22 @@ export default {
       // 根据服务类型跳转到对应页面
       switch(service.name) {
         case '访客登记':
-          uni.navigateTo({ url: '/pages/visitor/visitor-register' })
+          uni.navigateTo({ url: '/subpackages/visitor/visitor-register' })
           break
         case '快递代收':
-          uni.navigateTo({ url: '/pages/express/express-list' })
+          uni.navigateTo({ url: '/subpackages/express/express-list' })
           break
         case '社区活动':
-          uni.navigateTo({ url: '/pages/community/activity-list' })
+          uni.navigateTo({ url: '/subpackages/community/activity-list/index' })
           break
         case '周边商家':
-          uni.navigateTo({ url: '/pages/business/business-list' })
+          uni.navigateTo({ url: '/subpackages/business/business-list' })
           break
         case '家政服务':
-          uni.navigateTo({ url: '/pages/services/housekeeping' })
+          uni.navigateTo({ url: '/subpackages/services/housekeeping' })
           break
         case '车辆管理':
-          uni.navigateTo({ url: '/pages/vehicle/vehicle-manage' })
+          uni.navigateTo({ url: '/subpackages/vehicle/vehicle-manage' })
           break
       }
     },

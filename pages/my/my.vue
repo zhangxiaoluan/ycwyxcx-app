@@ -53,6 +53,14 @@
 					<text class="service-title">房屋信息</text>
 				</view>
 
+        <!-- 电子钱包 -->
+        <view class="service-card" @click="goToWallet">
+          <view class="service-icon wallet">
+            <u-icon name="red-packet" size="28" color="#ec6a5d"></u-icon>
+          </view>
+          <text class="service-title">电子钱包</text>
+        </view>
+
 				<!-- 家庭成员管理 -->
 				<view class="service-card" @click="goToFamilyMembers">
 					<view class="service-icon family">
@@ -61,20 +69,12 @@
 					<text class="service-title">家庭成员</text>
 				</view>
 
-				<!-- 电子钱包 -->
-				<view class="service-card" @click="goToWallet">
-					<view class="service-icon wallet">
-						<u-icon name="red-packet" size="28" color="#ec6a5d"></u-icon>
-					</view>
-					<text class="service-title">电子钱包</text>
-				</view>
-
 				<!-- 积分管理 -->
-				<view class="service-card" @click="goToPoints">
-					<view class="service-icon points">
-						<u-icon name="star" size="28" color="#ffc107"></u-icon>
+				<view class="service-card" @click="goToShopping">
+					<view class="service-icon shopping">
+						<u-icon name="shopping-cart" size="28" color="#d33c21"></u-icon>
 					</view>
-					<text class="service-title">积分管理</text>
+					<text class="service-title">积分商城</text>
 				</view>
 			</view>
 		</view>
@@ -303,7 +303,7 @@
 			// 房屋信息绑定
 			goToHouseBinding() {
 				uni.navigateTo({
-					url: '/subpackages/user/house-binding/house-binding'
+					url: '/subpackages/user/house-binding/house-bindings'
 				})
 			},
 
@@ -334,6 +334,15 @@
 					url: '/subpackages/wallet/points/points'
 				})
 			},
+
+      // 积分商城
+      goToShopping() {
+        uni.navigateTo({
+          url: '/subpackages/wallet/points-mall/points-mall'
+        })
+      },
+
+
 
 			// 我的任务
 			goToOrders() {
@@ -525,9 +534,11 @@
 							//background: rgba(7, 193, 96, 0.1);
 						}
 
-						&.points {
-							background: rgba(255, 193, 7, 0.1);
+						&.shopping {
+							background: rgba(211, 60, 33, 0.15);
 						}
+
+
 					}
 
 					.service-title {

@@ -274,11 +274,33 @@ var _houseBinding = __webpack_require__(/*! ../../../api/list/house-binding.js *
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 var _default = {
   data: function data() {
     return {
       // 表单数据 - 包含所有需要提交的字段
       formData: {
+        realName: '',
+        // 真实姓名
         phone: '',
         // 手机号
         communityId: '',
@@ -302,13 +324,13 @@ var _default = {
 
       // 小区相关
       communityList: [],
-      communityIndex: 0,
+      communityIndex: null,
       // 楼栋相关
       buildingList: [],
-      buildingIndex: 0,
+      buildingIndex: null,
       // 房间相关
       roomList: [],
-      roomIndex: 0,
+      roomIndex: null,
       // 业主关系
       relationList: [{
         id: 1,
@@ -323,7 +345,7 @@ var _default = {
         id: 4,
         name: '其他'
       }],
-      relationIndex: 0,
+      relationIndex: null,
       // 加载状态
       isLoading: false
     };
@@ -347,7 +369,25 @@ var _default = {
     },
     // 是否可以提交
     canSubmit: function canSubmit() {
-      return this.formData.phone && this.formData.communityId && this.formData.buildingId && this.formData.roomId && this.formData.relationType;
+      var realName = this.formData.realName;
+      var phone = this.formData.phone;
+      var communityId = this.formData.communityId;
+      var buildingId = this.formData.buildingId;
+      var roomId = this.formData.roomId;
+      var relationType = this.formData.relationType;
+      // remark 保持非必填
+
+      // 调试信息 - 在开发时检查各字段状态
+      console.log('表单验证状态:', {
+        realName: !!realName,
+        phone: !!phone,
+        communityId: !!communityId,
+        buildingId: !!buildingId,
+        roomId: !!roomId,
+        relationType: !!relationType,
+        canSubmit: !!(realName && phone && communityId && buildingId && roomId && relationType)
+      });
+      return realName && phone && communityId && buildingId && roomId && relationType;
     }
   },
   onLoad: function onLoad() {
@@ -507,8 +547,8 @@ var _default = {
         this.formData.roomName = '';
         this.buildingList = [];
         this.roomList = [];
-        this.buildingIndex = 0;
-        this.roomIndex = 0;
+        this.buildingIndex = null;
+        this.roomIndex = null;
         this.loadBuildings(selected.id);
       }
     },
@@ -525,7 +565,7 @@ var _default = {
         this.formData.roomId = '';
         this.formData.roomName = '';
         this.roomList = [];
-        this.roomIndex = 0;
+        this.roomIndex = null;
         this.loadRooms(this.formData.communityId, selected.id);
       }
     },
@@ -536,7 +576,8 @@ var _default = {
       if (selected) {
         // 更新formData
         this.formData.roomId = selected.id;
-        this.formData.roomName = selected.name;
+        // 使用roomNumber字段保持一致性，如果没有则使用name作为备选
+        this.formData.roomName = selected.roomNumber || selected.name;
       }
     },
     // 业主关系选择变化
@@ -585,7 +626,9 @@ var _default = {
                     icon: 'success'
                   });
                   setTimeout(function () {
-                    uni.navigateBack();
+                    uni.navigateTo({
+                      url: '/pages/my/my'
+                    });
                   }, 1500);
                 }
                 _context5.next = 17;
@@ -606,6 +649,12 @@ var _default = {
           }
         }, _callee5, null, [[3, 12]]);
       }))();
+    },
+    // 跳转到绑定记录列表
+    goToBindingsList: function goToBindingsList() {
+      uni.navigateTo({
+        url: '/subpackages/user/house-binding/house-bindings'
+      });
     }
   }
 };

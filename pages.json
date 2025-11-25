@@ -38,6 +38,13 @@
 					}
 				},
 				{
+					"path": "house-binding/house-bindings",
+					"style": {
+						"navigationBarTitleText": "房屋绑定记录",
+						"enablePullDownRefresh": true
+					}
+				},
+				{
 					"path": "family-members/family-members",
 					"style": {
 						"navigationBarTitleText": "家庭成员管理"
@@ -119,6 +126,19 @@
 					"path": "feedback/feedback",
 					"style": {
 						"navigationBarTitleText": "意见反馈"
+					}
+				},
+				{
+					"path": "activity-list/index",
+					"style": {
+						"navigationBarTitleText": "社区动态",
+						"enablePullDownRefresh": true
+					}
+				},
+				{
+					"path": "activity-list/apublish",
+					"style": {
+						"navigationBarTitleText": "发布动态"
 					}
 				}
 			]

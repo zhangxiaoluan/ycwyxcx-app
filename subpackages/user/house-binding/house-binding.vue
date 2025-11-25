@@ -4,6 +4,18 @@
       <view class="form-section">
         <!-- 手机号输入 -->
         <view class="form-item">
+          <text class="label">真实姓名</text>
+          <input
+              v-model="formData.realName"
+              class="input"
+              type="text"
+              placeholder="请输入真实姓名"
+              maxlength="20"
+          />
+        </view>
+
+        <!-- 手机号输入 -->
+        <view class="form-item">
           <text class="label">手机号</text>
           <input
             v-model="formData.phone"
@@ -59,12 +71,12 @@
             @change="onRoomChange"
             :value="roomIndex"
             :range="roomList"
-            range-key="name"
+            range-key="roomNumber"
             :disabled="roomList.length === 0"
           >
             <view class="picker-content">
               <text class="picker-text" :class="{ placeholder: !selectedRoom }">
-                {{ selectedRoom ? selectedRoom.name : '请选择房间' }}
+                {{ selectedRoom ? selectedRoom.roomNumber : '请选择房间' }}
               </text>
               <text class="picker-arrow">▼</text>
             </view>
@@ -111,6 +123,14 @@
         </button>
       </view>
     </view>
+
+    <!-- 底部悬浮按钮 - 查看绑定记录 -->
+    <view class="fab-container">
+      <button class="fab-button" @click="goToBindingsList">
+        <text class="fab-icon">📋</text>
+        <text class="fab-text">绑定记录</text>
+      </button>
+    </view>
   </view>
 </template>
 
@@ -122,6 +142,7 @@ export default {
     return {
       // 表单数据 - 包含所有需要提交的字段
       formData: {
+        realName: '',     // 真实姓名
         phone: '',        // 手机号
         communityId: '',  // 小区ID
         communityName: '',// 小区名称
@@ -136,15 +157,15 @@ export default {
 
       // 小区相关
       communityList: [],
-      communityIndex: 0,
+      communityIndex: null,
 
       // 楼栋相关
       buildingList: [],
-      buildingIndex: 0,
+      buildingIndex: null,
 
       // 房间相关
       roomList: [],
-      roomIndex: 0,
+      roomIndex: null,
 
       // 业主关系
       relationList: [
@@ -153,7 +174,7 @@ export default {
         { id: 3, name: '租客' },
         { id: 4, name: '其他' }
       ],
-      relationIndex: 0,
+      relationIndex: null,
 
       // 加载状态
       isLoading: false
@@ -183,11 +204,26 @@ export default {
 
     // 是否可以提交
     canSubmit() {
-      return this.formData.phone &&
-             this.formData.communityId &&
-             this.formData.buildingId &&
-             this.formData.roomId &&
-             this.formData.relationType
+      let realName = this.formData.realName
+      let phone = this.formData.phone
+      let communityId = this.formData.communityId
+      let buildingId = this.formData.buildingId
+      let roomId = this.formData.roomId
+      let relationType = this.formData.relationType
+      // remark 保持非必填
+
+      // 调试信息 - 在开发时检查各字段状态
+      console.log('表单验证状态:', {
+        realName: !!realName,
+        phone: !!phone,
+        communityId: !!communityId,
+        buildingId: !!buildingId,
+        roomId: !!roomId,
+        relationType: !!relationType,
+        canSubmit: !!(realName && phone && communityId && buildingId && roomId && relationType)
+      })
+
+      return realName && phone && communityId && buildingId && roomId && relationType
     }
   },
 
@@ -270,8 +306,8 @@ export default {
 
         this.buildingList = []
         this.roomList = []
-        this.buildingIndex = 0
-        this.roomIndex = 0
+        this.buildingIndex = null
+        this.roomIndex = null
 
         this.loadBuildings(selected.id)
       }
@@ -292,7 +328,7 @@ export default {
         this.formData.roomName = ''
 
         this.roomList = []
-        this.roomIndex = 0
+        this.roomIndex = null
 
         this.loadRooms(this.formData.communityId, selected.id)
       }
@@ -306,7 +342,8 @@ export default {
       if (selected) {
         // 更新formData
         this.formData.roomId = selected.id
-        this.formData.roomName = selected.name
+        // 使用roomNumber字段保持一致性，如果没有则使用name作为备选
+        this.formData.roomName = selected.roomNumber || selected.name
       }
     },
 
@@ -333,9 +370,7 @@ export default {
       }
 
       try {
-        uni.showLoading({
-          title: '提交中...'
-        })
+        uni.showLoading({ title: '提交中...' })
 
         // 直接提交formData
         const result = await submitHouseBinding(this.formData)
@@ -349,7 +384,7 @@ export default {
           })
 
           setTimeout(() => {
-            uni.navigateBack()
+            uni.navigateTo({ url: '/pages/my/my' })
           }, 1500)
         }
       } catch (error) {
@@ -360,6 +395,13 @@ export default {
           icon: 'none'
         })
       }
+    },
+
+    // 跳转到绑定记录列表
+    goToBindingsList() {
+      uni.navigateTo({
+        url: '/subpackages/user/house-binding/house-bindings'
+      })
     }
   }
 }
@@ -463,6 +505,39 @@ export default {
           background: #2d4a7d;
           transform: scale(0.98);
         }
+      }
+    }
+  }
+
+  // 底部悬浮按钮
+  .fab-container {
+    position: fixed;
+    bottom: 40rpx;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1000;
+
+    .fab-button {
+      background: #3b5598;
+      color: white;
+      border: none;
+      border-radius: 50rpx;
+      height: 90rpx;
+      padding: 0 40rpx;
+      display: flex;
+      align-items: center;
+      gap: 12rpx;
+      box-shadow: 0 4rpx 20rpx rgba(59, 85, 152, 0.3);
+      font-size: 28rpx;
+      font-weight: 600;
+
+      .fab-icon {
+        font-size: 36rpx;
+        line-height: 1;
+      }
+
+      .fab-text {
+        line-height: 1;
       }
     }
   }

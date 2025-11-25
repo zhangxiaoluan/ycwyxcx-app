@@ -9,26 +9,29 @@
     </view>
 
     <view class="content">
+      <!-- 分类标签 -->
       <view class="category-tabs">
-        <view class="tab-item" :class="currentCategory === 'all' ? 'active' : ''" @click="switchCategory('all')">
-          <text>全部</text>
-        </view>
-        <view class="tab-item" :class="currentCategory === 'coupon' ? 'active' : ''" @click="switchCategory('coupon')">
-          <text>优惠券</text>
-        </view>
-        <view class="tab-item" :class="currentCategory === 'service' ? 'active' : ''" @click="switchCategory('service')">
-          <text>服务</text>
-        </view>
-        <view class="tab-item" :class="currentCategory === 'goods' ? 'active' : ''" @click="switchCategory('goods')">
-          <text>实物</text>
-        </view>
+        <scroll-view scroll-x class="tab-scroll">
+          <view class="tab-item" :class="currentCategoryId === 0 ? 'active' : ''" @click="switchCategory(0)">
+            <text>全部</text>
+          </view>
+          <view class="tab-item"
+                v-for="category in categories"
+                :key="category.id"
+                :class="currentCategoryId === category.id ? 'active' : ''"
+                @click="switchCategory(category.id)">
+            <text>{{ category.name }}</text>
+          </view>
+        </scroll-view>
       </view>
 
-      <view class="goods-grid">
-        <view class="goods-item" v-for="item in filteredGoods" :key="item.id" @click="showGoodsDetail(item)">
+      <!-- 商品列表 -->
+      <view class="goods-grid" v-if="products.length > 0">
+        <view class="goods-item" v-for="item in products" :key="item.id" @click="showGoodsDetail(item)">
           <view class="goods-image">
-            <image :src="item.image" mode="aspectFill"></image>
-            <view class="goods-tag" v-if="item.tag">{{ item.tag }}</view>
+            <image :src="item.image || '/static/images/default-product.png'" mode="aspectFill"></image>
+            <view class="goods-tag" v-if="!item.canExchange">已兑完</view>
+            <view class="goods-tag hot" v-else-if="item.soldCount > 10">热门</view>
           </view>
           <view class="goods-info">
             <text class="goods-name">{{ item.name }}</text>
@@ -37,14 +40,23 @@
               <text class="points-value">{{ item.points }}</text>
               <text class="points-label">积分</text>
             </view>
+            <view class="goods-stock" v-if="item.stock > 0">
+              <text>库存{{ item.stock }}件</text>
+            </view>
           </view>
         </view>
       </view>
 
-      <view class="empty-state" v-if="filteredNotices.length === 0">
+      <view class="empty-state" v-else-if="!loading">
         <view class="empty-icon">🛍️</view>
         <text class="empty-text">暂无商品</text>
         <text class="empty-desc">该分类下暂无可兑换商品</text>
+      </view>
+
+      <!-- 加载状态 -->
+      <view class="loading-state" v-if="loading">
+        <u-loading-icon mode="circle" size="40"></u-loading-icon>
+        <text class="loading-text">加载中...</text>
       </view>
     </view>
 
@@ -71,91 +83,87 @@
 </template>
 
 <script>
+import { getCategories, getProducts, exchangeProduct } from '@/api/list/points-mall.js'
+import { signInfo } from '@/api/list/login.js'
+
 export default {
   data() {
     return {
-      userPoints: 1250,
-      currentCategory: 'all',
+      userPoints: 0,
+      currentCategoryId: 0,
       showDetailModal: false,
       selectedGoods: null,
-      filteredNotices: [],
-      goodsList: [
-        {
-          id: 1,
-          name: '物业费优惠券',
-          description: '50元物业费减免券',
-          points: 500,
-          category: 'coupon',
-          image: '/static/images/coupon1.png',
-          tag: '热门',
-          stock: 100,
-          rules: '1. 优惠券有效期30天\n2. 仅限抵扣物业费\n3. 不可兑现，不设找零'
-        },
-        {
-          id: 2,
-          name: '停车费优惠券',
-          description: '20元停车费减免券',
-          points: 200,
-          category: 'coupon',
-          image: '/static/images/coupon2.png',
-          stock: 50,
-          rules: '1. 优惠券有效期30天\n2. 仅限抵扣停车费\n3. 每人每月限兑2张'
-        },
-        {
-          id: 3,
-          name: '家政服务',
-          description: '2小时家政清洁服务',
-          points: 800,
-          category: 'service',
-          image: '/static/images/service1.png',
-          tag: '限时',
-          stock: 20,
-          rules: '1. 服务需提前3天预约\n2. 仅限小区内使用\n3. 有效期60天'
-        },
-        {
-          id: 4,
-          name: '维修服务',
-          description: '家电维修上门服务',
-          points: 300,
-          category: 'service',
-          image: '/static/images/service2.png',
-          stock: 30,
-          rules: '1. 包含基础维修费用\n2. 零件费用另计\n3. 服务范围：小区内'
-        },
-        {
-          id: 5,
-          name: '精美水杯',
-          description: '定制社区logo水杯',
-          points: 150,
-          category: 'goods',
-          image: '/static/images/goods1.png',
-          stock: 200,
-          rules: '1. 需到物业中心领取\n2. 领取时间：工作日9:00-18:00\n3. 有效期90天'
-        },
-        {
-          id: 6,
-          name: '雨伞',
-          description: '折叠晴雨两用伞',
-          points: 100,
-          category: 'goods',
-          image: '/static/images/goods2.png',
-          stock: 150,
-          rules: '1. 需到物业中心领取\n2. 领取时间：工作日9:00-18:00\n3. 有效期90天'
-        }
-      ]
+      categories: [],
+      products: [],
+      loading: true,
+      exchangeForm: {
+        contactInfo: '',
+        remark: ''
+      }
     }
   },
-  computed: {
-    filteredGoods() {
-      if (this.currentCategory === 'all') {
-        return this.goodsList
-      }
-      return this.goodsList.filter(goods => goods.category === this.currentCategory)
-    }
+  onLoad() {
+    this.loadData()
+    this.loadUserPoints()
+  },
+  onPullDownRefresh() {
+    this.loadData()
+    this.loadUserPoints()
   },
   methods: {
-    switchCategory(category) {
-      this.currentCategory = category
+    async loadData() {
+      try {
+        this.loading = true
+        // 获取分类数据
+        const categoriesRes = await getCategories()
+        this.categories = categoriesRes || []
+        // 获取商品数据
+        await this.loadProducts()
+
+      } catch (error) {
+        console.error('加载数据失败:', error)
+        uni.showToast({
+          title: '加载失败',
+          icon: 'none'
+        })
+      } finally {
+        this.loading = false
+        uni.stopPullDownRefresh()
+      }
+    },
+
+    // 获取商品数据
+    async loadProducts(categoryId = 0) {
+      try {
+        const params = categoryId ? { categoryId } : {}
+        const productsRes = await getProducts(params)
+
+        if (productsRes.code === 200 && productsRes.result && productsRes.result.records) {
+          this.products = productsRes.result.records
+        } else {
+          this.products = []
+        }
+      } catch (error) {
+        console.error('加载商品失败:', error)
+        this.products = []
+      }
+    },
+
+    async loadUserPoints() {
+      try {
+        const pointsRes = await signInfo()
+        if (pointsRes.code === 200 && pointsRes.result) {
+          this.userPoints = pointsRes.result.totalPoints || 0
+        }
+      } catch (error) {
+        console.error('加载积分信息失败:', error)
+      }
+    },
+
+    async switchCategory(categoryId) {
+      this.currentCategoryId = categoryId
+      this.products = []
+      await this.loadProducts(categoryId)
     },
 
     showGoodsDetail(goods) {
@@ -166,10 +174,22 @@ export default {
     closeDetail() {
       this.showDetailModal = false
       this.selectedGoods = null
+      this.exchangeForm = {
+        contactInfo: '',
+        remark: ''
+      }
     },
 
     exchangeGoods() {
       if (!this.selectedGoods) return
+
+      if (!this.selectedGoods.canExchange) {
+        uni.showToast({
+          title: '商品不可兑换',
+          icon: 'none'
+        })
+        return
+      }
 
       if (this.userPoints < this.selectedGoods.points) {
         uni.showToast({
@@ -179,9 +199,19 @@ export default {
         return
       }
 
-      if (this.selectedGoods.stock !== undefined && this.selectedGoods.stock <= 0) {
+      if (this.selectedGoods.stock <= 0) {
         uni.showToast({
           title: '库存不足',
+          icon: 'none'
+        })
+        return
+      }
+
+      // 检查兑换限制
+      if (this.selectedGoods.exchangeLimit > 0 &&
+          this.selectedGoods.userExchangedCount >= this.selectedGoods.exchangeLimit) {
+        uni.showToast({
+          title: '超出兑换限制',
           icon: 'none'
         })
         return
@@ -192,31 +222,86 @@ export default {
         content: `确定要花费${this.selectedGoods.points}积分兑换${this.selectedGoods.name}吗？`,
         success: (res) => {
           if (res.confirm) {
-            this.submitExchange()
+            this.showExchangeForm()
           }
         }
       })
     },
 
-    submitExchange() {
-      uni.showLoading({
-        title: '兑换中...'
-      })
-
-      setTimeout(() => {
-        uni.hideLoading()
-        this.userPoints -= this.selectedGoods.points
-        if (this.selectedGoods.stock !== undefined) {
-          this.selectedGoods.stock--
+    showExchangeForm() {
+      uni.showModal({
+        title: '填写兑换信息',
+        content: '请输入联系方式（手机号或地址）',
+        editable: true,
+        placeholderText: '请输入手机号或收货地址',
+        success: (res) => {
+          if (res.confirm && res.content) {
+            this.submitExchange(res.content)
+          } else if (res.confirm) {
+            uni.showToast({
+              title: '请填写联系方式',
+              icon: 'none'
+            })
+          }
         }
+      })
+    },
 
-        uni.showToast({
-          title: '兑换成功',
-          icon: 'success'
+    async submitExchange(contactInfo) {
+      try {
+        uni.showLoading({
+          title: '兑换中...'
         })
 
-        this.closeDetail()
-      }, 2000)
+        const params = {
+          productId: this.selectedGoods.id,
+          quantity: 1,
+          contactInfo: contactInfo,
+          remark: this.exchangeForm.remark
+        }
+
+        const res = await exchangeProduct(params)
+
+        uni.hideLoading()
+
+        if (res.code === 200) {
+          uni.showToast({
+            title: '兑换成功',
+            icon: 'success'
+          })
+
+          // 更新用户积分
+          this.userPoints -= this.selectedGoods.points
+
+          // 更新商品信息
+          const productIndex = this.products.findIndex(p => p.id === this.selectedGoods.id)
+          if (productIndex !== -1) {
+            this.products[productIndex].stock--
+            this.products[productIndex].soldCount++
+            this.products[productIndex].userExchangedCount++
+
+            // 如果库存为0，更新可兑换状态
+            if (this.products[productIndex].stock <= 0) {
+              this.products[productIndex].canExchange = false
+            }
+          }
+
+          this.closeDetail()
+        } else {
+          uni.showToast({
+            title: res.message || '兑换失败',
+            icon: 'none'
+          })
+        }
+
+      } catch (error) {
+        uni.hideLoading()
+        console.error('兑换失败:', error)
+        uni.showToast({
+          title: '兑换失败，请重试',
+          icon: 'none'
+        })
+      }
     }
   }
 }
@@ -265,36 +350,44 @@ export default {
       border-radius: 16rpx;
       padding: 20rpx;
       margin-bottom: 30rpx;
-      display: flex;
 
-      .tab-item {
-        flex: 1;
-        text-align: center;
-        padding: 15rpx 0;
-        position: relative;
+      .tab-scroll {
+        white-space: nowrap;
 
-        text {
-          font-size: 26rpx;
-          color: #666;
-          transition: color 0.3s;
-        }
+        .tab-item {
+          display: inline-block;
+          text-align: center;
+          padding: 15rpx 30rpx;
+          position: relative;
+          margin-right: 20rpx;
 
-        &.active {
           text {
-            color: #3b5598;
-            font-weight: 600;
+            font-size: 26rpx;
+            color: #666;
+            transition: color 0.3s;
           }
 
-          &::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 40rpx;
-            height: 4rpx;
-            background: #3b5598;
-            border-radius: 2rpx;
+          &.active {
+            text {
+              color: #3b5598;
+              font-weight: 600;
+            }
+
+            &::after {
+              content: '';
+              position: absolute;
+              bottom: 0;
+              left: 50%;
+              transform: translateX(-50%);
+              width: 40rpx;
+              height: 4rpx;
+              background: #3b5598;
+              border-radius: 2rpx;
+            }
+          }
+
+          &:last-child {
+            margin-right: 0;
           }
         }
       }
@@ -333,6 +426,14 @@ export default {
             font-size: 20rpx;
             padding: 4rpx 12rpx;
             border-radius: 12rpx;
+
+            &.hot {
+              background: #e74c3c;
+            }
+
+            &:not(.hot) {
+              background: #95a5a6;
+            }
           }
         }
 
@@ -377,6 +478,15 @@ export default {
               margin-left: 4rpx;
             }
           }
+
+          .goods-stock {
+            margin-top: 8rpx;
+
+            text {
+              font-size: 20rpx;
+              color: #999;
+            }
+          }
         }
       }
     }
@@ -402,6 +512,20 @@ export default {
         display: block;
         font-size: 26rpx;
         color: #999;
+      }
+    }
+
+    .loading-state {
+      text-align: center;
+      padding: 100rpx 30rpx;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+
+      .loading-text {
+        font-size: 26rpx;
+        color: #999;
+        margin-top: 20rpx;
       }
     }
   }

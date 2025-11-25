@@ -101,7 +101,7 @@ var components
 try {
   components = {
     uIcon: function () {
-      return Promise.all(/*! import() | uni_modules/uview-ui/components/u-icon/u-icon */[__webpack_require__.e("common/vendor"), __webpack_require__.e("uni_modules/uview-ui/components/u-icon/u-icon")]).then(__webpack_require__.bind(null, /*! @/uni_modules/uview-ui/components/u-icon/u-icon.vue */ 323))
+      return Promise.all(/*! import() | uni_modules/uview-ui/components/u-icon/u-icon */[__webpack_require__.e("common/vendor"), __webpack_require__.e("uni_modules/uview-ui/components/u-icon/u-icon")]).then(__webpack_require__.bind(null, /*! @/uni_modules/uview-ui/components/u-icon/u-icon.vue */ 331))
     },
   }
 } catch (e) {
@@ -598,32 +598,32 @@ var _default = {
       switch (service.name) {
         case '访客登记':
           uni.navigateTo({
-            url: '/pages/visitor/visitor-register'
+            url: '/subpackages/visitor/visitor-register'
           });
           break;
         case '快递代收':
           uni.navigateTo({
-            url: '/pages/express/express-list'
+            url: '/subpackages/express/express-list'
           });
           break;
         case '社区活动':
           uni.navigateTo({
-            url: '/pages/community/activity-list'
+            url: '/subpackages/community/activity-list/index'
           });
           break;
         case '周边商家':
           uni.navigateTo({
-            url: '/pages/business/business-list'
+            url: '/subpackages/business/business-list'
           });
           break;
         case '家政服务':
           uni.navigateTo({
-            url: '/pages/services/housekeeping'
+            url: '/subpackages/services/housekeeping'
           });
           break;
         case '车辆管理':
           uni.navigateTo({
-            url: '/pages/vehicle/vehicle-manage'
+            url: '/subpackages/vehicle/vehicle-manage'
           });
           break;
       }
