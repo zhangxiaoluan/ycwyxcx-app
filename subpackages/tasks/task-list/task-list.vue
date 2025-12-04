@@ -1,22 +1,5 @@
 <template>
   <view class="task-list-page">
-    <view class="header">
-      <text class="title">任务中心</text>
-      <view class="task-stats">
-        <view class="stat-item">
-          <text class="stat-value">{{ taskStats.pending }}</text>
-          <text class="stat-label">进行中</text>
-        </view>
-        <view class="stat-item">
-          <text class="stat-value">{{ taskStats.completed }}</text>
-          <text class="stat-label">已完成</text>
-        </view>
-        <view class="stat-item">
-          <text class="stat-value">{{ taskStats.total }}</text>
-          <text class="stat-label">总任务</text>
-        </view>
-      </view>
-    </view>
 
     <view class="content">
       <view class="task-tabs">
@@ -26,7 +9,6 @@
           @click="switchTab('all')"
         >
           <text>全部</text>
-          <view class="badge" v-if="getTabCount('all') > 0">{{ getTabCount('all') }}</view>
         </view>
         <view
           class="tab-item"
@@ -34,7 +16,6 @@
           @click="switchTab('pending')"
         >
           <text>进行中</text>
-          <view class="badge" v-if="getTabCount('pending') > 0">{{ getTabCount('pending') }}</view>
         </view>
         <view
           class="tab-item"
@@ -50,49 +31,79 @@
           <u-icon name="plus" size="16" color="#fff"></u-icon>
           <text>发布任务</text>
         </button>
-        <button class="action-btn filter" @click="showFilter">
-          <u-icon name="funnel" size="16" color="#3b5598"></u-icon>
-          <text>筛选</text>
+        <button class="action-btn my-tasks" @click="viewMyTasks">
+          <u-icon name="account-fill" size="16" color="#3b5598"></u-icon>
+          <text>我的任务</text>
         </button>
       </view>
 
-      <view class="task-list">
-        <view class="task-item" v-for="task in filteredTasks" :key="task.id" @click="viewTaskDetail(task)">
+      <view class="task-list" v-if="filteredTasks.length > 0">
+        <view
+          class="task-item"
+          v-for="task in filteredTasks"
+          :key="task.id"
+          @click="viewTaskDetail(task)"
+        >
           <view class="task-header">
-            <view class="task-type" :class="task.type">
-              <u-icon :name="getTaskTypeIcon(task.type)" size="16" color="#fff"></u-icon>
-              <text>{{ getTaskTypeText(task.type) }}</text>
+            <view class="task-type" :class="'task-type-' + task.taskType">
+              <text>{{ task.taskTypeName }}</text>
             </view>
-            <view class="task-status" :class="task.status">
-              {{ getTaskStatusText(task.status) }}
+            <view class="task-status" :class="'task-status-' + task.taskStatus">
+              {{ task.taskStatusName }}
             </view>
           </view>
 
           <view class="task-content">
             <text class="task-title">{{ task.title }}</text>
-            <text class="task-desc">{{ task.description }}</text>
+            <text class="task-desc">{{ task.content }}</text>
           </view>
 
           <view class="task-info">
             <view class="task-meta">
-              <text class="meta-item">
+              <view class="meta-item">
                 <u-icon name="clock" size="14" color="#999"></u-icon>
-                {{ task.createTime }}
-              </text>
-              <text class="meta-item" v-if="task.deadline">
-                <u-icon name="alert-circle" size="14" color="#ff6b35"></u-icon>
-                截止: {{ task.deadline }}
-              </text>
+                {{ formatTime(task.publishTime) }}
+              </view>
+              <view class="meta-item" v-if="task.remainingHours > 0">
+                <u-icon name="clock" size="14" color="#ff6b35"></u-icon>
+                剩余{{ task.remainingHours }}小时
+              </view>
+              <view class="meta-item" v-if="task.deadlineTime">
+                <u-icon name="calendar" size="14" color="#999"></u-icon>
+                截止: {{ formatTime(task.deadlineTime) }}
+              </view>
             </view>
-            <view class="task-reward" v-if="task.reward">
+            <view class="task-reward" v-if="task.rewardPoints > 0">
               <text class="reward-label">奖励</text>
-              <text class="reward-value">{{ task.reward }}</text>
+              <text class="reward-value">{{ task.rewardPoints }}积分</text>
+            </view>
+          </view>
+
+          <view class="task-footer">
+            <view class="publisher-info" v-if="task.publisherName">
+              <u-icon name="man-add-fill" size="16" color="#999"></u-icon>
+              <text>{{ task.publisherName }}</text>
+            </view>
+            <view class="task-actions">
+              <button
+                class="take-btn"
+                v-if="task.canTake && !task.hasApplied"
+                @click.stop="handleTakeTask(task)"
+              >
+                领取任务
+              </button>
+              <text
+                class="applied-text"
+                v-else-if="task.hasApplied"
+              >
+                已申请
+              </text>
             </view>
           </view>
         </view>
       </view>
 
-      <view class="empty-state" v-if="filteredTasks.length === 0">
+      <view class="empty-state" v-else-if="!loading">
         <view class="empty-icon">📋</view>
         <text class="empty-text">暂无任务</text>
         <text class="empty-desc">快去发布或参与任务吧</text>
@@ -101,190 +112,90 @@
           <text>发布第一个任务</text>
         </button>
       </view>
-    </view>
 
-    <!-- 筛选弹窗 -->
-    <u-modal
-      v-model="showFilterModal"
-      title="任务筛选"
-      @confirm="applyFilter"
-      @cancel="cancelFilter"
-    >
-      <view class="filter-form">
-        <view class="filter-item">
-          <text class="filter-label">任务类型</text>
-          <view class="filter-options">
-            <label class="option-item" v-for="type in taskTypes" :key="type.value">
-              <checkbox :value="type.value" :checked="filterTypes.includes(type.value)" @change="onTypeChange" />
-              <text>{{ type.label }}</text>
-            </label>
-          </view>
-        </view>
-
-        <view class="filter-item">
-          <text class="filter-label">奖励类型</text>
-          <view class="filter-options">
-            <label class="option-item" v-for="reward in rewardTypes" :key="reward.value">
-              <checkbox :value="reward.value" :checked="filterRewards.includes(reward.value)" @change="onRewardChange" />
-              <text>{{ reward.label }}</text>
-            </label>
-          </view>
-        </view>
+      <view class="loading-more" v-if="loading">
+        <u-loading-icon mode="circle" color="#3b5598"></u-loading-icon>
+        <text>加载中...</text>
       </view>
-    </u-modal>
+    </view>
   </view>
 </template>
 
 <script>
+import { getTaskList, takeTask as apiTakeTask } from '@/api/list/tasks'
 export default {
   data() {
     return {
       currentTab: 'all',
-      showFilterModal: false,
-      filterTypes: [],
-      filterRewards: [],
-      taskTypes: [
-        { label: '维修服务', value: 'repair' },
-        { label: '家政服务', value: 'cleaning' },
-        { label: '配送服务', value: 'delivery' },
-        { label: '其他服务', value: 'other' }
-      ],
-      rewardTypes: [
-        { label: '现金奖励', value: 'cash' },
-        { label: '积分奖励', value: 'points' },
-        { label: '服务兑换', value: 'service' }
-      ],
-      tasks: [
-        {
-          id: 1,
-          title: '修理水龙头漏水',
-          description: '厨房水龙头漏水需要修理，有相关经验的师傅请联系',
-          type: 'repair',
-          status: 'pending',
-          reward: '50元',
-          rewardType: 'cash',
-          createTime: '2024-11-15',
-          deadline: '2024-11-20'
-        },
-        {
-          id: 2,
-          title: '全屋深度清洁',
-          description: '三室一厅需要深度清洁，包括厨房和卫生间',
-          type: 'cleaning',
-          status: 'pending',
-          reward: '200元',
-          rewardType: 'cash',
-          createTime: '2024-11-14',
-          deadline: '2024-11-25'
-        },
-        {
-          id: 3,
-          title: '代购生活用品',
-          description: '帮忙到超市购买生活用品，清单如下...',
-          type: 'delivery',
-          status: 'completed',
-          reward: '20积分',
-          rewardType: 'points',
-          createTime: '2024-11-13'
-        },
-        {
-          id: 4,
-          title: '搬运家具',
-          description: '需要帮忙搬运一些家具到楼上',
-          type: 'other',
-          status: 'pending',
-          reward: '100元',
-          rewardType: 'cash',
-          createTime: '2024-11-12',
-          deadline: '2024-11-18'
-        },
-        {
-          id: 5,
-          title: '照顾宠物',
-          description: '出差期间需要帮忙照顾猫咪一周',
-          type: 'other',
-          status: 'completed',
-          reward: '50积分',
-          rewardType: 'points',
-          createTime: '2024-11-10'
-        }
-      ]
+      taskList: [],
+      loading: false,
     }
   },
   computed: {
-    taskStats() {
-      const pending = this.tasks.filter(task => task.status === 'pending').length
-      const completed = this.tasks.filter(task => task.status === 'completed').length
-      return {
-        pending,
-        completed,
-        total: this.tasks.length
-      }
-    },
+    // taskStats() {
+    //   const pending = this.taskList.filter(task => task.taskStatus === 1 || task.taskStatus === 2).length
+    //   const completed = this.taskList.filter(task => task.taskStatus === 3).length
+    //   return {
+    //     pending,
+    //     completed,
+    //     total: this.taskList.length
+    //   }
+    // },
     filteredTasks() {
-      let filtered = this.tasks
-
-      // 按状态筛选
-      if (this.currentTab === 'pending') {
-        filtered = filtered.filter(task => task.status === 'pending')
-      } else if (this.currentTab === 'completed') {
-        filtered = filtered.filter(task => task.status === 'completed')
+      switch (this.currentTab) {
+        case 'pending':
+          return this.taskList.filter(task => task.taskStatus === 1 || task.taskStatus === 2)
+        case 'completed':
+          return this.taskList.filter(task => task.taskStatus === 3)
+        default:
+          return this.taskList
       }
-
-      // 按类型筛选
-      if (this.filterTypes.length > 0) {
-        filtered = filtered.filter(task => this.filterTypes.includes(task.type))
-      }
-
-      // 按奖励类型筛选
-      if (this.filterRewards.length > 0) {
-        filtered = filtered.filter(task => this.filterRewards.includes(task.rewardType))
-      }
-
-      return filtered
     }
   },
+  onLoad() {
+    this.loadTasks()
+  },
+  onPullDownRefresh() {
+    this.refreshTasks()
+  },
   methods: {
+
+    async loadTasks() {
+      if (this.loading) return
+      this.loading = true
+      try {
+        const res = await getTaskList()
+        this.taskList = res.records || []
+      } finally {
+        this.loading = false
+        uni.stopPullDownRefresh()
+      }
+    },
+
+    async refreshTasks() {
+      await this.loadTasks()
+    },
+
     switchTab(tab) {
       this.currentTab = tab
     },
 
-    getTabCount(tab) {
-      if (tab === 'all') {
-        return this.tasks.length
-      } else if (tab === 'pending') {
-        return this.tasks.filter(task => task.status === 'pending').length
-      }
-      return 0
-    },
-
-    getTaskTypeIcon(type) {
-      const icons = {
-        repair: 'hammer',
-        cleaning: 'broom',
-        delivery: 'shopping-cart',
-        other: 'help-circle'
-      }
-      return icons[type] || 'help-circle'
-    },
-
-    getTaskTypeText(type) {
-      const typeMap = {
-        repair: '维修',
-        cleaning: '家政',
-        delivery: '配送',
-        other: '其他'
-      }
-      return typeMap[type] || '其他'
-    },
-
-    getTaskStatusText(status) {
-      const statusMap = {
-        pending: '进行中',
-        completed: '已完成',
-        cancelled: '已取消'
-      }
-      return statusMap[status] || '未知'
+    // getTabCount(tab) {
+    //   switch (tab) {
+    //     case 'all':
+    //       return this.taskList.length
+    //     case 'pending':
+    //       return this.taskStats.pending
+    //     case 'completed':
+    //       return this.taskStats.completed
+    //     default:
+    //       return 0
+    //   }
+    // },
+    formatTime(time) {
+      if (!time) return ''
+      const date = new Date(time)
+      return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')} ${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`
     },
 
     publishTask() {
@@ -299,32 +210,28 @@ export default {
       })
     },
 
-    showFilter() {
-      this.showFilterModal = true
+    viewMyTasks() {
+      uni.navigateTo({
+        url: '/subpackages/tasks/my-tasks/my-tasks'
+      })
     },
 
-    onTypeChange(e) {
-      this.filterTypes = e.detail.value
-    },
-
-    onRewardChange(e) {
-      this.filterRewards = e.detail.value
-    },
-
-    applyFilter() {
-      this.showFilterModal = false
-    },
-
-    cancelFilter() {
-      this.filterTypes = []
-      this.filterRewards = []
-      this.showFilterModal = false
+    async handleTakeTask(task) {
+      try {
+        uni.showLoading({ title: '领取中...' })
+        await apiTakeTask({ taskId: task.id })
+        uni.showToast({ title: '领取成功', icon: 'success' })
+        // 刷新任务列表
+        await this.loadTasks()
+      } finally {
+        uni.hideLoading()
+      }
     }
   }
 }
 </script>
 
-<style lang="scss">
+<style scoped lang="scss">
 .task-list-page {
   background: #f5f5f5;
   min-height: 100vh;
@@ -444,7 +351,7 @@ export default {
           color: white;
         }
 
-        &.filter {
+        &.my-tasks {
           flex: 1;
           background: white;
           color: #3b5598;
@@ -474,43 +381,48 @@ export default {
           .task-type {
             display: flex;
             align-items: center;
-            padding: 6rpx 12rpx;
+            padding: 6rpx 18rpx;
             border-radius: 12rpx;
-            font-size: 22rpx;
+            font-size: 27rpx;
             color: white;
 
-            text {
-              margin-left: 6rpx;
+            &.task-type-1 {
+              background: rgba(255, 107, 53, 0.1);
+              color: rgba(255, 107, 53, 0.99);
             }
 
-            &.repair {
-              background: #ff6b35;
+            &.task-type-2 {
+              background: rgba(7, 193, 96, 0.1);
+              color: rgba(7, 193, 96, 0.99);
             }
 
-            &.cleaning {
-              background: #07c160;
+            &.task-type-3 {
+              background: rgba(59, 85, 152, 0.1);
+              color: rgba(59, 85, 152, 0.99);
             }
 
-            &.delivery {
-              background: #3b5598;
-            }
-
-            &.other {
-              background: #9c27b0;
+            &.task-type-4 {
+              background: rgba(156, 39, 176, 0.1);
+              color: rgba(156, 39, 176, 0.99);
             }
           }
 
           .task-status {
-            font-size: 22rpx;
-            padding: 6rpx 12rpx;
+            padding: 6rpx 18rpx;
             border-radius: 12rpx;
+            font-size: 27rpx;
 
-            &.pending {
+            &.task-status-0, &.task-status-1 {
               background: #fff7e6;
               color: #fa8c16;
             }
 
-            &.completed {
+            &.task-status-2 {
+              background: #e6f7ff;
+              color: #1890ff;
+            }
+
+            &.task-status-3 {
               background: #f6ffed;
               color: #52c41a;
             }
@@ -522,7 +434,6 @@ export default {
 
           .task-title {
             display: block;
-            font-size: 28rpx;
             color: #333;
             font-weight: 500;
             margin-bottom: 8rpx;
@@ -530,7 +441,7 @@ export default {
           }
 
           .task-desc {
-            font-size: 24rpx;
+            font-size: 26rpx;
             color: #666;
             line-height: 1.5;
             display: -webkit-box;
@@ -551,12 +462,13 @@ export default {
             .meta-item {
               display: flex;
               align-items: center;
-              font-size: 22rpx;
+              font-size: 26rpx;
               color: #999;
-              margin-bottom: 6rpx;
+              margin-bottom: 10rpx;
 
-              u-icon {
-                margin-right: 6rpx;
+              .u-icon {
+                margin-right: 10rpx;
+
               }
 
               &:last-child {
@@ -570,15 +482,54 @@ export default {
 
             .reward-label {
               display: block;
-              font-size: 20rpx;
+              font-size: 25rpx;
               color: #999;
               margin-bottom: 4rpx;
             }
 
             .reward-value {
-              font-size: 26rpx;
+              font-size: 27rpx;
               color: #ff6b35;
               font-weight: 600;
+            }
+          }
+        }
+
+        .task-footer {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-top: 20rpx;
+
+          .publisher-info {
+            display: flex;
+            align-items: center;
+            font-size: 26rpx;
+            color: #999;
+
+            .u-icon {
+              margin-right: 6rpx;
+            }
+          }
+
+          .task-actions {
+            margin-bottom: 0;
+            .take-btn {
+              background: #3b5598;
+              color: white;
+              border: none;
+              border-radius: 15rpx;
+              padding: 10rpx 20rpx;
+              font-size: 26rpx;
+              height: 55rpx;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+            }
+
+            .applied-text {
+              font-size: 26rpx;
+              color: #999;
             }
           }
         }
@@ -625,32 +576,17 @@ export default {
         }
       }
     }
-  }
 
-  .filter-form {
-    .filter-item {
-      margin-bottom: 30rpx;
+    .loading-more {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 40rpx;
+      gap: 16rpx;
 
-      .filter-label {
-        display: block;
-        font-size: 28rpx;
-        color: #333;
-        margin-bottom: 15rpx;
-        font-weight: 500;
-      }
-
-      .filter-options {
-        .option-item {
-          display: flex;
-          align-items: center;
-          margin-bottom: 15rpx;
-
-          text {
-            margin-left: 15rpx;
-            font-size: 26rpx;
-            color: #333;
-          }
-        }
+      text {
+        font-size: 26rpx;
+        color: #999;
       }
     }
   }

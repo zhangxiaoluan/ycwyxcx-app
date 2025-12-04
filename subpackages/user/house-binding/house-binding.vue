@@ -124,14 +124,7 @@
       </view>
     </view>
 
-    <!-- 底部悬浮按钮 - 查看绑定记录 -->
-    <view class="fab-container">
-      <button class="fab-button" @click="goToBindingsList">
-        <text class="fab-icon">📋</text>
-        <text class="fab-text">绑定记录</text>
-      </button>
     </view>
-  </view>
 </template>
 
 <script>
@@ -378,13 +371,8 @@ export default {
         uni.hideLoading()
 
         if (result) {
-          uni.showToast({
-            title: '绑定成功',
-            icon: 'success'
-          })
-
-          setTimeout(() => {
-            uni.navigateTo({ url: '/pages/my/my' })
+          uni.showToast({ title: '绑定成功', icon: 'success' })
+          setTimeout(() => { uni.navigateTo({ url: '/subpackages/user/house-binding/house-bindings' })
           }, 1500)
         }
       } catch (error) {
@@ -397,13 +385,7 @@ export default {
       }
     },
 
-    // 跳转到绑定记录列表
-    goToBindingsList() {
-      uni.navigateTo({
-        url: '/subpackages/user/house-binding/house-bindings'
-      })
     }
-  }
 }
 </script>
 
@@ -505,39 +487,6 @@ export default {
           background: #2d4a7d;
           transform: scale(0.98);
         }
-      }
-    }
-  }
-
-  // 底部悬浮按钮
-  .fab-container {
-    position: fixed;
-    bottom: 40rpx;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 1000;
-
-    .fab-button {
-      background: #3b5598;
-      color: white;
-      border: none;
-      border-radius: 50rpx;
-      height: 90rpx;
-      padding: 0 40rpx;
-      display: flex;
-      align-items: center;
-      gap: 12rpx;
-      box-shadow: 0 4rpx 20rpx rgba(59, 85, 152, 0.3);
-      font-size: 28rpx;
-      font-weight: 600;
-
-      .fab-icon {
-        font-size: 36rpx;
-        line-height: 1;
-      }
-
-      .fab-text {
-        line-height: 1;
       }
     }
   }

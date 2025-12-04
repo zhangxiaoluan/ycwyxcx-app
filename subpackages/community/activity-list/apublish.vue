@@ -139,8 +139,7 @@
     </view>
 
     <!-- 媒体选择弹窗 -->
-    <u-popup
-      v-model="showMediaPicker"
+    <u-popup :show="showMediaPicker"
       mode="bottom"
       :round="10"
       :safe-area-inset-bottom="true">
@@ -174,7 +173,7 @@
 
     <!-- 隐私设置弹窗 -->
     <u-popup
-      v-model="showPrivacyPicker"
+      :show="showPrivacyPicker"
       mode="bottom"
       :round="10"
       :safe-area-inset-bottom="true">
@@ -498,11 +497,7 @@ export default {
       // 检查是否有正在上传的媒体
       const uploadingMedia = this.selectedMedia.filter(m => m.uploading)
       if (uploadingMedia.length > 0) {
-        uni.showToast({
-          title: '请等待媒体文件上传完成',
-          icon: 'none'
-        })
-        return
+        return uni.showToast({ title: '请等待媒体文件上传完成', icon: 'none' })
       }
 
       this.submitting = true
@@ -519,10 +514,7 @@ export default {
 
         const result = await createPost(postData)
 
-        uni.showToast({
-          title: '发布成功',
-          icon: 'success'
-        })
+        uni.showToast({ title: '发布成功', icon: 'success' })
 
         // 延迟返回，让用户看到成功提示
         setTimeout(() => {

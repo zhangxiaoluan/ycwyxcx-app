@@ -137,12 +137,7 @@ export default {
       try {
         const params = categoryId ? { categoryId } : {}
         const productsRes = await getProducts(params)
-
-        if (productsRes.code === 200 && productsRes.result && productsRes.result.records) {
-          this.products = productsRes.result.records
-        } else {
-          this.products = []
-        }
+	   this.products = productsRes.records || []
       } catch (error) {
         console.error('加载商品失败:', error)
         this.products = []

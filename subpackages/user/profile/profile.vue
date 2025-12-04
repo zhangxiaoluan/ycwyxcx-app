@@ -9,9 +9,9 @@
         <view class="cell-right">
           <view class="avatar-wrapper">
             <image
-              :src="userInfo.avatar || '/static/default-avatar.png'"
-              class="avatar-image"
-              mode="aspectFill"
+                :src="userInfo.avatar || '/static/default-avatar.png'"
+                class="avatar-image"
+                mode="aspectFill"
             />
             <button
                 class="avatar-hidden-btn"
@@ -29,48 +29,64 @@
         </view>
         <view class="cell-right">
           <input
-            type="nickname"
-            v-model="userInfo.nickname"
-            class="cell-input"
-            placeholder="请输入昵称"
+              type="nickname"
+              v-model="userInfo.name"
+              class="cell-input"
+              placeholder="请输入昵称"
+          />
+        </view>
+      </view>
+
+      <view class="cell-item">
+        <view class="cell-left">
+          <text class="cell-title">电话</text>
+        </view>
+        <view class="cell-right">
+          <input
+              type="text"
+              readonly
+              disabled
+              v-model="userInfo.cellphone"
+              class="cell-input"
+              placeholder="请输入昵称"
           />
         </view>
       </view>
 
       <!-- 性别 Cell -->
-      <view class="cell-item">
-        <view class="cell-left">
-          <text class="cell-title">性别</text>
-        </view>
-        <view class="cell-right">
-          <radio-group @change="onGenderChange" class="gender-group">
-            <label class="radio-item">
-              <radio value="male" color="#3b5598" :checked="userInfo.gender === 'male'" />
-              <text>男</text>
-            </label>
-            <label class="radio-item">
-              <radio value="female" color="#3b5598" :checked="userInfo.gender === 'female'" />
-              <text>女</text>
-            </label>
-          </radio-group>
-        </view>
-      </view>
-
-      <!-- 生日 Cell -->
-      <view class="cell-item">
-        <view class="cell-left">
-          <text class="cell-title">生日</text>
-        </view>
-        <view class="cell-right">
-          <picker mode="date" :value="userInfo.birthday" @change="onBirthdayChange">
-            <view class="cell-picker">
-              <text class="cell-text" :class="{ placeholder: !userInfo.birthday }">
-                {{ userInfo.birthday || '请选择生日' }}
-              </text>
+            <view class="cell-item">
+              <view class="cell-left">
+                <text class="cell-title">性别</text>
+              </view>
+              <view class="cell-right">
+                <radio-group @change="onGenderChange" class="gender-group">
+                  <label class="radio-item">
+                    <radio value="男" color="#3b5598" :checked="userInfo.gender === '男'" />
+                    <text>男</text>
+                  </label>
+                  <label class="radio-item">
+                    <radio value="女" color="#3b5598" :checked="userInfo.gender === '女'" />
+                    <text>女</text>
+                  </label>
+                </radio-group>
+              </view>
             </view>
-          </picker>
-        </view>
-      </view>
+
+          <!-- 生日 Cell -->
+            <view class="cell-item">
+              <view class="cell-left">
+                <text class="cell-title">生日</text>
+              </view>
+              <view class="cell-right">
+                <picker mode="date" :value="userInfo.birthDate" @change="onBirthdayChange">
+                  <view class="cell-picker">
+                    <text class="cell-text" :class="{ placeholder: !userInfo.birthDate }">
+                      {{ userInfo.birthDate || '请选择生日' }}
+                    </text>
+                  </view>
+                </picker>
+              </view>
+            </view>
 
       <!-- 保存按钮 -->
       <view class="btn-container">
@@ -81,24 +97,34 @@
 </template>
 
 <script>
+import {setUser} from "@/api/list/login";
+import {uploadFile, userMe} from "../../../api/list/login";
+
 export default {
   data() {
     return {
-      userInfo: {
-        avatar: '/static/logo.png',
-        nickname: '',
-        gender: 'male',
-        birthday: ''
+      userInfo: uni.getStorageSync('wyUserInfo') || {
+        avatar: '',
+        gender: '',
+        name: '',
+        cellphone: '',
+        email: '',
+        loginName: '',
+        region: '',
+        birthDate: '',
       }
     }
   },
   onLoad() {
     this.loadUserInfo()
+
   },
   methods: {
     loadUserInfo() {
-      // 加载用户信息
-      console.log('加载用户信息')
+      userMe().then(res => {
+        uni.setStorageSync('wyUserInfo', { ...this.userInfo, ...res });
+        this.userInfo = res || {};
+      })
     },
 
     chooseavatar(e) {
@@ -114,7 +140,11 @@ export default {
         sizeType: ['compressed'],
         sourceType: ['album', 'camera'],
         success: (res) => {
-          this.userInfo.avatar = res.tempFilePaths[0]
+          let tempFiles = res.tempFiles[0]
+          uploadFile(tempFiles.path, tempFiles).then(res => {
+            let url = res.url
+            this.userInfo.avatar = url
+          })
         }
       })
       // #endif
@@ -125,14 +155,15 @@ export default {
     },
 
     onBirthdayChange(e) {
-      this.userInfo.birthday = e.detail.value
+      this.userInfo.birthDate = e.detail.value
     },
 
     saveProfile() {
-      // 保存用户信息
-      uni.showToast({
-        title: '保存成功',
-        icon: 'success'
+      setUser(this.userInfo).then(res => {
+        uni.setStorageSync('wyUserInfo', { ...this.userInfo, ...res });
+        // 保存用户信息
+        uni.showToast({ title: '保存成功', icon: 'success' })
+        setTimeout(() => { uni.switchTab({ url: '/pages/my/my' }) }, 1500)
       })
     }
   }
@@ -151,6 +182,7 @@ export default {
     border-radius: 20rpx;
     overflow: hidden;
     padding: 0 20rpx;
+
     .cell-item {
       display: flex;
       align-items: center;

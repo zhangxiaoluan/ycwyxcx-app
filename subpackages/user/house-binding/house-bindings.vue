@@ -39,7 +39,7 @@
           <view class="community-name">
             {{ item.communityName || '小区名称' }}
             {{ item.buildingName || '栋' }} 栋
-            {{ item.roomName || '房间' }}
+            {{ item.roomNumber || '房间' }}
           </view>
         </view>
 
@@ -74,25 +74,11 @@
         <!-- 操作按钮 -->
         <view class="action-buttons">
           <button
-            v-if="item.status === 1"
-            class="btn-cancel"
-            @click="cancelBinding(item)"
-          >
-            撤销申请
-          </button>
-          <button
             v-if="item.status === 2"
             class="btn-unbind"
             @click="unbindHouse(item)"
           >
             解除绑定
-          </button>
-          <button
-            v-if="item.status === 3"
-            class="btn-reapply"
-            @click="reapplyBinding(item)"
-          >
-            重新申请
           </button>
         </view>
       </view>
@@ -121,7 +107,7 @@
 </template>
 
 <script>
-import {houseBindings, houseBindingsDel} from '../../../api/list/house-binding'
+import {getBinding, houseBindings, houseBindingsDel} from '../../../api/list/house-binding'
 export default {
   data() {
     return {
@@ -158,12 +144,13 @@ export default {
 
         const result = await houseBindings(params)
 
+        // 通过审核
+        // getBinding().then(res=>{  console.log(res) })
+
         if (result && Array.isArray(result.records)) {
           const newRecords = result.records.map(item => {
-            // 这里需要根据实际API返回的字段进行映射
             return {
               ...item,
-              // 如果API没有返回这些字段，需要通过其他接口获取或省略显示
               communityName: item.communityName || '小区名称',
               buildingName: item.buildingName || '楼栋',
               roomName: item.roomName || '房间'
@@ -192,7 +179,7 @@ export default {
       }
     },
 
-  
+
     // 获取关系文本
     getRelationText(relationType) {
       const relationMap = {
@@ -211,37 +198,7 @@ export default {
       return date.toLocaleString('zh-CN')
     },
 
-    // 撤销申请
-    async cancelBinding(item) {
-      try {
-        const result = await uni.showModal({
-          title: '确认撤销',
-          content: '确定要撤销该绑定申请吗？',
-          confirmText: '确定',
-          cancelText: '取消'
-        })
 
-        if (result.confirm) {
-          uni.showLoading({ title: '处理中...' })
-          // 调用解除绑定接口，使用绑定ID
-          await houseBindingsDel(item.id)
-          uni.hideLoading()
-          uni.showToast({
-            title: '撤销成功',
-            icon: 'success'
-          })
-          // 重新加载列表
-          this.loadBindings(true)
-        }
-      } catch (error) {
-        uni.hideLoading()
-        console.error('撤销申请失败:', error)
-        uni.showToast({
-          title: error.message || '撤销失败',
-          icon: 'none'
-        })
-      }
-    },
 
     // 解除绑定
     async unbindHouse(item) {
@@ -274,13 +231,6 @@ export default {
       }
     },
 
-    // 重新申请
-    reapplyBinding(item) {
-      // 跳转到绑定页面，并预填信息
-      uni.navigateTo({
-        url: `/subpackages/user/house-binding/house-binding?reapply=true&data=${JSON.stringify(item)}`
-      })
-    },
 
     // 去绑定页面
     goToBinding() {
@@ -358,7 +308,7 @@ export default {
 
         .label {
           color: #999;
-          width: 140rpx;
+          width: 100rpx;
           flex-shrink: 0;
         }
 
@@ -374,12 +324,16 @@ export default {
       gap: 20rpx;
       margin-top: 20rpx;
 
+      uni-button:after{
+        border: unset;
+      }
+
       button {
         flex: 1;
         height: 70rpx;
-        border-radius: 8rpx;
+        border-radius: 20rpx;
         font-size: 28rpx;
-        border: none;
+
 
         &.btn-cancel {
           background: #ffc107;

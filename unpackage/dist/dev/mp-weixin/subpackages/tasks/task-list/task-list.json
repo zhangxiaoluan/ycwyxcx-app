@@ -1,7 +1,8 @@
 {
-  "navigationBarTitleText": "我的任务",
+  "navigationBarTitleText": "任务中心",
+  "enablePullDownRefresh": true,
   "usingComponents": {
     "u-icon": "/uni_modules/uview-ui/components/u-icon/u-icon",
-    "u-modal": "/uni_modules/uview-ui/components/u-modal/u-modal"
+    "u-loading-icon": "/uni_modules/uview-ui/components/u-loading-icon/u-loading-icon"
   }
 }

@@ -83,7 +83,7 @@
 .house-bindings-page .binding-item .user-info .info-row .label,
 .house-bindings-page .binding-item .audit-info .info-row .label {
   color: #999;
-  width: 140rpx;
+  width: 100rpx;
   flex-shrink: 0;
 }
 .house-bindings-page .binding-item .user-info .info-row .value,
@@ -96,12 +96,14 @@
   gap: 20rpx;
   margin-top: 20rpx;
 }
+.house-bindings-page .binding-item .action-buttons uni-button:after {
+  border: unset;
+}
 .house-bindings-page .binding-item .action-buttons button {
   flex: 1;
   height: 70rpx;
-  border-radius: 8rpx;
+  border-radius: 20rpx;
   font-size: 28rpx;
-  border: none;
 }
 .house-bindings-page .binding-item .action-buttons button.btn-cancel {
   background: #ffc107;

@@ -217,10 +217,10 @@
 				showSignModal: false,
 			}
 		},
-		onLoad() {
-			this.initHandle()
-		},
-		onShow() {},
+		onLoad() {},
+		onShow() {
+      this.initHandle()
+    },
 		methods: {
       initHandle(){
         this.getStatusBarHeight()

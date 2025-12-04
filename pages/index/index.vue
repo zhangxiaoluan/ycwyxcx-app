@@ -15,17 +15,17 @@
       </view>
     </view>
 
-    <!-- 搜索栏 -->
-    <view class="search-section">
-      <view class="search-box">
-        <u-icon name="search" size="20" color="#999"></u-icon>
-        <input
-          class="search-input"
-          placeholder="搜索功能和服务"
-          @input="onSearchInput"
-        />
-      </view>
-    </view>
+<!--    &lt;!&ndash; 搜索栏 &ndash;&gt;-->
+<!--    <view class="search-section">-->
+<!--      <view class="search-box">-->
+<!--        <u-icon name="search" size="20" color="#999"></u-icon>-->
+<!--        <input-->
+<!--          class="search-input"-->
+<!--          placeholder="搜索功能和服务"-->
+<!--          @input="onSearchInput"-->
+<!--        />-->
+<!--      </view>-->
+<!--    </view>-->
 
     <!-- 轮播图 -->
     <view class="banner-section">
@@ -42,11 +42,11 @@
       >
         <swiper-item v-for="(banner, index) in banners" :key="index">
           <view class="banner-item" @click="onBannerClick(banner)">
-            <image :src="banner.image" mode="aspectFill" class="banner-image" :class="{ 'loading': !imageLoaded[index] }" @load="onImageLoad(index)"></image>
+            <image :src="banner.imageUrl" mode="aspectFill" class="banner-image" :class="{ 'loading': !imageLoaded[index] }" @load="onImageLoad(index)"></image>
             <view class="banner-content">
-              <view class="banner-type" :class="banner.type">{{ getTypeText(banner.type) }}</view>
+              <!-- <view class="banner-type" :class="banner.type">{{ getTypeText(banner.type) }}</view>-->
               <text class="banner-title">{{ banner.title }}</text>
-              <text class="banner-desc">{{ banner.desc }}</text>
+              <text class="banner-desc">{{ banner.publishTime }}</text>
             </view>
           </view>
         </swiper-item>
@@ -75,7 +75,7 @@
         <view class="function-card repair" @click="goToRepairs">
           <view class="function-icon">
             <view class="icon-bg repair-bg">
-              <u-icon name="coupon" size="24" color="#fff"></u-icon>
+              <u-icon name="pushpin" size="24" color="#fff"></u-icon>
             </view>
           </view>
           <text class="function-title">报修服务</text>
@@ -113,8 +113,8 @@
     <!-- 便民服务 -->
     <view class="convenience-section">
       <view class="section-header">
-        <text class="section-title">便民服务</text>
-        <text class="more-text" @click="goToConvenience">查看全部 ></text>
+        <text class="section-title">其他服务</text>
+<!--        <text class="more-text" @click="goToConvenience">查看全部 ></text>-->
       </view>
       <view class="service-grid">
         <view class="service-item" v-for="service in convenienceServices.slice(0, 8)" :key="service.id" @click="goToService(service)">
@@ -127,48 +127,50 @@
     </view>
 
     <!-- 社区公告预览 -->
-    <view class="notice-preview-section">
-      <view class="section-header">
-        <text class="section-title">社区公告</text>
-        <text class="more-text" @click="goToNotices">查看全部 ></text>
-      </view>
-      <view class="notice-preview-list">
-        <view class="notice-preview-item" v-for="notice in notices.slice(0, 3)" :key="notice.id" @click="goToNoticeDetail(notice)">
-          <view class="notice-dot" :class="{ unread: !notice.read }"></view>
-          <view class="notice-preview-content">
-            <text class="notice-preview-title">{{ notice.title }}</text>
-            <text class="notice-preview-time">{{ notice.time }}</text>
-          </view>
-        </view>
-      </view>
-    </view>
+<!--    <view class="notice-preview-section">-->
+<!--      <view class="section-header">-->
+<!--        <text class="section-title">社区公告</text>-->
+<!--        <text class="more-text" @click="goToNotices">查看全部 ></text>-->
+<!--      </view>-->
+<!--      <view class="notice-preview-list">-->
+<!--        <view class="notice-preview-item" v-for="notice in notices.slice(0, 3)" :key="notice.id" @click="goToNoticeDetail(notice)">-->
+<!--          <view class="notice-dot" :class="{ unread: !notice.read }"></view>-->
+<!--          <view class="notice-preview-content">-->
+<!--            <text class="notice-preview-title">{{ notice.title }}</text>-->
+<!--            <text class="notice-preview-time">{{ notice.time }}</text>-->
+<!--          </view>-->
+<!--        </view>-->
+<!--      </view>-->
+<!--    </view>-->
 
     <!-- 联系客服 -->
-    <view class="contact-section">
-      <view class="contact-card">
-        <view class="contact-info">
-          <u-icon name="home" size="24" color="#3b5598"></u-icon>
-          <view class="contact-details">
-            <text class="contact-title">7x24小时客服</text>
-            <text class="contact-phone">400-123-4567</text>
-          </view>
-        </view>
-        <view class="contact-buttons">
-          <button class="contact-btn call" @click="makePhoneCall">
-            <u-icon name="phone" size="16" color="#fff"></u-icon>
-            <text>电话</text>
-          </button>
-          <button class="contact-btn chat" @click="openChat">
-            <u-icon name="home" size="16" color="#fff"></u-icon>
-            <text>在线</text>
-          </button>
-        </view>
-      </view>
-    </view>
+<!--    <view class="contact-section">-->
+<!--      <view class="contact-card">-->
+<!--        <view class="contact-info">-->
+<!--          <u-icon name="home" size="24" color="#3b5598"></u-icon>-->
+<!--          <view class="contact-details">-->
+<!--            <text class="contact-title">7x24小时客服</text>-->
+<!--            <text class="contact-phone">400-123-4567</text>-->
+<!--          </view>-->
+<!--        </view>-->
+<!--        <view class="contact-buttons">-->
+<!--          <button class="contact-btn call" @click="makePhoneCall">-->
+<!--            <u-icon name="phone" size="16" color="#fff"></u-icon>-->
+<!--            <text>电话</text>-->
+<!--          </button>-->
+<!--          <button class="contact-btn chat" @click="openChat">-->
+<!--            <u-icon name="home" size="16" color="#fff"></u-icon>-->
+<!--            <text>在线</text>-->
+<!--          </button>-->
+<!--        </view>-->
+<!--      </view>-->
+<!--    </view>-->
   </view>
 </template>
 
 <script>
+import {articleCarousel} from "../../api/list/home";
+
 export default {
   data() {
     return {
@@ -186,38 +188,14 @@ export default {
         completed: 15
       },
       banners: [
-        {
-          id: 1,
-          image: 'https://picsum.photos/360/166?id=1',
-          title: '物业费缴费优惠活动',
-          desc: '本月缴费享9折优惠',
-          url: '/pages/payment/property-fee',
-          type: 'promotion'
-        },
-        {
-          id: 2,
-          image: 'https://picsum.photos/360/166?id=2',
-          title: '社区活动报名中',
-          desc: '周末联欢活动等你参加',
-          url: '/pages/community/activity',
-          type: 'activity'
-        },
-        {
-          id: 3,
-          image: 'https://picsum.photos/360/166?id=3',
-          title: '智慧物业新功能上线',
-          desc: '在线报修、一键缴费更便捷',
-          url: '/pages/announcement',
-          type: 'announcement'
-        },
-        {
-          id: 4,
-          image: 'https://picsum.photos/360/166?id=4',
-          title: '家政服务优惠',
-          desc: '专业家政服务，社区专享价格',
-          url: '/subpackages/wallet/points-mall/points-mall',
-          type: 'service'
-        }
+        // {
+        //   id: 1,
+        //   image: 'https://picsum.photos/360/166?id=1',
+        //   title: '物业费缴费优惠活动',
+        //   desc: '本月缴费享9折优惠',
+        //   url: '/pages/payment/property-fee',
+        //   type: 'promotion'
+        // },
       ],
       quickRepairItems: [
         { id: 1, name: '水电维修', icon: 'zap', color: '#ff6b35' },
@@ -258,16 +236,14 @@ export default {
       ]
     }
   },
-  onLoad() {
+  onLoad() {},
+  onShow() {
     this.getStatusBarHeight()
     this.loadData()
     this.initBannerImages()
-  },
-  onShow() {
     this.loadUnreadCount()
   },
   methods: {
-
     getStatusBarHeight() {
       // 获取系统信息（包含状态栏高度）
       const systemInfo = uni.getSystemInfoSync();
@@ -285,13 +261,14 @@ export default {
       // #endif
     },
 
-
-
     initBannerImages() {
-      // 初始化banner图片加载状态
-      this.imageLoaded = {}
-      this.banners.forEach((banner, index) => {
-        this.$set(this.imageLoaded, index, false)
+      articleCarousel().then(response => {
+        console.log(response);
+        // 初始化banner图片加载状态
+        this.banners = response || []
+        // this.banners.forEach((banner, index) => {
+        //   this.$set(this.imageLoaded, index, false)
+        // })
       })
     },
 
@@ -322,15 +299,11 @@ export default {
     },
 
     onBannerClick(banner) {
-      // 添加点击统计或反馈效果
-      console.log('Banner clicked:', banner.title)
-
       uni.navigateTo({
-        url: banner.url,
+        url: `/subpackages/home/article-detail?id=${banner.articleId}`,
         fail: () => {
-          // 如果页面不存在，显示提示
           uni.showToast({
-            title: '功能开发中',
+            title: '页面跳转失败',
             icon: 'none'
           })
         }
@@ -371,7 +344,7 @@ export default {
 
     goToRepairs() {
       uni.navigateTo({
-        url: '/pages/repair/repair-list'
+        url: '/subpackages/repair/list'
       })
     },
 
@@ -428,9 +401,7 @@ export default {
     },
 
     goToConvenience() {
-      uni.navigateTo({
-        url: '/pages/convenience/convenience-services'
-      })
+      uni.navigateTo({ url: '/subpackages/convenience/services/index' })
     },
 
     openChat() {

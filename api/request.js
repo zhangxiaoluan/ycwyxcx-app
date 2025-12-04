@@ -3,7 +3,7 @@ const BASE_URL = ''
 // #endif
 
 // #ifdef MP-WEIXIN
-const BASE_URL = 'http://81.71.98.7:8802'
+const BASE_URL = 'http://62.234.35.7:8802'
 // #endif
 
 
@@ -115,7 +115,7 @@ export const wxSendRequest = (target, config) => {
 export const sendUpload = async (url, filePath, file) => {
     return new Promise((resolve, reject) => {
         uni.uploadFile({
-            url: url,
+            url: BASE_URL + url,
             filePath: filePath,
             file: file,
             name: 'file',
@@ -135,7 +135,7 @@ export const sendUpload = async (url, filePath, file) => {
 export const sendUploads = async (url, fileList) => {
     return new Promise((resolve, reject) => {
         uni.uploadFile({
-            url: url,
+            url: BASE_URL + url,
             files: fileList,
             success: res => {
                 let data = JSON.parse(res.data)

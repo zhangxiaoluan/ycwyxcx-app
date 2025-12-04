@@ -29,7 +29,8 @@
       "pages": [
         "task-list/task-list",
         "task-detail/task-detail",
-        "task-publish/task-publish"
+        "task-publish/task-publish",
+        "my-tasks/my-tasks"
       ]
     },
     {
@@ -48,6 +49,28 @@
         "settings/settings",
         "about/about",
         "privacy/privacy"
+      ]
+    },
+    {
+      "root": "subpackages/repair",
+      "pages": [
+        "list",
+        "apply",
+        "detail",
+        "progress",
+        "rate"
+      ]
+    },
+    {
+      "root": "subpackages/home",
+      "pages": [
+        "article-detail"
+      ]
+    },
+    {
+      "root": "subpackages/convenience",
+      "pages": [
+        "services/index"
       ]
     }
   ],

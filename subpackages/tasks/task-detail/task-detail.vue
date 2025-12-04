@@ -1,17 +1,14 @@
 <template>
   <view class="task-detail-page">
-
     <view class="content" v-if="taskDetail">
       <!-- 任务状态卡片 -->
-      <view class="status-card" :class="taskDetail.status">
+      <view class="status-card" :class="'task-status-' + taskDetail.taskStatus">
         <view class="status-header">
-          <view class="task-type" :class="taskDetail.type">
-            <u-icon :name="getTaskTypeIcon(taskDetail.type)" size="20" color="#fff"></u-icon>
-            <text>{{ getTaskTypeText(taskDetail.type) }}</text>
+          <view class="task-type" :class="'task-type-' + taskDetail.taskType">
+            <text>{{ taskDetail.taskTypeName }}</text>
           </view>
-          <view class="task-status">
-            <u-icon :name="getStatusIcon(taskDetail.status)" size="16" :color="getStatusColor(taskDetail.status)"></u-icon>
-            <text :style="{ color: getStatusColor(taskDetail.status) }">{{ getTaskStatusText(taskDetail.status) }}</text>
+          <view class="task-status-text">
+            <text>{{ taskDetail.taskStatusName }}</text>
           </view>
         </view>
         <text class="task-title">{{ taskDetail.title }}</text>
@@ -20,16 +17,37 @@
       <!-- 任务信息 -->
       <view class="info-section">
         <view class="section-title">任务描述</view>
-        <text class="task-description">{{ taskDetail.description }}</text>
+        <text class="task-description">{{ taskDetail.content }}</text>
       </view>
 
-      <!-- 任务要求 -->
-      <view class="info-section" v-if="taskDetail.requirements">
-        <view class="section-title">任务要求</view>
-        <view class="requirements-list">
-          <text class="requirement-item" v-for="(req, index) in taskDetail.requirements" :key="index">
-            • {{ req }}
-          </text>
+      <!-- 任务图片 -->
+      <view class="info-section" v-if="taskDetail.taskImages && taskDetail.taskImages.length > 0">
+        <view class="section-title">任务图片</view>
+        <view class="image-grid">
+          <view
+            class="image-item"
+            v-for="(img, index) in taskDetail.taskImages"
+            :key="index"
+            @click="previewImage(taskDetail.taskImages, index)"
+          >
+            <image :src="img" mode="aspectFill"></image>
+          </view>
+        </view>
+      </view>
+
+      <!-- 发布者信息 -->
+      <view class="info-section" v-if="taskDetail.publisherName">
+        <view class="section-title">发布者信息</view>
+        <view class="publisher-info">
+          <view class="publisher-avatar">
+            <u-icon name="user" size="40" color="#3b5598"></u-icon>
+          </view>
+          <view class="publisher-details">
+            <text class="publisher-name">{{ taskDetail.publisherName }}</text>
+            <text class="publisher-community" v-if="taskDetail.communityName">
+              {{ taskDetail.communityName }}
+            </text>
+          </view>
         </view>
       </view>
 
@@ -39,692 +57,562 @@
         <view class="info-grid">
           <view class="info-item">
             <text class="info-label">发布时间</text>
-            <text class="info-value">{{ taskDetail.createTime }}</text>
+            <text class="info-value">{{ formatDateTime(taskDetail.publishTime) }}</text>
           </view>
-          <view class="info-item" v-if="taskDetail.deadline">
+          <view class="info-item" v-if="taskDetail.deadlineTime">
             <text class="info-label">截止时间</text>
-            <text class="info-value deadline">{{ taskDetail.deadline }}</text>
+            <text class="info-value deadline">{{ formatDateTime(taskDetail.deadlineTime) }}</text>
+          </view>
+          <view class="info-item" v-if="taskDetail.takeTime">
+            <text class="info-label">领取时间</text>
+            <text class="info-value">{{ formatDateTime(taskDetail.takeTime) }}</text>
           </view>
           <view class="info-item" v-if="taskDetail.completeTime">
             <text class="info-label">完成时间</text>
-            <text class="info-value">{{ taskDetail.completeTime }}</text>
+            <text class="info-value">{{ formatDateTime(taskDetail.completeTime) }}</text>
           </view>
         </view>
+      </view>
+
+      <!-- 联系信息 -->
+      <view class="info-section" v-if="taskDetail.contactPhone || taskDetail.contactAddress">
+        <view class="section-title">联系信息</view>
+        <view class="contact-info">
+          <view class="contact-item" v-if="taskDetail.contactPhone">
+            <u-icon name="phone" size="16" color="#3b5598"></u-icon>
+            <text>{{ taskDetail.contactPhone }}</text>
+          </view>
+          <view class="contact-item" v-if="taskDetail.contactAddress">
+            <u-icon name="map-pin" size="16" color="#3b5598"></u-icon>
+            <text>{{ taskDetail.contactAddress }}</text>
+          </view>
+        </view>
+      </view>
+
+      <!-- 领取者信息 -->
+      <view class="info-section" v-if="taskDetail.takerName">
+        <view class="section-title">领取者信息</view>
+        <view class="taker-info">
+          <view class="taker-avatar">
+            <u-icon name="user" size="40" color="#3b5598"></u-icon>
+          </view>
+          <view class="taker-details">
+            <text class="taker-name">{{ taskDetail.takerName }}</text>
+            <text class="take-time">领取时间：{{ formatDateTime(taskDetail.takeTime) }}</text>
+          </view>
+        </view>
+      </view>
+
+      <!-- 备注 -->
+      <view class="info-section" v-if="taskDetail.remark">
+        <view class="section-title">备注</view>
+        <text class="remark-text">{{ taskDetail.remark }}</text>
       </view>
 
       <!-- 奖励信息 -->
-      <view class="reward-section">
+      <view class="info-section" v-if="taskDetail.rewardPoints > 0">
         <view class="section-title">任务奖励</view>
         <view class="reward-info">
-          <view class="reward-amount">
-            <text class="reward-value">{{ taskDetail.reward }}</text>
-            <text class="reward-type">{{ getRewardTypeText(taskDetail.rewardType) }}</text>
-          </view>
-          <view class="reward-desc" v-if="taskDetail.rewardDesc">
-            {{ taskDetail.rewardDesc }}
-          </view>
-        </view>
-      </view>
-
-      <!-- 发布者信息 -->
-      <view class="publisher-section">
-        <view class="section-title">发布者</view>
-        <view class="publisher-info">
-          <image :src="taskDetail.publisher.avatar" class="publisher-avatar" mode="aspectFill"></image>
-          <view class="publisher-details">
-            <text class="publisher-name">{{ taskDetail.publisher.name }}</text>
-            <text class="publisher-rating">评分：{{ taskDetail.publisher.rating }}/5.0</text>
-          </view>
-          <button class="contact-btn" @click="contactPublisher">
-            <u-icon name="message" size="16" color="#3b5598"></u-icon>
-            <text>联系</text>
-          </button>
-        </view>
-      </view>
-
-      <!-- 接单者信息 -->
-      <view class="assignee-section" v-if="taskDetail.assignee">
-        <view class="section-title">接单者</view>
-        <view class="assignee-info">
-          <image :src="taskDetail.assignee.avatar" class="assignee-avatar" mode="aspectFill"></image>
-          <view class="assignee-details">
-            <text class="assignee-name">{{ taskDetail.assignee.name }}</text>
-            <text class="assignee-rating">评分：{{ taskDetail.assignee.rating }}/5.0</text>
-          </view>
-          <button class="contact-btn" @click="contactAssignee">
-            <u-icon name="message" size="16" color="#3b5598"></u-icon>
-            <text>联系</text>
-          </button>
-        </view>
-      </view>
-
-      <!-- 任务进度 -->
-      <view class="progress-section" v-if="taskDetail.status === 'pending' && taskDetail.progress">
-        <view class="section-title">任务进度</view>
-        <view class="progress-info">
-          <view class="progress-bar">
-            <view class="progress-fill" :style="{ width: taskDetail.progress + '%' }"></view>
-          </view>
-          <text class="progress-text">{{ taskDetail.progress }}%</text>
-        </view>
-        <view class="progress-updates" v-if="taskDetail.updates">
-          <view class="update-item" v-for="(update, index) in taskDetail.updates" :key="index">
-            <text class="update-time">{{ update.time }}</text>
-            <text class="update-content">{{ update.content }}</text>
-          </view>
-        </view>
-      </view>
-
-      <!-- 图片附件 -->
-      <view class="attachments-section" v-if="taskDetail.images && taskDetail.images.length > 0">
-        <view class="section-title">图片附件</view>
-        <view class="images-grid">
-          <image
-            v-for="(image, index) in taskDetail.images"
-            :key="index"
-            :src="image"
-            class="task-image"
-            mode="aspectFill"
-            @click="previewImage(index)"
-          ></image>
+          <text class="reward-value">{{ taskDetail.rewardPoints }} 积分</text>
+          <text class="reward-desc">完成此任务可获得积分奖励</text>
         </view>
       </view>
     </view>
 
+    <!-- 加载状态 -->
+    <view class="loading-state" v-else-if="loading">
+      <u-loading-icon mode="circle" color="#3b5598" size="40"></u-loading-icon>
+      <text>加载中...</text>
+    </view>
+
+    <!-- 错误状态 -->
+    <view class="error-state" v-else>
+      <u-icon name="order" size="64" color="#ddd"></u-icon>
+      <text class="error-text">加载失败</text>
+      <button class="retry-btn" @click="loadTaskDetail">重试</button>
+    </view>
+
     <!-- 操作按钮 -->
-    <view class="action-bar" v-if="taskDetail">
-      <button class="action-btn cancel" v-if="canCancel" @click="cancelTask">取消任务</button>
-      <button class="action-btn accept" v-if="canAccept" @click="acceptTask">接单</button>
-      <button class="action-btn complete" v-if="canComplete" @click="completeTask">确认完成</button>
-      <button class="action-btn contact" v-if="canContact" @click="contactUser">联系对方</button>
+    <view class="action-section" v-if="taskDetail && showActions">
+      <button
+        class="action-btn primary"
+        v-if="taskDetail.canTake && !taskDetail.hasApplied"
+        @click="takeTask"
+      >
+        <u-icon name="checkmark" size="16" color="#fff"></u-icon>
+        <text>领取任务</text>
+      </button>
+
+      <button
+        class="action-btn primary"
+        v-if="taskDetail.taskStatus === 2 && isTaskTaker"
+        @click="completeTask"
+      >
+        <u-icon name="checkmark-circle" size="16" color="#fff"></u-icon>
+        <text>完成任务</text>
+      </button>
+
+      <button
+        class="action-btn secondary"
+        v-if="taskDetail.taskStatus === 1 && isTaskPublisher"
+        @click="cancelTask"
+      >
+        <u-icon name="close" size="16" color="#f5222d"></u-icon>
+        <text>取消任务</text>
+      </button>
     </view>
   </view>
 </template>
 
 <script>
+import { getTaskDetail, takeTask as apiTakeTask, cancelTask as apiCancelTask, completeTask as apiCompleteTask } from '@/api/list/tasks'
+
 export default {
+  name: 'task-detail',
   data() {
     return {
-      taskId: null,
+      taskId: '',
       taskDetail: null,
-      currentUser: {
-        id: 'user001',
-        name: '当前用户'
-      }
+      loading: false,
+      userInfo: null // 这里应该从全局状态获取用户信息
     }
   },
   computed: {
-    canCancel() {
-      return this.taskDetail &&
-             this.taskDetail.publisher.id === this.currentUser.id &&
-             this.taskDetail.status === 'pending'
+    showActions() {
+      if (!this.taskDetail) return false
+      return (this.taskDetail.canTake && !this.taskDetail.hasApplied) ||
+             (this.taskDetail.taskStatus === 2 && this.isTaskTaker) ||
+             (this.taskDetail.taskStatus === 1 && this.isTaskPublisher)
     },
-    canAccept() {
-      return this.taskDetail &&
-             this.taskDetail.publisher.id !== this.currentUser.id &&
-             !this.taskDetail.assignee &&
-             this.taskDetail.status === 'pending'
+    isTaskPublisher() {
+      return this.userInfo && this.taskDetail && this.userInfo.id === this.taskDetail.publisherId
     },
-    canComplete() {
-      return this.taskDetail &&
-             ((this.taskDetail.assignee && this.taskDetail.assignee.id === this.currentUser.id) ||
-              (this.taskDetail.publisher.id === this.currentUser.id)) &&
-             this.taskDetail.status === 'pending'
-    },
-    canContact() {
-      return this.taskDetail &&
-             this.taskDetail.status === 'pending' &&
-             ((this.taskDetail.assignee && this.taskDetail.assignee.id === this.currentUser.id) ||
-              (this.taskDetail.publisher.id === this.currentUser.id))
+    isTaskTaker() {
+      return this.userInfo && this.taskDetail && this.userInfo.id === this.taskDetail.takerId
     }
   },
   onLoad(options) {
-    this.taskId = options.id
-    this.loadTaskDetail()
+    if (options.id) {
+      this.taskId = options.id
+      this.loadTaskDetail()
+    } else {
+      uni.showToast({
+        title: '参数错误',
+        icon: 'none'
+      })
+      uni.navigateBack()
+    }
   },
   methods: {
-    loadTaskDetail() {
-      // 模拟加载任务详情
-      this.taskDetail = {
-        id: this.taskId,
-        title: '修理水龙头漏水',
-        description: '厨房水龙头漏水需要修理，已经持续了一周时间。漏水主要在水龙头底部连接处，需要更换密封圈。希望有相关维修经验的师傅能够处理，需要自备基本工具。',
-        type: 'repair',
-        status: 'pending',
-        requirements: [
-          '需要有水管维修经验',
-          '能够自备基本维修工具',
-          '工作态度认真负责',
-          '维修后需要确保不漏水'
-        ],
-        reward: '50元',
-        rewardType: 'cash',
-        rewardDesc: '完成维修并确认不漏水后立即支付',
-        createTime: '2024-11-15 10:30',
-        deadline: '2024-11-20 18:00',
-        publisher: {
-          id: 'user002',
-          name: '张先生',
-          avatar: '/static/images/avatar1.png',
-          rating: 4.8
-        },
-        assignee: null,
-        progress: 0,
-        updates: [],
-        images: [
-          '/static/images/leak1.jpg',
-          '/static/images/leak2.jpg'
-        ]
-      }
-    },
+    async loadTaskDetail() {
+      if (this.loading) return
 
-    getTaskTypeIcon(type) {
-      const icons = {
-        repair: 'hammer',
-        cleaning: 'broom',
-        delivery: 'shopping-cart',
-        other: 'help-circle'
-      }
-      return icons[type] || 'help-circle'
-    },
-
-    getTaskTypeText(type) {
-      const typeMap = {
-        repair: '维修',
-        cleaning: '家政',
-        delivery: '配送',
-        other: '其他'
-      }
-      return typeMap[type] || '其他'
-    },
-
-    getStatusIcon(status) {
-      const icons = {
-        pending: 'clock',
-        completed: 'checkmark-circle',
-        cancelled: 'close-circle'
-      }
-      return icons[status] || 'help-circle'
-    },
-
-    getStatusColor(status) {
-      const colors = {
-        pending: '#fa8c16',
-        completed: '#52c41a',
-        cancelled: '#f5222d'
-      }
-      return colors[status] || '#666'
-    },
-
-    getTaskStatusText(status) {
-      const statusMap = {
-        pending: '进行中',
-        completed: '已完成',
-        cancelled: '已取消'
-      }
-      return statusMap[status] || '未知'
-    },
-
-    getRewardTypeText(type) {
-      const typeMap = {
-        cash: '现金',
-        points: '积分',
-        service: '服务'
-      }
-      return typeMap[type] || ''
-    },
-
-    contactPublisher() {
-      uni.showToast({
-        title: '功能开发中',
-        icon: 'none'
-      })
-    },
-
-    contactAssignee() {
-      uni.showToast({
-        title: '功能开发中',
-        icon: 'none'
-      })
-    },
-
-    contactUser() {
-      uni.showToast({
-        title: '功能开发中',
-        icon: 'none'
-      })
-    },
-
-    cancelTask() {
-      uni.showModal({
-        title: '取消任务',
-        content: '确定要取消这个任务吗？取消后将无法恢复。',
-        success: (res) => {
-          if (res.confirm) {
-            this.taskDetail.status = 'cancelled'
-            uni.showToast({
-              title: '任务已取消',
-              icon: 'success'
-            })
-          }
-        }
-      })
-    },
-
-    acceptTask() {
-      uni.showModal({
-        title: '确认接单',
-        content: '确定要接取这个任务吗？接单后请及时联系发布者确认细节。',
-        success: (res) => {
-          if (res.confirm) {
-            this.taskDetail.assignee = {
-              id: this.currentUser.id,
-              name: this.currentUser.name,
-              avatar: '/static/logo.png',
-              rating: 4.5
-            }
-            uni.showToast({
-              title: '接单成功',
-              icon: 'success'
-            })
-          }
-        }
-      })
-    },
-
-    completeTask() {
-      uni.showModal({
-        title: '确认完成',
-        content: '确定任务已经完成了吗？请确保所有工作都已按要求完成。',
-        success: (res) => {
-          if (res.confirm) {
-            this.taskDetail.status = 'completed'
-            this.taskDetail.completeTime = this.formatTime(new Date())
-            uni.showToast({
-              title: '任务已完成',
-              icon: 'success'
-            })
-          }
-        }
-      })
-    },
-
-    previewImage(index) {
-      if (this.taskDetail.images) {
-        uni.previewImage({
-          urls: this.taskDetail.images,
-          current: index
+      this.loading = true
+      try {
+        const res = await getTaskDetail(this.taskId)
+        this.taskDetail = res
+      } catch (error) {
+        uni.showToast({
+          title: '加载失败',
+          icon: 'none'
         })
+      } finally {
+        this.loading = false
       }
     },
+    formatDateTime(time) {
+      if (!time) return ''
+      const date = new Date(time)
+      return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')} ${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`
+    },
+    previewImage(images, current) {
+      uni.previewImage({
+        urls: images,
+        current: current
+      })
+    },
+    async takeTask() {
+      try {
+        uni.showLoading({ title: '领取中...' })
+        await apiTakeTask(this.taskId)
 
-    formatTime(date) {
-      const year = date.getFullYear()
-      const month = String(date.getMonth() + 1).padStart(2, '0')
-      const day = String(date.getDate()).padStart(2, '0')
-      const hours = String(date.getHours()).padStart(2, '0')
-      const minutes = String(date.getMinutes()).padStart(2, '0')
-      return `${year}-${month}-${day} ${hours}:${minutes}`
+        uni.showToast({
+          title: '领取成功',
+          icon: 'success'
+        })
+
+        // 重新加载详情
+        await this.loadTaskDetail()
+
+      } catch (error) {
+        uni.showToast({
+          title: '领取失败',
+          icon: 'none'
+        })
+      } finally {
+        uni.hideLoading()
+      }
+    },
+    async cancelTask() {
+      try {
+        const confirm = await new Promise((resolve) => {
+          uni.showModal({
+            title: '确认取消',
+            content: '确定要取消这个任务吗？',
+            success: (res) => {
+              resolve(res.confirm)
+            }
+          })
+        })
+
+        if (!confirm) return
+
+        uni.showLoading({ title: '取消中...' })
+        await apiCancelTask(this.taskId)
+
+        uni.showToast({
+          title: '取消成功',
+          icon: 'success'
+        })
+
+        // 重新加载详情
+        await this.loadTaskDetail()
+
+      } catch (error) {
+        uni.showToast({
+          title: '取消失败',
+          icon: 'none'
+        })
+      } finally {
+        uni.hideLoading()
+      }
+    },
+    async completeTask() {
+      try {
+        const confirm = await new Promise((resolve) => {
+          uni.showModal({
+            title: '确认完成',
+            content: '确定要标记这个任务为已完成吗？',
+            success: (res) => {
+              resolve(res.confirm)
+            }
+          })
+        })
+
+        if (!confirm) return
+
+        uni.showLoading({ title: '提交中...' })
+        await apiCompleteTask(this.taskId)
+
+        uni.showToast({
+          title: '任务已完成',
+          icon: 'success'
+        })
+
+        // 重新加载详情
+        await this.loadTaskDetail()
+
+      } catch (error) {
+        uni.showToast({
+          title: '操作失败',
+          icon: 'none'
+        })
+      } finally {
+        uni.hideLoading()
+      }
     }
   }
 }
 </script>
 
-<style lang="scss">
+<style scoped lang="scss">
 .task-detail-page {
-  background: #f5f5f5;
   min-height: 100vh;
-  padding-bottom: 120rpx;
+  background-color: #f5f5f5;
+}
 
-  .header {
-    background: #3b5598;
-    padding: 40rpx 30rpx;
-    color: white;
+.header {
+  background: linear-gradient(135deg, #3b5598 0%, #2c3e50 100%);
+  padding: 20rpx 30rpx 40rpx;
 
-    .title {
-      font-size: 36rpx;
-      font-weight: 600;
-    }
+  .title {
+    font-size: 36rpx;
+    font-weight: 600;
+    color: #fff;
   }
+}
 
-  .content {
-    padding: 30rpx;
+.content {
+  padding: 20rpx;
+}
 
-    .status-card {
-      background: white;
-      border-radius: 16rpx;
-      padding: 30rpx;
-      margin-bottom: 30rpx;
-      border-left: 6rpx solid #3b5598;
+.status-card {
+  background: #fff;
+  border-radius: 16rpx;
+  padding: 30rpx;
+  margin-bottom: 20rpx;
+  box-shadow: 0 4rpx 20rpx rgba(59, 85, 152, 0.1);
 
-      &.completed {
-        border-left-color: #52c41a;
-      }
-
-      &.cancelled {
-        border-left-color: #f5222d;
-      }
-
-      .status-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 20rpx;
-
-        .task-type {
-          display: flex;
-          align-items: center;
-          padding: 8rpx 16rpx;
-          border-radius: 16rpx;
-          font-size: 24rpx;
-          color: white;
-
-          text {
-            margin-left: 8rpx;
-          }
-
-          &.repair {
-            background: #ff6b35;
-          }
-
-          &.cleaning {
-            background: #07c160;
-          }
-
-          &.delivery {
-            background: #3b5598;
-          }
-
-          &.other {
-            background: #9c27b0;
-          }
-        }
-
-        .task-status {
-          display: flex;
-          align-items: center;
-
-          text {
-            margin-left: 6rpx;
-            font-size: 24rpx;
-            font-weight: 500;
-          }
-        }
-      }
-
-      .task-title {
-        font-size: 32rpx;
-        color: #333;
-        font-weight: 600;
-        line-height: 1.4;
-      }
-    }
-
-    .info-section, .reward-section, .publisher-section, .assignee-section, .progress-section, .attachments-section {
-      background: white;
-      border-radius: 16rpx;
-      padding: 30rpx;
-      margin-bottom: 20rpx;
-
-      .section-title {
-        font-size: 28rpx;
-        color: #333;
-        font-weight: 600;
-        margin-bottom: 20rpx;
-        position: relative;
-        padding-left: 20rpx;
-
-        &::before {
-          content: '';
-          position: absolute;
-          left: 0;
-          top: 50%;
-          transform: translateY(-50%);
-          width: 6rpx;
-          height: 24rpx;
-          background: #3b5598;
-          border-radius: 3rpx;
-        }
-      }
-
-      .task-description {
-        font-size: 26rpx;
-        color: #666;
-        line-height: 1.6;
-      }
-
-      .requirements-list {
-        .requirement-item {
-          display: block;
-          font-size: 26rpx;
-          color: #666;
-          line-height: 1.6;
-          margin-bottom: 10rpx;
-
-          &:last-child {
-            margin-bottom: 0;
-          }
-        }
-      }
-
-      .info-grid {
-        .info-item {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          padding: 15rpx 0;
-          border-bottom: 1rpx solid #f0f0f0;
-
-          &:last-child {
-            border-bottom: none;
-          }
-
-          .info-label {
-            font-size: 26rpx;
-            color: #666;
-          }
-
-          .info-value {
-            font-size: 26rpx;
-            color: #333;
-            font-weight: 500;
-
-            &.deadline {
-              color: #ff6b35;
-            }
-          }
-        }
-      }
-    }
-
-    .reward-section {
-      .reward-info {
-        .reward-amount {
-          display: flex;
-          align-items: baseline;
-          margin-bottom: 10rpx;
-
-          .reward-value {
-            font-size: 36rpx;
-            color: #ff6b35;
-            font-weight: 700;
-          }
-
-          .reward-type {
-            font-size: 24rpx;
-            color: #ff6b35;
-            margin-left: 8rpx;
-          }
-        }
-
-        .reward-desc {
-          font-size: 24rpx;
-          color: #999;
-          line-height: 1.5;
-        }
-      }
-    }
-
-    .publisher-section, .assignee-section {
-      .publisher-info, .assignee-info {
-        display: flex;
-        align-items: center;
-
-        .publisher-avatar, .assignee-avatar {
-          width: 80rpx;
-          height: 80rpx;
-          border-radius: 50%;
-          margin-right: 20rpx;
-        }
-
-        .publisher-details, .assignee-details {
-          flex: 1;
-
-          .publisher-name, .assignee-name {
-            display: block;
-            font-size: 28rpx;
-            color: #333;
-            font-weight: 500;
-            margin-bottom: 6rpx;
-          }
-
-          .publisher-rating, .assignee-rating {
-            font-size: 24rpx;
-            color: #999;
-          }
-        }
-
-        .contact-btn {
-          display: flex;
-          align-items: center;
-          background: #f0f0f0;
-          border: none;
-          border-radius: 20rpx;
-          padding: 12rpx 20rpx;
-          font-size: 24rpx;
-          color: #3b5598;
-
-          text {
-            margin-left: 6rpx;
-          }
-        }
-      }
-    }
-
-    .progress-section {
-      .progress-info {
-        display: flex;
-        align-items: center;
-        margin-bottom: 20rpx;
-
-        .progress-bar {
-          flex: 1;
-          height: 8rpx;
-          background: #f0f0f0;
-          border-radius: 4rpx;
-          margin-right: 20rpx;
-          overflow: hidden;
-
-          .progress-fill {
-            height: 100%;
-            background: #3b5598;
-            border-radius: 4rpx;
-            transition: width 0.3s ease;
-          }
-        }
-
-        .progress-text {
-          font-size: 26rpx;
-          color: #3b5598;
-          font-weight: 600;
-        }
-      }
-
-      .progress-updates {
-        .update-item {
-          margin-bottom: 15rpx;
-
-          .update-time {
-            display: block;
-            font-size: 22rpx;
-            color: #999;
-            margin-bottom: 6rpx;
-          }
-
-          .update-content {
-            font-size: 24rpx;
-            color: #666;
-            line-height: 1.5;
-          }
-
-          &:last-child {
-            margin-bottom: 0;
-          }
-        }
-      }
-    }
-
-    .attachments-section {
-      .images-grid {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 15rpx;
-
-        .task-image {
-          width: 100%;
-          height: 150rpx;
-          border-radius: 8rpx;
-        }
-      }
-    }
-  }
-
-  .action-bar {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    background: white;
-    padding: 20rpx 30rpx;
-    border-top: 1rpx solid #f0f0f0;
+  .status-header {
     display: flex;
-    gap: 20rpx;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20rpx;
 
-    .action-btn {
-      flex: 1;
-      height: 80rpx;
-      border-radius: 8rpx;
+    .task-type {
+      padding: 8rpx 16rpx;
+      border-radius: 12rpx;
+      font-size: 22rpx;
+      color: white;
+
+      &.task-type-1 {
+        background: #ff6b35;
+      }
+
+      &.task-type-2 {
+        background: #07c160;
+      }
+
+      &.task-type-3 {
+        background: #3b5598;
+      }
+
+      &.task-type-4 {
+        background: #9c27b0;
+      }
+    }
+
+    .task-status-text {
+      font-size: 22rpx;
+      color: #666;
+    }
+  }
+
+  .task-title {
+    font-size: 30rpx;
+    font-weight: 600;
+    color: #333;
+    line-height: 1.4;
+  }
+}
+
+.info-section {
+  background: #fff;
+  border-radius: 16rpx;
+  padding: 30rpx;
+  margin-bottom: 20rpx;
+
+  .section-title {
+    display: flex;
+    align-items: center;
+    gap: 12rpx;
+    margin-bottom: 20rpx;
+    padding-bottom: 12rpx;
+    border-bottom: 2rpx solid #f0f0f0;
+
+    text {
       font-size: 28rpx;
       font-weight: 600;
-      border: none;
+      color: #333;
+    }
+  }
+
+  .task-description {
+    font-size: 26rpx;
+    color: #666;
+    line-height: 1.6;
+  }
+
+  .image-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16rpx;
+
+    .image-item {
+      width: 200rpx;
+      height: 200rpx;
+      border-radius: 12rpx;
+      overflow: hidden;
+
+      image {
+        width: 100%;
+        height: 100%;
+      }
+    }
+  }
+
+  .publisher-info, .taker-info {
+    display: flex;
+    align-items: center;
+    gap: 20rpx;
+
+    .publisher-avatar, .taker-avatar {
+      width: 80rpx;
+      height: 80rpx;
+      background: #f0f5ff;
+      border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
+    }
 
-      text {
-        margin-left: 8rpx;
+    .publisher-details, .taker-details {
+      flex: 1;
+
+      .publisher-name, .taker-name {
+        font-size: 28rpx;
+        font-weight: 500;
+        color: #333;
+        display: block;
+        margin-bottom: 8rpx;
       }
 
-      &.cancel {
-        background: #f0f0f0;
+      .publisher-community, .take-time {
+        font-size: 24rpx;
         color: #666;
       }
+    }
+  }
 
-      &.accept {
-        background: #07c160;
-        color: white;
+  .info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20rpx;
+
+    .info-item {
+      display: flex;
+      flex-direction: column;
+      gap: 8rpx;
+
+      .info-label {
+        font-size: 24rpx;
+        color: #999;
       }
 
-      &.complete {
-        background: #3b5598;
-        color: white;
-      }
+      .info-value {
+        font-size: 26rpx;
+        color: #333;
+        font-weight: 500;
 
-      &.contact {
-        background: #ff6b35;
-        color: white;
+        &.deadline {
+          color: #fa8c16;
+        }
       }
     }
+  }
+
+  .contact-info {
+    .contact-item {
+      display: flex;
+      align-items: center;
+      gap: 12rpx;
+      margin-bottom: 16rpx;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+
+      text {
+        font-size: 26rpx;
+        color: #666;
+      }
+    }
+  }
+
+  .remark-text {
+    font-size: 26rpx;
+    color: #666;
+    line-height: 1.6;
+    background: #f8f9fa;
+    padding: 20rpx;
+    border-radius: 12rpx;
+  }
+
+  .reward-info {
+    text-align: center;
+    padding: 30rpx;
+    background: linear-gradient(135deg, #fff7e6 0%, #ffe7ba 100%);
+    border-radius: 12rpx;
+
+    .reward-value {
+      font-size: 36rpx;
+      font-weight: 700;
+      color: #fa8c16;
+      display: block;
+      margin-bottom: 12rpx;
+    }
+
+    .reward-desc {
+      font-size: 24rpx;
+      color: #8a6d3b;
+    }
+  }
+}
+
+.action-section {
+  padding: 20rpx;
+  display: flex;
+  gap: 20rpx;
+
+  .action-btn {
+    flex: 1;
+    height: 88rpx;
+    border-radius: 44rpx;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 32rpx;
+    font-weight: 500;
+    border: none;
+
+    &.primary {
+      background: linear-gradient(135deg, #3b5598 0%, #2c3e50 100%);
+      color: #fff;
+
+      u-icon {
+        margin-right: 12rpx;
+      }
+    }
+
+    &.secondary {
+      background: #fff;
+      color: #f5222d;
+      border: 2rpx solid #f5222d;
+
+      u-icon {
+        margin-right: 12rpx;
+      }
+    }
+  }
+}
+
+.loading-state, .error-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  padding: 40rpx;
+
+  text {
+    font-size: 28rpx;
+    color: #999;
+    margin-top: 20rpx;
+  }
+
+  .error-text {
+    color: #666;
+    margin-bottom: 40rpx;
+  }
+
+  .retry-btn {
+    height: 80rpx;
+    background: #3b5598;
+    color: #fff;
+    border-radius: 40rpx;
+    padding: 0 60rpx;
+    font-size: 28rpx;
+    border: none;
   }
 }
 </style>

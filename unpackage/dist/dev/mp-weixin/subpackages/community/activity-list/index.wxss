@@ -120,16 +120,16 @@
   font-size: 22rpx;
   color: white;
 }
-.post-list .user-info .post-status.status-normal.data-v-0156f9f9 {
+.post-list .user-info .post-status.post-status-0.data-v-0156f9f9 {
   background-color: #07c160;
 }
-.post-list .user-info .post-status.status-pending.data-v-0156f9f9 {
+.post-list .user-info .post-status.post-status-1.data-v-0156f9f9 {
   background-color: #ff9500;
 }
-.post-list .user-info .post-status.status-rejected.data-v-0156f9f9 {
+.post-list .user-info .post-status.post-status-2.data-v-0156f9f9 {
   background-color: #ff4d4f;
 }
-.post-list .user-info .post-status.status-deleted.data-v-0156f9f9 {
+.post-list .user-info .post-status.post-status-3.data-v-0156f9f9 {
   background-color: #999;
 }
 .post-list .post-content.data-v-0156f9f9 {

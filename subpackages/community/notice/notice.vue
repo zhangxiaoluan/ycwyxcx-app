@@ -1,64 +1,52 @@
 <template>
   <view class="notice-page">
-    <view class="header">
-      <text class="title">社区公告</text>
-      <view class="search-box">
-        <u-icon name="search" size="20" color="#999"></u-icon>
-        <input v-model="searchKeyword" class="search-input" placeholder="搜索公告" @input="onSearchInput" />
-      </view>
-    </view>
-
     <view class="content">
       <view class="notice-tabs">
         <view class="tab-item" :class="currentTab === 'all' ? 'active' : ''" @click="switchTab('all')">
           <text>全部</text>
           <view class="badge" v-if="getTabCount('all') > 0">{{ getTabCount('all') }}</view>
         </view>
-        <view class="tab-item" :class="currentTab === 'property' ? 'active' : ''" @click="switchTab('property')">
-          <text>物业</text>
-          <view class="badge" v-if="getTabCount('property') > 0">{{ getTabCount('property') }}</view>
-        </view>
-        <view class="tab-item" :class="currentTab === 'community' ? 'active' : ''" @click="switchTab('community')">
-          <text>社区</text>
-          <view class="badge" v-if="getTabCount('community') > 0">{{ getTabCount('community') }}</view>
-        </view>
-        <view class="tab-item" :class="currentTab === 'emergency' ? 'active' : ''" @click="switchTab('emergency')">
-          <text>紧急</text>
-          <view class="badge" v-if="getTabCount('emergency') > 0">{{ getTabCount('emergency') }}</view>
+        <view class="tab-item"
+              v-for="category in categoriesData"
+              :key="category.id"
+              :class="currentTab === category.id ? 'active' : ''"
+              @click="switchTab(category.id)">
+          <text>{{ category.name }}</text>
+          <view class="badge" v-if="category.unreadCount > 0">{{ category.unreadCount }}</view>
         </view>
       </view>
 
       <view class="notice-list">
         <view class="notice-item" v-for="notice in filteredNotices" :key="notice.id" @click="viewNoticeDetail(notice)">
           <view class="notice-header">
-            <view class="notice-type" :class="notice.type">
-              <u-icon :name="getTypeIcon(notice.type)" size="16" color="#fff"></u-icon>
-              <text>{{ getTypeText(notice.type) }}</text>
+            <view class="notice-type" :class="'priority-' + (notice.priority === 0 ? 'normal' : notice.priority === 1 ? 'important' : 'urgent')">
+              <u-icon :name="getPriorityIcon(notice.priority)" size="16" color="#fff"></u-icon>
+              <text>{{ getPriorityText(notice.priority) }}</text>
             </view>
             <view class="notice-time">{{ notice.publishTime }}</view>
           </view>
 
           <view class="notice-content">
             <text class="notice-title">{{ notice.title }}</text>
-            <text class="notice-summary">{{ notice.summary }}</text>
+            <text class="notice-summary">{{ notice.summary || notice.content }}</text>
           </view>
 
           <view class="notice-footer">
             <view class="notice-meta">
               <text class="publisher">
                 <u-icon name="account" size="14" color="#999"></u-icon>
-                {{ notice.publisher }}
+                {{ notice.publisherName }}
               </text>
               <text class="view-count">
                 <u-icon name="eye" size="14" color="#999"></u-icon>
-                {{ notice.viewCount }}
+                {{ notice.viewCount || 0 }}
               </text>
             </view>
-            <view class="unread-dot" v-if="!notice.read"></view>
+            <view class="unread-dot" v-if="!notice.isRead"></view>
           </view>
 
-          <view class="emergency-badge" v-if="notice.isEmergency">
-            <text>紧急</text>
+          <view class="top-badge" v-if="notice.isTop">
+            <text>置顶</text>
           </view>
         </view>
       </view>
@@ -66,7 +54,7 @@
       <view class="empty-state" v-if="filteredNotices.length === 0">
         <view class="empty-icon">📢</view>
         <text class="empty-text">暂无公告</text>
-        <text class="empty-desc">{{ searchKeyword ? '没有找到相关公告' : '该分类下暂无公告' }}</text>
+        <text class="empty-desc">该分类下暂无公告</text>
       </view>
     </view>
 
@@ -89,8 +77,8 @@
         </view>
 
         <view class="detail-footer">
-          <text class="detail-publisher">发布人：{{ selectedNotice.publisher }}</text>
-          <text class="detail-views">阅读：{{ selectedNotice.viewCount }}次</text>
+          <text class="detail-publisher">发布人：{{ selectedNotice.publisherName }}</text>
+          <text class="detail-views">阅读：{{ selectedNotice.viewCount || 0 }}次</text>
         </view>
       </scroll-view>
     </u-modal>
@@ -98,54 +86,15 @@
 </template>
 
 <script>
+import {categories, categoriesList, categoriesRead} from "@/api/list/notice";
 export default {
   data() {
     return {
       currentTab: 'all',
-      searchKeyword: '',
       showDetailModal: false,
       selectedNotice: null,
-      notices: [
-        {
-          id: 1,
-          title: '停水通知',
-          summary: '因管道维修，明日9:00-12:00将停水',
-          content: '尊敬的业主：\n\n因小区主供水管道需要紧急维修，物业计划于明日（11月16日）上午9:00-12:00进行停水维修作业。请各位业主提前做好储水准备。\n\n维修期间给您带来的不便，敬请谅解。如有疑问，请联系物业服务中心。\n\n物业服务中心\n2024年11月15日',
-          type: 'property',
-          publisher: '物业服务中心',
-          publishTime: '2024-11-15 16:30',
-          viewCount: 156,
-          read: false,
-          isEmergency: true,
-          images: []
-        },
-        {
-          id: 2,
-          title: '物业费缴纳通知',
-          summary: '本月物业费即将到期，请及时缴纳',
-          content: '尊敬的业主：\n\n本月物业费缴纳截止日期为11月30日，请您及时通过APP或前往物业服务中心缴纳。逾期将产生滞纳金。\n\n缴纳方式：\n1. APP在线缴纳\n2. 物业服务中心现场缴纳\n3. 银行转账\n\n感谢您的配合！',
-          type: 'property',
-          publisher: '财务部',
-          publishTime: '2024-11-14 10:00',
-          viewCount: 89,
-          read: false,
-          isEmergency: false,
-          images: []
-        },
-        {
-          id: 3,
-          title: '社区联欢活动通知',
-          summary: '本周末将举办社区联欢活动，欢迎参加',
-          content: '亲爱的业主们：\n\n为增进邻里感情，丰富社区文化生活，物业将于本周六（11月18日）下午2:00在小区广场举办社区联欢活动。\n\n活动内容：\n- 文艺表演\n- 互动游戏\n- 美食品尝\n- 抽奖环节\n\n欢迎各位业主踊跃参加！',
-          type: 'community',
-          publisher: '社区居委会',
-          publishTime: '2024-11-13 14:20',
-          viewCount: 234,
-          read: true,
-          isEmergency: false,
-          images: []
-        }
-      ]
+      notices: [],
+      categoriesData: []
     }
   },
   computed: {
@@ -153,75 +102,117 @@ export default {
       let filtered = this.notices
 
       if (this.currentTab !== 'all') {
-        filtered = filtered.filter(notice => notice.type === this.currentTab)
-      }
-
-      if (this.searchKeyword) {
-        const keyword = this.searchKeyword.toLowerCase()
-        filtered = filtered.filter(notice =>
-          notice.title.toLowerCase().includes(keyword) ||
-          notice.summary.toLowerCase().includes(keyword) ||
-          notice.content.toLowerCase().includes(keyword)
-        )
+        filtered = filtered.filter(notice => notice.categoryId === this.currentTab)
       }
 
       filtered.sort((a, b) => {
-        if (a.isEmergency && !b.isEmergency) return -1
-        if (!a.isEmergency && b.isEmergency) return 1
+        if (a.isTop && !b.isTop) return -1
+        if (!a.isTop && b.isTop) return 1
+        if (a.priority === 2 && b.priority !== 2) return -1
+        if (a.priority !== 2 && b.priority === 2) return 1
         return new Date(b.publishTime) - new Date(a.publishTime)
       })
 
       return filtered
     }
   },
+  onLoad() {
+    this.loadCategories()
+    this.loadNotices()
+  },
   methods: {
+    // 加载公告分类
+    async loadCategories() {
+      try {
+        const response = await categories()
+        console.log('公告分类:', response)
+        this.categoriesData = response || []
+      } catch (error) {
+        console.error('加载公告分类失败:', error)
+      }
+    },
+
+    // 加载公告列表
+    async loadNotices() {
+      try {
+        const response = await categoriesList()
+        let records = response.records
+        this.notices = records || []
+      } catch (error) {
+        console.error('加载公告列表失败:', error)
+      }
+    },
+
+    // 切换标签页
     switchTab(tab) {
       this.currentTab = tab
     },
 
+    // 获取标签页未读数量
     getTabCount(tab) {
       if (tab === 'all') {
-        return this.notices.filter(n => !n.read).length
+        return this.notices.filter(n => !n.isRead).length
       }
-      return this.notices.filter(n => n.type === tab && !n.read).length
+      return this.notices.filter(n => n.categoryId === tab && !n.isRead).length
     },
 
+    // 获取优先级图标
+    getPriorityIcon(priority) {
+      const icons = {
+        0: 'info-circle', // 普通
+        1: 'error-circle', // 重要
+        2: 'alert-circle'  // 紧急
+      }
+      return icons[priority] || 'info-circle'
+    },
+
+    // 获取优先级文本
+    getPriorityText(priority) {
+      const textMap = {
+        0: '普通',
+        1: '重要',
+        2: '紧急'
+      }
+      return textMap[priority] || '普通'
+    },
+
+  
+    // 获取类型图标
     getTypeIcon(type) {
       const icons = {
         property: 'home',
-        community: 'people',
-        emergency: 'alert-circle'
+        community: 'people'
       }
       return icons[type] || 'info-circle'
     },
 
+    // 获取类型文本
     getTypeText(type) {
       const typeMap = {
         property: '物业',
-        community: '社区',
-        emergency: '紧急'
+        community: '社区'
       }
       return typeMap[type] || '通知'
     },
 
-    onSearchInput(e) {
-      this.searchKeyword = e.detail.value
-    },
+    // 查看公告详情
+    async viewNoticeDetail(notice) {
+      // 如果公告未读，调用已读接口
+      if (!notice.isRead) {
+        try {
+          await categoriesRead(notice.id)
+          notice.isRead = true
+          notice.readTime = new Date().toISOString()
+        } catch (error) {
+          console.error('标记已读失败:', error)
+        }
+      }
 
-    viewNoticeDetail(notice) {
-      notice.read = true
-      notice.viewCount++
+      // 增加浏览次数
+      notice.viewCount = (notice.viewCount || 0) + 1
+
       this.selectedNotice = notice
       this.showDetailModal = true
-    },
-
-    previewImage(index) {
-      if (this.selectedNotice && this.selectedNotice.images) {
-        uni.previewImage({
-          urls: this.selectedNotice.images,
-          current: index
-        })
-      }
     }
   }
 }
@@ -232,37 +223,6 @@ export default {
   background: #f5f5f5;
   min-height: 100vh;
 
-  .header {
-    background: #3b5598;
-    padding: 40rpx 30rpx;
-    color: white;
-
-    .title {
-      font-size: 36rpx;
-      font-weight: 600;
-      margin-bottom: 20rpx;
-    }
-
-    .search-box {
-      display: flex;
-      align-items: center;
-      background: rgba(255, 255, 255, 0.2);
-      border-radius: 20rpx;
-      padding: 15rpx 20rpx;
-
-      .search-input {
-        flex: 1;
-        font-size: 26rpx;
-        color: white;
-        margin-left: 15rpx;
-
-        &::placeholder {
-          color: rgba(255, 255, 255, 0.7);
-        }
-      }
-    }
-  }
-
   .content {
     padding: 30rpx;
 
@@ -272,17 +232,26 @@ export default {
       padding: 20rpx;
       margin-bottom: 30rpx;
       display: flex;
+      overflow-x: auto;
+      white-space: nowrap;
+      -webkit-overflow-scrolling: touch;
+
+      &::-webkit-scrollbar {
+        display: none;
+      }
 
       .tab-item {
-        flex: 1;
+        flex: none;
+        min-width: 120rpx;
         text-align: center;
-        padding: 15rpx 0;
+        padding: 15rpx 20rpx;
         position: relative;
 
         text {
           font-size: 26rpx;
           color: #666;
           transition: color 0.3s;
+          white-space: nowrap;
         }
 
         &.active {
@@ -306,16 +275,16 @@ export default {
 
         .badge {
           position: absolute;
-          top: 10rpx;
-          right: 50%;
-          transform: translateX(20rpx);
+          top: 8rpx;
+          right: 15rpx;
           background: #f5222d;
           color: white;
-          font-size: 20rpx;
-          padding: 2rpx 8rpx;
-          border-radius: 12rpx;
-          min-width: 24rpx;
+          font-size: 18rpx;
+          padding: 2rpx 6rpx;
+          border-radius: 10rpx;
+          min-width: 20rpx;
           text-align: center;
+          transform: translateX(50%);
         }
       }
     }
@@ -351,16 +320,24 @@ export default {
               margin-left: 6rpx;
             }
 
+            &.priority-normal {
+              background: #909399;
+            }
+
+            &.priority-important {
+              background: #e6a23c;
+            }
+
+            &.priority-urgent {
+              background: #f5222d;
+            }
+
             &.property {
               background: #3b5598;
             }
 
             &.community {
               background: #07c160;
-            }
-
-            &.emergency {
-              background: #f5222d;
             }
           }
 
@@ -420,6 +397,18 @@ export default {
             background: #f5222d;
             border-radius: 50%;
           }
+        }
+
+        .top-badge {
+          position: absolute;
+          top: -8rpx;
+          right: -8rpx;
+          background: #ff4757;
+          color: white;
+          font-size: 20rpx;
+          padding: 4rpx 12rpx;
+          border-radius: 12rpx;
+          z-index: 2;
         }
 
         .emergency-badge {

@@ -57,11 +57,6 @@ export function signRecords() {
     return sendRequest(json)
 }
 
-
-
-
-
-
 // 登出
 export function authLogin() {
   const json = {
@@ -103,3 +98,8 @@ export function loginWithoutPwd(params) {
   return sendRequest(json)
 }
 
+
+export function uploadFile(filePath, file) {
+    let url = '/app/common/storage/upload'
+    return sendUpload(url, filePath, file)
+}

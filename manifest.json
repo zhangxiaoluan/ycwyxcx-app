@@ -111,9 +111,10 @@
     "vueVersion" : "2",
     "h5": {
       "devServer": {
+		"port": 8690,
         "proxy": {
           "/app" : {
-            "target" : "http://81.71.98.7:8802",
+            "target" : "http://62.234.35.7:8802",
             "changeOrigin" : "ture",
             "secure" : true,
             "pathRewrite" : {

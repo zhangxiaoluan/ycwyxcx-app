@@ -1,211 +1,284 @@
 {
-	"pages": [
-		{
-			"path": "pages/index/index",
-			"style": {
-				"navigationBarTitleText": "首页",
-				"enablePullDownRefresh": true,
-				"navigationStyle": "custom"
-			}
-		},
-		{
-			"path": "pages/my/my",
-			"style": {
-				"navigationBarTitleText": "我的",
-				"navigationStyle": "custom"
-			}
-		},
-      {
-        "path": "pages/login/login",
-        "style": {
-          "navigationBarTitleText": "登录",
-          "navigationStyle": "custom"
-        }
+  "pages": [
+    {
+      "path": "pages/index/index",
+      "style": {
+        "navigationBarTitleText": "首页",
+        "enablePullDownRefresh": true,
+        "navigationStyle": "custom"
       }
-    ],
-	"subpackages": [{
-			"root": "subpackages/user",
-			"pages": [{
-					"path": "profile/profile",
-					"style": {
-						"navigationBarTitleText": "个人资料"
-					}
-				},
-				{
-					"path": "house-binding/house-binding",
-					"style": {
-						"navigationBarTitleText": "房屋信息绑定"
-					}
-				},
-				{
-					"path": "house-binding/house-bindings",
-					"style": {
-						"navigationBarTitleText": "房屋绑定记录",
-						"enablePullDownRefresh": true
-					}
-				},
-				{
-					"path": "family-members/family-members",
-					"style": {
-						"navigationBarTitleText": "家庭成员管理"
-					}
-				},
-				{
-					"path": "identity-verification/identity-verification",
-					"style": {
-						"navigationBarTitleText": "实名认证"
-					}
-				}
-			]
-		},
-		{
-			"root": "subpackages/wallet",
-			"pages": [{
-					"path": "wallet/wallet",
-					"style": {
-						"navigationBarTitleText": "电子钱包"
-					}
-				},
-				{
-					"path": "points/points",
-					"style": {
-						"navigationBarTitleText": "积分管理"
-					}
-				},
-				{
-					"path": "withdraw/withdraw",
-					"style": {
-						"navigationBarTitleText": "提现"
-					}
-				},
-				{
-					"path": "points-mall/points-mall",
-					"style": {
-						"navigationBarTitleText": "积分商城"
-					}
-				}
-			]
-		},
-		{
-			"root": "subpackages/tasks",
-			"pages": [{
-					"path": "task-list/task-list",
-					"style": {
-						"navigationBarTitleText": "我的任务"
-					}
-				},
-				{
-					"path": "task-detail/task-detail",
-					"style": {
-						"navigationBarTitleText": "任务详情"
-					}
-				},
-				{
-					"path": "task-publish/task-publish",
-					"style": {
-						"navigationBarTitleText": "发布任务"
-					}
-				}
-			]
-		},
-		{
-			"root": "subpackages/community",
-			"pages": [{
-					"path": "message/message",
-					"style": {
-						"navigationBarTitleText": "消息"
-					}
-				},
-				{
-					"path": "notice/notice",
-					"style": {
-						"navigationBarTitleText": "公告通知"
-					}
-				},
-				{
-					"path": "feedback/feedback",
-					"style": {
-						"navigationBarTitleText": "意见反馈"
-					}
-				},
-				{
-					"path": "activity-list/index",
-					"style": {
-						"navigationBarTitleText": "社区动态",
-						"enablePullDownRefresh": true
-					}
-				},
-				{
-					"path": "activity-list/apublish",
-					"style": {
-						"navigationBarTitleText": "发布动态"
-					}
-				}
-			]
-		},
-		{
-			"root": "subpackages/settings",
-			"pages": [{
-					"path": "settings/settings",
-					"style": {
-						"navigationBarTitleText": "设置"
-					}
-				},
-				{
-					"path": "about/about",
-					"style": {
-						"navigationBarTitleText": "关于我们"
-					}
-				},
-				{
-					"path": "privacy/privacy",
-					"style": {
-						"navigationBarTitleText": "隐私政策"
-					}
-				}
-			]
-		}
-	],
-	"preloadRule": {
-		"pages/index/index": {
-			"network": "all",
-			"packages": [
-				"subpackages/user"
-			]
-		},
-		"pages/login/login": {
-			"network": "all",
-			"packages": [
-				"subpackages/user"
-			]
-		}
-	},
-	"globalStyle": {
-		"navigationBarTextStyle": "black",
-		"navigationBarTitleText": "智慧物业",
-		"navigationBarBackgroundColor": "#ffffff",
-		"backgroundColor": "#ffffff"
-	},
-	"tabBar": {
-		"color": "#515151",
-		"selectedColor": "#3b5598",
-		"borderStyle": "black",
-		"backgroundColor": "#ffffff",
-		"height": "55px",
-		"fontSize": "12px",
-		"list": [{
-				"pagePath": "pages/index/index",
-				"iconPath": "/static/image/tabBar/home.png",
-				"selectedIconPath": "/static/image/tabBar/home-a.png",
-				"text": "首页"
-			},
-			{
-				"pagePath": "pages/my/my",
-				"iconPath": "/static/image/tabBar/my.png",
-				"selectedIconPath": "/static/image/tabBar/my-a.png",
-				"text": "我的"
-			}
-		]
-	},
-	"uniIdRouter": {}
+    },
+    {
+      "path": "pages/my/my",
+      "style": {
+        "navigationBarTitleText": "我的",
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/login/login",
+      "style": {
+        "navigationBarTitleText": "登录",
+        "navigationStyle": "custom"
+      }
+    }
+  ],
+  "subpackages": [
+    {
+      "root": "subpackages/user",
+      "pages": [
+        {
+          "path": "profile/profile",
+          "style": {
+            "navigationBarTitleText": "个人资料"
+          }
+        },
+        {
+          "path": "house-binding/house-binding",
+          "style": {
+            "navigationBarTitleText": "房屋信息绑定"
+          }
+        },
+        {
+          "path": "house-binding/house-bindings",
+          "style": {
+            "navigationBarTitleText": "房屋绑定记录",
+            "enablePullDownRefresh": true
+          }
+        },
+        {
+          "path": "family-members/family-members",
+          "style": {
+            "navigationBarTitleText": "家庭成员管理"
+          }
+        },
+        {
+          "path": "identity-verification/identity-verification",
+          "style": {
+            "navigationBarTitleText": "实名认证"
+          }
+        }
+      ]
+    },
+    {
+      "root": "subpackages/wallet",
+      "pages": [
+        {
+          "path": "wallet/wallet",
+          "style": {
+            "navigationBarTitleText": "电子钱包"
+          }
+        },
+        {
+          "path": "points/points",
+          "style": {
+            "navigationBarTitleText": "积分管理"
+          }
+        },
+        {
+          "path": "withdraw/withdraw",
+          "style": {
+            "navigationBarTitleText": "提现"
+          }
+        },
+        {
+          "path": "points-mall/points-mall",
+          "style": {
+            "navigationBarTitleText": "积分商城"
+          }
+        }
+      ]
+    },
+    {
+      "root": "subpackages/tasks",
+      "pages": [
+        {
+          "path": "task-list/task-list",
+          "style": {
+            "navigationBarTitleText": "任务中心",
+            "enablePullDownRefresh": true
+          }
+        },
+        {
+          "path": "task-detail/task-detail",
+          "style": {
+            "navigationBarTitleText": "任务详情"
+          }
+        },
+        {
+          "path": "task-publish/task-publish",
+          "style": {
+            "navigationBarTitleText": "发布任务"
+          }
+        },
+        {
+          "path": "my-tasks/my-tasks",
+          "style": {
+            "navigationBarTitleText": "我的任务",
+            "enablePullDownRefresh": true
+          }
+        }
+      ]
+    },
+    {
+      "root": "subpackages/community",
+      "pages": [
+        {
+          "path": "message/message",
+          "style": {
+            "navigationBarTitleText": "消息"
+          }
+        },
+        {
+          "path": "notice/notice",
+          "style": {
+            "navigationBarTitleText": "公告通知"
+          }
+        },
+        {
+          "path": "feedback/feedback",
+          "style": {
+            "navigationBarTitleText": "意见反馈"
+          }
+        },
+        {
+          "path": "activity-list/index",
+          "style": {
+            "navigationBarTitleText": "社区动态",
+            "enablePullDownRefresh": true
+          }
+        },
+        {
+          "path": "activity-list/apublish",
+          "style": {
+            "navigationBarTitleText": "发布动态"
+          }
+        }
+      ]
+    },
+    {
+      "root": "subpackages/settings",
+      "pages": [
+        {
+          "path": "settings/settings",
+          "style": {
+            "navigationBarTitleText": "设置"
+          }
+        },
+        {
+          "path": "about/about",
+          "style": {
+            "navigationBarTitleText": "关于我们"
+          }
+        },
+        {
+          "path": "privacy/privacy",
+          "style": {
+            "navigationBarTitleText": "隐私政策"
+          }
+        }
+      ]
+    },
+    {
+      "root": "subpackages/repair",
+      "pages": [
+        {
+          "path": "list",
+          "style": {
+            "navigationBarTitleText": "报修管理",
+            "enablePullDownRefresh": true
+          }
+        },
+        {
+          "path": "apply",
+          "style": {
+            "navigationBarTitleText": "申请报修"
+          }
+        },
+        {
+          "path": "detail",
+          "style": {
+            "navigationBarTitleText": "报修详情"
+          }
+        },
+        {
+          "path": "progress",
+          "style": {
+            "navigationBarTitleText": "处理进度"
+          }
+        },
+        {
+          "path": "rate",
+          "style": {
+            "navigationBarTitleText": "服务评价"
+          }
+        }
+      ]
+    },
+    {
+      "root": "subpackages/home",
+      "pages": [
+        {
+          "path": "article-detail",
+          "style": {
+            "navigationBarTitleText": "文章详情"
+          }
+        }
+      ]
+    },
+    {
+      "root": "subpackages/convenience",
+      "pages": [
+        {
+          "path": "services/index",
+          "style": {
+            "navigationBarTitleText": "便民服务"
+          }
+        }
+      ]
+    }
+  ],
+  "preloadRule": {
+    "pages/index/index": {
+      "network": "all",
+      "packages": [
+        "subpackages/user"
+      ]
+    },
+    "pages/login/login": {
+      "network": "all",
+      "packages": [
+        "subpackages/user"
+      ]
+    }
+  },
+  "globalStyle": {
+    "navigationBarTextStyle": "black",
+    "navigationBarTitleText": "智慧物业",
+    "navigationBarBackgroundColor": "#ffffff",
+    "backgroundColor": "#ffffff"
+  },
+  "tabBar": {
+    "color": "#515151",
+    "selectedColor": "#3b5598",
+    "borderStyle": "black",
+    "backgroundColor": "#ffffff",
+    "height": "55px",
+    "fontSize": "12px",
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "iconPath": "/static/image/tabBar/home.png",
+        "selectedIconPath": "/static/image/tabBar/home-a.png",
+        "text": "首页"
+      },
+      {
+        "pagePath": "pages/my/my",
+        "iconPath": "/static/image/tabBar/my.png",
+        "selectedIconPath": "/static/image/tabBar/my-a.png",
+        "text": "我的"
+      }
+    ]
+  },
+  "uniIdRouter": {}
 }

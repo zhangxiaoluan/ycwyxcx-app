@@ -9,12 +9,11 @@
           <view class="type-selector">
             <view
               class="type-item"
-              :class="{ active: formData.type === item.value }"
+              :class="{ active: formData.taskType === item.value }"
               v-for="item in taskTypes"
               :key="item.value"
               @click="selectType(item.value)"
             >
-              <u-icon :name="item.icon" size="24" :color="formData.type === item.value ? '#fff' : item.color"></u-icon>
               <text>{{ item.label }}</text>
             </view>
           </view>
@@ -34,45 +33,80 @@
         <view class="form-item required">
           <text class="form-label">任务描述</text>
           <textarea
-            v-model="formData.description"
+            v-model="formData.content"
             class="form-textarea"
             placeholder="请详细描述您的任务需求，包括具体要求、注意事项等"
             maxlength="500"
           ></textarea>
-          <text class="input-count">{{ formData.description.length }}/500</text>
+          <text class="input-count">{{ formData.content.length }}/500</text>
+        </view>
+
+        <view class="form-item required">
+          <text class="form-label">联系电话</text>
+          <input
+            v-model="formData.contactPhone"
+            class="form-input"
+            placeholder="请输入联系电话"
+            type="number"
+          />
+        </view>
+
+        <view class="form-item required">
+          <text class="form-label">联系地址</text>
+          <input
+            v-model="formData.contactAddress"
+            class="form-input"
+            placeholder="请输入详细地址"
+          />
+        </view>
+
+        <view class="form-item required">
+          <text class="form-label">截止时间</text>
+          <picker
+            mode="date"
+            :value="formData.deadlineTime"
+            :start="getMinDate()"
+            @change="onDeadlineTimeChange"
+          >
+            <view class="picker">
+              {{ formData.deadlineTime || '请选择截止时间' }}
+            </view>
+          </picker>
+          <text class="error-text" v-if="deadlineError">截止时间不能早于当前时间</text>
+        </view>
+
+        <view class="form-item required">
+          <text class="form-label">积分奖励</text>
+          <input
+            v-model="formData.rewardPoints"
+            class="form-input"
+            placeholder="请输入积分奖励数量"
+            type="number"
+          />
         </view>
 
         <view class="form-item">
-          <text class="form-label">任务要求</text>
-          <view class="requirements-list">
-            <view class="requirement-item" v-for="(req, index) in formData.requirements" :key="index">
-              <input
-                v-model="formData.requirements[index]"
-                class="requirement-input"
-                placeholder="输入具体要求"
-              />
-              <button class="remove-btn" @click="removeRequirement(index)" v-if="formData.requirements.length > 1">
-                <u-icon name="trash" size="16" color="#f5222d"></u-icon>
-              </button>
-            </view>
-            <button class="add-btn" @click="addRequirement">
-              <u-icon name="plus" size="16" color="#3b5598"></u-icon>
-              <text>添加要求</text>
-            </button>
-          </view>
+          <text class="form-label">备注</text>
+          <textarea
+            v-model="formData.remark"
+            class="form-textarea"
+            placeholder="请输入备注信息（选填）"
+            maxlength="200"
+          ></textarea>
+          <text class="input-count">{{ formData.remark.length }}/200</text>
         </view>
 
         <view class="form-item">
           <text class="form-label">任务图片</text>
           <view class="image-upload">
             <view class="image-list">
-              <view class="image-item" v-for="(image, index) in formData.images" :key="index">
+              <view class="image-item" v-for="(image, index) in formData.taskImages" :key="index">
                 <image :src="image" mode="aspectFill" @click="previewImage(index)"></image>
                 <button class="delete-image" @click="deleteImage(index)">
                   <u-icon name="close" size="14" color="#fff"></u-icon>
                 </button>
               </view>
-              <view class="upload-btn" @click="chooseImage" v-if="formData.images.length < 6">
+              <view class="upload-btn" @click="chooseImage" v-if="formData.taskImages.length < 6">
                 <u-icon name="camera" size="32" color="#999"></u-icon>
                 <text class="upload-text">添加图片</text>
                 <text class="upload-tips">最多6张</text>
@@ -80,703 +114,368 @@
             </view>
           </view>
         </view>
-
-        <view class="form-item required">
-          <text class="form-label">截止时间</text>
-          <picker
-            mode="date"
-            :value="formData.deadline"
-            @change="onDeadlineChange"
-            :start="minDate"
-          >
-            <view class="picker">
-              {{ formData.deadline || '请选择截止时间' }}
-            </view>
-          </picker>
-        </view>
-
-        <view class="form-item required">
-          <text class="form-label">任务奖励</text>
-          <view class="reward-selector">
-            <view
-              class="reward-type"
-              :class="{ active: formData.rewardType === item.value }"
-              v-for="item in rewardTypes"
-              :key="item.value"
-              @click="selectRewardType(item.value)"
-            >
-              <text>{{ item.label }}</text>
-            </view>
-          </view>
-          <view class="reward-input-wrapper" v-if="formData.rewardType">
-            <input
-              v-model="formData.reward"
-              class="reward-input"
-              :placeholder="'请输入' + getRewardPlaceholder(formData.rewardType)"
-              type="digit"
-            />
-            <text class="reward-unit">{{ getRewardUnit(formData.rewardType) }}</text>
-          </view>
-        </view>
-
-        <view class="form-item">
-          <text class="form-label">奖励说明</text>
-          <textarea
-            v-model="formData.rewardDesc"
-            class="form-textarea"
-            placeholder="可选：补充说明奖励发放条件等"
-            maxlength="200"
-          ></textarea>
-        </view>
-
-        <view class="form-item">
-          <text class="form-label">联系方式</text>
-          <radio-group @change="onContactChange">
-            <label class="contact-option">
-              <radio value="app" :checked="formData.contactMethod === 'app'" />
-              <text>通过APP内消息联系</text>
-            </label>
-            <label class="contact-option">
-              <radio value="phone" :checked="formData.contactMethod === 'phone'" />
-              <text>通过电话联系</text>
-            </label>
-            <label class="contact-option">
-              <radio value="both" :checked="formData.contactMethod === 'both'" />
-              <text>APP消息和电话都可以</text>
-            </label>
-          </radio-group>
-        </view>
       </view>
 
-      <view class="notice-section">
-        <view class="notice-title">
-          <u-icon name="info-circle" size="20" color="#3b5598"></u-icon>
-          <text>发布须知</text>
-        </view>
-        <view class="notice-list">
-          <text class="notice-item">• 请确保任务描述真实准确，避免误导</text>
-          <text class="notice-item">• 任务内容需符合法律法规，禁止发布违法信息</text>
-          <text class="notice-item">• 请合理设置任务奖励，过低奖励可能影响接单率</text>
-          <text class="notice-item">• 发布后将扣除相应的诚信保证金</text>
-          <text class="notice-item">• 任务完成后请及时确认并发放奖励</text>
-        </view>
+      <view class="submit-section">
+        <button class="submit-btn" @click="submitTask" :disabled="!canSubmit || submitting">
+          <u-icon name="checkmark" size="16" color="#fff" v-if="!submitting"></u-icon>
+          <u-loading-icon mode="circle" color="#fff" size="16" v-else></u-loading-icon>
+          <text>{{ submitting ? '提交中...' : '发布任务' }}</text>
+        </button>
       </view>
-
-      <view class="agreement">
-        <checkbox-group @change="onAgreementChange">
-          <checkbox value="agreed" :checked="agreedToTerms">
-          </checkbox>
-          <text class="agreement-text">
-            我已阅读并同意《任务发布服务协议》
-          </text>
-        </checkbox-group>
-      </view>
-
-      <button class="submit-btn" :disabled="!canSubmit" @click="submitTask">
-        发布任务
-      </button>
     </view>
   </view>
 </template>
 
 <script>
+import { publishTask } from '@/api/list/tasks'
+import {uploadFile} from "@/api/list/upload";
+import {getTaskTypes} from "../../../api/list/tasks";
+
 export default {
+  name: 'task-publish',
   data() {
     return {
-      agreedToTerms: false,
-      minDate: '',
-      taskTypes: [
-        { label: '维修服务', value: 'repair', icon: 'hammer', color: '#ff6b35' },
-        { label: '家政服务', value: 'cleaning', icon: 'broom', color: '#07c160' },
-        { label: '配送服务', value: 'delivery', icon: 'shopping-cart', color: '#3b5598' },
-        { label: '其他服务', value: 'other', icon: 'help-circle', color: '#9c27b0' }
-      ],
-      rewardTypes: [
-        { label: '现金奖励', value: 'cash' },
-        { label: '积分奖励', value: 'points' },
-        { label: '服务兑换', value: 'service' }
-      ],
       formData: {
-        type: '',
+        taskType: 1,
         title: '',
-        description: '',
-        requirements: [''],
-        images: [],
-        deadline: '',
-        rewardType: '',
-        reward: '',
-        rewardDesc: '',
-        contactMethod: 'app'
-      }
+        content: '',
+        contactPhone: '',
+        contactAddress: '',
+        deadlineTime: '',
+        rewardPoints: '',
+        remark: '',
+        taskImages: []
+      },
+      taskTypes: [],
+      submitting: false,
+      deadlineError: false
     }
   },
   computed: {
     canSubmit() {
-      return this.formData.type &&
+      return this.formData.taskType &&
              this.formData.title.trim() &&
-             this.formData.description.trim() &&
-             this.formData.deadline &&
-             this.formData.rewardType &&
-             this.formData.reward.trim() &&
-             this.agreedToTerms
-    }
+             this.formData.content.trim() &&
+             this.formData.contactPhone.trim() &&
+             this.formData.contactAddress.trim() &&
+             this.formData.deadlineTime &&
+             !this.deadlineError &&
+             this.formData.rewardPoints > 0
+    },
   },
   onLoad() {
-    this.initForm()
+    this.isGetTaskTypes()
   },
   methods: {
-    initForm() {
-      // 设置最小日期为明天
-      const tomorrow = new Date()
-      tomorrow.setDate(tomorrow.getDate() + 1)
-      this.minDate = this.formatDate(tomorrow)
+    isGetTaskTypes(){
+      getTaskTypes().then(res => {
+        this.taskTypes = res || []
+      })
+    },
+    selectType(value) {
+      this.formData.taskType = value
     },
 
-    formatDate(date) {
-      const year = date.getFullYear()
-      const month = String(date.getMonth() + 1).padStart(2, '0')
-      const day = String(date.getDate()).padStart(2, '0')
+    // 获取最小可选日期（今天）
+    getMinDate() {
+      const today = new Date()
+      const year = today.getFullYear()
+      const month = String(today.getMonth() + 1).padStart(2, '0')
+      const day = String(today.getDate()).padStart(2, '0')
       return `${year}-${month}-${day}`
     },
 
-    selectType(type) {
-      this.formData.type = type
-    },
+    onDeadlineTimeChange(e) {
+      const selectedDate = e.detail.value
+      const minDate = this.getMinDate()
 
-    selectRewardType(type) {
-      this.formData.rewardType = type
-      this.formData.reward = ''
-    },
-
-    getRewardPlaceholder(type) {
-      const placeholders = {
-        cash: '奖励金额',
-        points: '积分数额',
-        service: '服务内容'
+      // 验证选择的日期不能早于今天
+      if (selectedDate < minDate) {
+        this.deadlineError = true
+        this.formData.deadlineTime = '' // 清空无效选择
+      } else {
+        this.deadlineError = false
+        this.formData.deadlineTime = selectedDate
       }
-      return placeholders[type] || ''
     },
 
-    getRewardUnit(type) {
-      const units = {
-        cash: '元',
-        points: '积分',
-        service: ''
-      }
-      return units[type] || ''
-    },
-
-    addRequirement() {
-      this.formData.requirements.push('')
-    },
-
-    removeRequirement(index) {
-      this.formData.requirements.splice(index, 1)
-    },
-
-    chooseImage() {
-      const maxCount = 6 - this.formData.images.length
-      uni.chooseImage({
-        count: maxCount,
-        sizeType: ['compressed'],
-        sourceType: ['album', 'camera'],
-        success: (res) => {
-          this.formData.images.push(...res.tempFilePaths)
+    async chooseImage() {
+      try {
+        const res = await uni.chooseImage({
+          count: 6 - this.formData.taskImages.length,
+          sizeType: ['compressed'],
+          sourceType: ['album', 'camera']
+        })
+        let tempFiles = res.tempFiles
+        for (const file of tempFiles) {
+          try {
+            const uploadRes = await uploadFile(file.path, file)
+            let url = uploadRes.url
+            if (url){
+              this.formData.taskImages.push(url)
+            }
+          } catch (error) {
+            console.error('上传失败:', error)
+          }
         }
-      })
+      } catch (error) {
+        console.error('选择图片失败:', error)
+      }
     },
 
     deleteImage(index) {
-      this.formData.images.splice(index, 1)
+      this.formData.taskImages.splice(index, 1)
     },
 
-    previewImage(index) {
+    previewImage(current) {
       uni.previewImage({
-        urls: this.formData.images,
-        current: index
+        urls: this.formData.taskImages,
+        current: current
       })
     },
 
-    onDeadlineChange(e) {
-      this.formData.deadline = e.detail.value
-    },
+    async submitTask() {
+      if (!this.canSubmit || this.submitting) return
 
-    onContactChange(e) {
-      this.formData.contactMethod = e.detail.value[0] || 'app'
-    },
+      this.submitting = true
 
-    onAgreementChange(e) {
-      this.agreedToTerms = e.detail.value.includes('agreed')
-    },
+      try {
+        const submitData = {
+          taskType: this.formData.taskType,
+          title: this.formData.title.trim(),
+          content: this.formData.content.trim(),
+          contactPhone: this.formData.contactPhone.trim(),
+          contactAddress: this.formData.contactAddress.trim(),
+          deadlineTime: this.formData.deadlineTime + ' 00:00:00',
+          rewardPoints: parseInt(this.formData.rewardPoints),
+          remark: this.formData.remark.trim(),
+          taskImages: this.formData.taskImages.length > 0 ? this.formData.taskImages : undefined
+        }
 
-    validateForm() {
-      if (!this.formData.type) {
+        await publishTask(submitData)
+
         uni.showToast({
-          title: '请选择任务类型',
-          icon: 'none'
-        })
-        return false
-      }
-
-      if (!this.formData.title.trim()) {
-        uni.showToast({
-          title: '请输入任务标题',
-          icon: 'none'
-        })
-        return false
-      }
-
-      if (!this.formData.description.trim()) {
-        uni.showToast({
-          title: '请输入任务描述',
-          icon: 'none'
-        })
-        return false
-      }
-
-      if (!this.formData.deadline) {
-        uni.showToast({
-          title: '请选择截止时间',
-          icon: 'none'
-        })
-        return false
-      }
-
-      if (!this.formData.rewardType) {
-        uni.showToast({
-          title: '请选择奖励类型',
-          icon: 'none'
-        })
-        return false
-      }
-
-      if (!this.formData.reward.trim()) {
-        uni.showToast({
-          title: '请输入奖励内容',
-          icon: 'none'
-        })
-        return false
-      }
-
-      if (!this.agreedToTerms) {
-        uni.showToast({
-          title: '请同意服务协议',
-          icon: 'none'
-        })
-        return false
-      }
-
-      return true
-    },
-
-    submitTask() {
-      if (!this.validateForm()) {
-        return
-      }
-
-      // 过滤空的要求项
-      this.formData.requirements = this.formData.requirements.filter(req => req.trim())
-
-      uni.showLoading({
-        title: '发布中...'
-      })
-
-      // 模拟提交
-      setTimeout(() => {
-        uni.hideLoading()
-        uni.showToast({
-          title: '任务发布成功',
+          title: '发布成功',
           icon: 'success'
         })
 
         setTimeout(() => {
           uni.navigateBack()
         }, 1500)
-      }, 2000)
+
+      } catch (error) {
+        uni.showToast({
+          title: '发布失败',
+          icon: 'none'
+        })
+      } finally {
+        this.submitting = false
+      }
     }
   }
 }
 </script>
 
-<style lang="scss">
+<style scoped lang="scss">
 .task-publish-page {
-  background: #f5f5f5;
   min-height: 100vh;
+  background-color: #f5f5f5;
+}
 
-  .header {
-    background: #3b5598;
-    padding: 40rpx 30rpx;
-    color: white;
 
-    .title {
-      font-size: 36rpx;
-      font-weight: 600;
+
+.content {
+  padding: 20rpx;
+}
+
+.form-section {
+  background: #fff;
+  border-radius: 16rpx;
+  padding: 30rpx;
+  margin-bottom: 20rpx;
+}
+
+.form-item {
+  margin-bottom: 40rpx;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+
+  &.required {
+    .form-label::before {
+      content: '*';
+      color: #f5222d;
+      margin-right: 8rpx;
+    }
+  }
+}
+
+.form-label {
+  font-size: 28rpx;
+  color: #333;
+  font-weight: 500;
+  display: block;
+  margin-bottom: 16rpx;
+}
+
+.form-input, .form-textarea {
+  padding: 24rpx;
+  border: 2rpx solid #e8e8e8;
+  border-radius: 12rpx;
+  font-size: 28rpx;
+  background: #fafafa;
+
+  &::placeholder {
+    color: #999;
+  }
+}
+
+.form-textarea {
+  height: 200rpx;
+  resize: none;
+}
+
+.input-count {
+  font-size: 24rpx;
+  color: #999;
+  text-align: right;
+  display: block;
+  margin-top: 8rpx;
+}
+
+.type-selector {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16rpx;
+
+  .type-item {
+    padding: 20rpx 32rpx;
+    border: 2rpx solid #e8e8e8;
+    border-radius: 12rpx;
+    background: #fafafa;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s;
+
+    &.active {
+      background: #3b5598;
+      border-color: #3b5598;
+      color: #fff;
+    }
+
+    text {
+      font-size: 26rpx;
+    }
+  }
+}
+
+.picker {
+  padding: 24rpx;
+  border: 2rpx solid #e8e8e8;
+  border-radius: 12rpx;
+  background: #fafafa;
+  color: #333;
+}
+
+.error-text {
+  display: block;
+  font-size: 24rpx;
+  color: #f5222d;
+  margin-top: 8rpx;
+}
+
+.image-upload {
+  .image-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20rpx;
+  }
+
+  .image-item {
+    width: 160rpx;
+    height: 160rpx;
+    border-radius: 12rpx;
+    overflow: hidden;
+    position: relative;
+
+    image {
+      width: 100%;
+      height: 100%;
+    }
+
+    .delete-image {
+      position: absolute;
+      top: 8rpx;
+      right: 8rpx;
+      width: 32rpx;
+      height: 32rpx;
+      background: rgba(0, 0, 0, 0.6);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: none;
     }
   }
 
-  .content {
-    padding: 30rpx;
+  .upload-btn {
+    width: 160rpx;
+    height: 160rpx;
+    border: 2rpx dashed #ddd;
+    border-radius: 12rpx;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: #fafafa;
 
-    .form-section {
-      background: white;
-      border-radius: 16rpx;
-      padding: 30rpx;
-      margin-bottom: 30rpx;
-
-      .form-item {
-        margin-bottom: 40rpx;
-
-        &.required {
-          .form-label::after {
-            content: ' *';
-            color: #f5222d;
-          }
-        }
-
-        &:last-child {
-          margin-bottom: 0;
-        }
-
-        .form-label {
-          display: block;
-          font-size: 28rpx;
-          color: #333;
-          margin-bottom: 15rpx;
-          font-weight: 500;
-        }
-
-        .form-input {
-          width: 100%;
-          height: 80rpx;
-          border: 1rpx solid #e0e0e0;
-          border-radius: 8rpx;
-          padding: 0 20rpx;
-          font-size: 28rpx;
-          background: #fafafa;
-        }
-
-        .form-textarea {
-          width: 100%;
-          min-height: 120rpx;
-          border: 1rpx solid #e0e0e0;
-          border-radius: 8rpx;
-          padding: 20rpx;
-          font-size: 28rpx;
-          background: #fafafa;
-          line-height: 1.5;
-        }
-
-        .input-count {
-          font-size: 22rpx;
-          color: #999;
-          text-align: right;
-          display: block;
-          margin-top: 8rpx;
-        }
-
-        .type-selector {
-          display: grid;
-          grid-template-columns: 1fr 1fr;
-          gap: 15rpx;
-
-          .type-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 25rpx 15rpx;
-            border: 2rpx solid #e0e0e0;
-            border-radius: 12rpx;
-            transition: all 0.3s;
-
-            text {
-              font-size: 24rpx;
-              color: #666;
-              margin-top: 12rpx;
-            }
-
-            &.active {
-              border-color: #3b5598;
-              background: rgba(59, 85, 152, 0.1);
-
-              text {
-                color: #3b5598;
-                font-weight: 500;
-              }
-            }
-          }
-        }
-
-        .requirements-list {
-          .requirement-item {
-            display: flex;
-            align-items: center;
-            margin-bottom: 15rpx;
-
-            .requirement-input {
-              flex: 1;
-              height: 70rpx;
-              border: 1rpx solid #e0e0e0;
-              border-radius: 8rpx;
-              padding: 0 20rpx;
-              font-size: 26rpx;
-              background: #fafafa;
-              margin-right: 15rpx;
-            }
-
-            .remove-btn {
-              width: 60rpx;
-              height: 60rpx;
-              border-radius: 50%;
-              border: 1rpx solid #f5222d;
-              background: white;
-              display: flex;
-              align-items: center;
-              justify-content: center;
-            }
-          }
-
-          .add-btn {
-            width: 100%;
-            height: 60rpx;
-            border: 2rpx dashed #d9d9d9;
-            border-radius: 8rpx;
-            background: #fafafa;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 24rpx;
-            color: #3b5598;
-
-            text {
-              margin-left: 8rpx;
-            }
-          }
-        }
-
-        .image-upload {
-          .image-list {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 15rpx;
-
-            .image-item {
-              position: relative;
-              width: 100%;
-              padding-top: 100%;
-              border-radius: 8rpx;
-              overflow: hidden;
-
-              image {
-                position: absolute;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-              }
-
-              .delete-image {
-                position: absolute;
-                top: 6rpx;
-                right: 6rpx;
-                width: 36rpx;
-                height: 36rpx;
-                border-radius: 50%;
-                background: rgba(0, 0, 0, 0.6);
-                border: none;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-              }
-            }
-
-            .upload-btn {
-              padding-top: 100%;
-              position: relative;
-              border: 2rpx dashed #d9d9d9;
-              border-radius: 8rpx;
-              display: flex;
-              flex-direction: column;
-              align-items: center;
-              justify-content: center;
-
-              &::before {
-                content: '';
-                position: absolute;
-                top: 0;
-                left: 0;
-                right: 0;
-                bottom: 0;
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                justify-content: center;
-              }
-
-              .upload-text {
-                font-size: 24rpx;
-                color: #999;
-                margin-top: 8rpx;
-              }
-
-              .upload-tips {
-                font-size: 20rpx;
-                color: #ccc;
-                margin-top: 4rpx;
-              }
-            }
-          }
-        }
-
-        .picker {
-          width: 100%;
-          height: 80rpx;
-          border: 1rpx solid #e0e0e0;
-          border-radius: 8rpx;
-          padding: 0 20rpx;
-          font-size: 28rpx;
-          color: #333;
-          background: #fafafa;
-          display: flex;
-          align-items: center;
-        }
-
-        .reward-selector {
-          display: flex;
-          gap: 15rpx;
-          margin-bottom: 15rpx;
-
-          .reward-type {
-            flex: 1;
-            height: 60rpx;
-            border: 1rpx solid #e0e0e0;
-            border-radius: 8rpx;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 26rpx;
-            color: #666;
-            transition: all 0.3s;
-
-            &.active {
-              border-color: #3b5598;
-              background: rgba(59, 85, 152, 0.1);
-              color: #3b5598;
-              font-weight: 500;
-            }
-          }
-        }
-
-        .reward-input-wrapper {
-          display: flex;
-          align-items: center;
-
-          .reward-input {
-            flex: 1;
-            height: 80rpx;
-            border: 1rpx solid #e0e0e0;
-            border-radius: 8rpx 0 0 8rpx;
-            padding: 0 20rpx;
-            font-size: 28rpx;
-            background: #fafafa;
-            border-right: none;
-          }
-
-          .reward-unit {
-            height: 80rpx;
-            width: 80rpx;
-            border: 1rpx solid #e0e0e0;
-            border-radius: 0 8rpx 8rpx 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 26rpx;
-            color: #666;
-            background: #fafafa;
-          }
-        }
-
-        .contact-option {
-          display: flex;
-          align-items: center;
-          margin-bottom: 15rpx;
-
-          text {
-            margin-left: 15rpx;
-            font-size: 26rpx;
-            color: #333;
-          }
-        }
-      }
+    .upload-text {
+      font-size: 24rpx;
+      color: #666;
+      margin-top: 8rpx;
     }
 
-    .notice-section {
-      background: white;
-      border-radius: 16rpx;
-      padding: 30rpx;
-      margin-bottom: 30rpx;
-
-      .notice-title {
-        display: flex;
-        align-items: center;
-        font-size: 28rpx;
-        color: #333;
-        font-weight: 600;
-        margin-bottom: 20rpx;
-
-        text {
-          margin-left: 10rpx;
-        }
-      }
-
-      .notice-list {
-        .notice-item {
-          display: block;
-          font-size: 24rpx;
-          color: #666;
-          line-height: 1.6;
-          margin-bottom: 10rpx;
-
-          &:last-child {
-            margin-bottom: 0;
-          }
-        }
-      }
+    .upload-tips {
+      font-size: 20rpx;
+      color: #999;
+      margin-top: 4rpx;
     }
+  }
+}
 
-    .agreement {
-      background: white;
-      border-radius: 16rpx;
-      padding: 25rpx 30rpx;
-      margin-bottom: 30rpx;
+.submit-section {
+  padding: 40rpx 0;
+}
 
-      checkbox-group {
-        display: flex;
-        align-items: center;
+uni-button[disabled]:not([type]), uni-button[disabled][type=default]{
+  color: #fff;
+  opacity: 0.7;
+}
 
-        text {
-          margin-left: 15rpx;
-          font-size: 26rpx;
-          color: #333;
-          line-height: 1.5;
-          flex: 1;
-        }
-      }
-    }
+.submit-btn {
+  width: 100%;
+  height: 88rpx;
+  background: linear-gradient(135deg, #3b5598 0%, #39648f 100%);
+  border-radius: 44rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 32rpx;
+  font-weight: 500;
+  border: none;
 
-    .submit-btn {
-      width: 100%;
-      height: 80rpx;
-      background: #3b5598;
-      color: white;
-      border: none;
-      border-radius: 8rpx;
-      font-size: 30rpx;
-      font-weight: 600;
+  &:disabled {
+    color: #fff;
+  }
 
-      &:disabled {
-        background: #ccc;
-      }
-    }
+
+  u-icon, u-loading-icon {
+    margin-right: 12rpx;
   }
 }
 </style>

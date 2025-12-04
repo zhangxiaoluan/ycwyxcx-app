@@ -24,63 +24,63 @@
 /* 垂直间距 */
 /* 透明度 */
 /* 文章场景相关 */
-.task-list-page {
+.task-list-page.data-v-5360aefc {
   background: #f5f5f5;
   min-height: 100vh;
 }
-.task-list-page .header {
+.task-list-page .header.data-v-5360aefc {
   background: linear-gradient(135deg, #3b5598 0%, #5a7bcd 100%);
   padding: 40rpx 30rpx;
   color: white;
 }
-.task-list-page .header .title {
+.task-list-page .header .title.data-v-5360aefc {
   font-size: 36rpx;
   font-weight: 600;
   margin-bottom: 20rpx;
 }
-.task-list-page .header .task-stats {
+.task-list-page .header .task-stats.data-v-5360aefc {
   display: flex;
   gap: 40rpx;
 }
-.task-list-page .header .task-stats .stat-item {
+.task-list-page .header .task-stats .stat-item.data-v-5360aefc {
   text-align: center;
 }
-.task-list-page .header .task-stats .stat-item .stat-value {
+.task-list-page .header .task-stats .stat-item .stat-value.data-v-5360aefc {
   display: block;
   font-size: 32rpx;
   font-weight: 700;
   margin-bottom: 6rpx;
 }
-.task-list-page .header .task-stats .stat-item .stat-label {
+.task-list-page .header .task-stats .stat-item .stat-label.data-v-5360aefc {
   font-size: 22rpx;
   opacity: 0.8;
 }
-.task-list-page .content {
+.task-list-page .content.data-v-5360aefc {
   padding: 30rpx;
 }
-.task-list-page .content .task-tabs {
+.task-list-page .content .task-tabs.data-v-5360aefc {
   background: white;
   border-radius: 16rpx;
   padding: 20rpx;
   margin-bottom: 30rpx;
   display: flex;
 }
-.task-list-page .content .task-tabs .tab-item {
+.task-list-page .content .task-tabs .tab-item.data-v-5360aefc {
   flex: 1;
   text-align: center;
   padding: 15rpx 0;
   position: relative;
 }
-.task-list-page .content .task-tabs .tab-item text {
+.task-list-page .content .task-tabs .tab-item text.data-v-5360aefc {
   font-size: 26rpx;
   color: #666;
   transition: color 0.3s;
 }
-.task-list-page .content .task-tabs .tab-item.active text {
+.task-list-page .content .task-tabs .tab-item.active text.data-v-5360aefc {
   color: #3b5598;
   font-weight: 600;
 }
-.task-list-page .content .task-tabs .tab-item.active::after {
+.task-list-page .content .task-tabs .tab-item.active.data-v-5360aefc::after {
   content: "";
   position: absolute;
   bottom: 0;
@@ -92,7 +92,7 @@
   background: #3b5598;
   border-radius: 2rpx;
 }
-.task-list-page .content .task-tabs .tab-item .badge {
+.task-list-page .content .task-tabs .tab-item .badge.data-v-5360aefc {
   position: absolute;
   top: 10rpx;
   right: 50%;
@@ -106,12 +106,12 @@
   min-width: 24rpx;
   text-align: center;
 }
-.task-list-page .content .task-actions {
+.task-list-page .content .task-actions.data-v-5360aefc {
   display: flex;
   gap: 20rpx;
   margin-bottom: 30rpx;
 }
-.task-list-page .content .task-actions .action-btn {
+.task-list-page .content .task-actions .action-btn.data-v-5360aefc {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -121,21 +121,21 @@
   font-weight: 600;
   border: none;
 }
-.task-list-page .content .task-actions .action-btn text {
+.task-list-page .content .task-actions .action-btn text.data-v-5360aefc {
   margin-left: 8rpx;
 }
-.task-list-page .content .task-actions .action-btn.publish {
+.task-list-page .content .task-actions .action-btn.publish.data-v-5360aefc {
   flex: 2;
   background: #3b5598;
   color: white;
 }
-.task-list-page .content .task-actions .action-btn.filter {
+.task-list-page .content .task-actions .action-btn.my-tasks.data-v-5360aefc {
   flex: 1;
   background: white;
   color: #3b5598;
   border: 1rpx solid #e0e0e0;
 }
-.task-list-page .content .task-list .task-item {
+.task-list-page .content .task-list .task-item.data-v-5360aefc {
   background: white;
   border-radius: 12rpx;
   padding: 25rpx;
@@ -144,65 +144,69 @@
   transition: transform 0.2s;
   transition: transform 0.2s, -webkit-transform 0.2s;
 }
-.task-list-page .content .task-list .task-item:active {
+.task-list-page .content .task-list .task-item.data-v-5360aefc:active {
   -webkit-transform: scale(0.98);
           transform: scale(0.98);
 }
-.task-list-page .content .task-list .task-item .task-header {
+.task-list-page .content .task-list .task-item .task-header.data-v-5360aefc {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 15rpx;
 }
-.task-list-page .content .task-list .task-item .task-header .task-type {
+.task-list-page .content .task-list .task-item .task-header .task-type.data-v-5360aefc {
   display: flex;
   align-items: center;
-  padding: 6rpx 12rpx;
+  padding: 6rpx 18rpx;
   border-radius: 12rpx;
-  font-size: 22rpx;
+  font-size: 27rpx;
   color: white;
 }
-.task-list-page .content .task-list .task-item .task-header .task-type text {
-  margin-left: 6rpx;
+.task-list-page .content .task-list .task-item .task-header .task-type.task-type-1.data-v-5360aefc {
+  background: rgba(255, 107, 53, 0.1);
+  color: rgba(255, 107, 53, 0.99);
 }
-.task-list-page .content .task-list .task-item .task-header .task-type.repair {
-  background: #ff6b35;
+.task-list-page .content .task-list .task-item .task-header .task-type.task-type-2.data-v-5360aefc {
+  background: rgba(7, 193, 96, 0.1);
+  color: rgba(7, 193, 96, 0.99);
 }
-.task-list-page .content .task-list .task-item .task-header .task-type.cleaning {
-  background: #07c160;
+.task-list-page .content .task-list .task-item .task-header .task-type.task-type-3.data-v-5360aefc {
+  background: rgba(59, 85, 152, 0.1);
+  color: rgba(59, 85, 152, 0.99);
 }
-.task-list-page .content .task-list .task-item .task-header .task-type.delivery {
-  background: #3b5598;
+.task-list-page .content .task-list .task-item .task-header .task-type.task-type-4.data-v-5360aefc {
+  background: rgba(156, 39, 176, 0.1);
+  color: rgba(156, 39, 176, 0.99);
 }
-.task-list-page .content .task-list .task-item .task-header .task-type.other {
-  background: #9c27b0;
-}
-.task-list-page .content .task-list .task-item .task-header .task-status {
-  font-size: 22rpx;
-  padding: 6rpx 12rpx;
+.task-list-page .content .task-list .task-item .task-header .task-status.data-v-5360aefc {
+  padding: 6rpx 18rpx;
   border-radius: 12rpx;
+  font-size: 27rpx;
 }
-.task-list-page .content .task-list .task-item .task-header .task-status.pending {
+.task-list-page .content .task-list .task-item .task-header .task-status.task-status-0.data-v-5360aefc, .task-list-page .content .task-list .task-item .task-header .task-status.task-status-1.data-v-5360aefc {
   background: #fff7e6;
   color: #fa8c16;
 }
-.task-list-page .content .task-list .task-item .task-header .task-status.completed {
+.task-list-page .content .task-list .task-item .task-header .task-status.task-status-2.data-v-5360aefc {
+  background: #e6f7ff;
+  color: #1890ff;
+}
+.task-list-page .content .task-list .task-item .task-header .task-status.task-status-3.data-v-5360aefc {
   background: #f6ffed;
   color: #52c41a;
 }
-.task-list-page .content .task-list .task-item .task-content {
+.task-list-page .content .task-list .task-item .task-content.data-v-5360aefc {
   margin-bottom: 15rpx;
 }
-.task-list-page .content .task-list .task-item .task-content .task-title {
+.task-list-page .content .task-list .task-item .task-content .task-title.data-v-5360aefc {
   display: block;
-  font-size: 28rpx;
   color: #333;
   font-weight: 500;
   margin-bottom: 8rpx;
   line-height: 1.4;
 }
-.task-list-page .content .task-list .task-item .task-content .task-desc {
-  font-size: 24rpx;
+.task-list-page .content .task-list .task-item .task-content .task-desc.data-v-5360aefc {
+  font-size: 26rpx;
   color: #666;
   line-height: 1.5;
   display: -webkit-box;
@@ -210,63 +214,97 @@
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
-.task-list-page .content .task-list .task-item .task-info {
+.task-list-page .content .task-list .task-item .task-info.data-v-5360aefc {
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
 }
-.task-list-page .content .task-list .task-item .task-info .task-meta {
+.task-list-page .content .task-list .task-item .task-info .task-meta.data-v-5360aefc {
   flex: 1;
 }
-.task-list-page .content .task-list .task-item .task-info .task-meta .meta-item {
+.task-list-page .content .task-list .task-item .task-info .task-meta .meta-item.data-v-5360aefc {
   display: flex;
   align-items: center;
-  font-size: 22rpx;
+  font-size: 26rpx;
   color: #999;
-  margin-bottom: 6rpx;
+  margin-bottom: 10rpx;
 }
-.task-list-page .content .task-list .task-item .task-info .task-meta .meta-item u-icon {
-  margin-right: 6rpx;
+.task-list-page .content .task-list .task-item .task-info .task-meta .meta-item .u-icon.data-v-5360aefc {
+  margin-right: 10rpx;
 }
-.task-list-page .content .task-list .task-item .task-info .task-meta .meta-item:last-child {
+.task-list-page .content .task-list .task-item .task-info .task-meta .meta-item.data-v-5360aefc:last-child {
   margin-bottom: 0;
 }
-.task-list-page .content .task-list .task-item .task-info .task-reward {
+.task-list-page .content .task-list .task-item .task-info .task-reward.data-v-5360aefc {
   text-align: right;
 }
-.task-list-page .content .task-list .task-item .task-info .task-reward .reward-label {
+.task-list-page .content .task-list .task-item .task-info .task-reward .reward-label.data-v-5360aefc {
   display: block;
-  font-size: 20rpx;
+  font-size: 25rpx;
   color: #999;
   margin-bottom: 4rpx;
 }
-.task-list-page .content .task-list .task-item .task-info .task-reward .reward-value {
-  font-size: 26rpx;
+.task-list-page .content .task-list .task-item .task-info .task-reward .reward-value.data-v-5360aefc {
+  font-size: 27rpx;
   color: #ff6b35;
   font-weight: 600;
 }
-.task-list-page .content .empty-state {
+.task-list-page .content .task-list .task-item .task-footer.data-v-5360aefc {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 20rpx;
+}
+.task-list-page .content .task-list .task-item .task-footer .publisher-info.data-v-5360aefc {
+  display: flex;
+  align-items: center;
+  font-size: 26rpx;
+  color: #999;
+}
+.task-list-page .content .task-list .task-item .task-footer .publisher-info .u-icon.data-v-5360aefc {
+  margin-right: 6rpx;
+}
+.task-list-page .content .task-list .task-item .task-footer .task-actions.data-v-5360aefc {
+  margin-bottom: 0;
+}
+.task-list-page .content .task-list .task-item .task-footer .task-actions .take-btn.data-v-5360aefc {
+  background: #3b5598;
+  color: white;
+  border: none;
+  border-radius: 15rpx;
+  padding: 10rpx 20rpx;
+  font-size: 26rpx;
+  height: 55rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.task-list-page .content .task-list .task-item .task-footer .task-actions .applied-text.data-v-5360aefc {
+  font-size: 26rpx;
+  color: #999;
+}
+.task-list-page .content .empty-state.data-v-5360aefc {
   text-align: center;
   padding: 100rpx 30rpx;
 }
-.task-list-page .content .empty-state .empty-icon {
+.task-list-page .content .empty-state .empty-icon.data-v-5360aefc {
   font-size: 120rpx;
   margin-bottom: 30rpx;
 }
-.task-list-page .content .empty-state .empty-text {
+.task-list-page .content .empty-state .empty-text.data-v-5360aefc {
   display: block;
   font-size: 32rpx;
   color: #333;
   margin-bottom: 10rpx;
   font-weight: 600;
 }
-.task-list-page .content .empty-state .empty-desc {
+.task-list-page .content .empty-state .empty-desc.data-v-5360aefc {
   display: block;
   font-size: 26rpx;
   color: #999;
   margin-bottom: 40rpx;
 }
-.task-list-page .content .empty-state .empty-action-btn {
+.task-list-page .content .empty-state .empty-action-btn.data-v-5360aefc {
   background: #3b5598;
   color: white;
   border: none;
@@ -277,26 +315,17 @@
   display: inline-flex;
   align-items: center;
 }
-.task-list-page .content .empty-state .empty-action-btn text {
+.task-list-page .content .empty-state .empty-action-btn text.data-v-5360aefc {
   margin-left: 10rpx;
 }
-.task-list-page .filter-form .filter-item {
-  margin-bottom: 30rpx;
-}
-.task-list-page .filter-form .filter-item .filter-label {
-  display: block;
-  font-size: 28rpx;
-  color: #333;
-  margin-bottom: 15rpx;
-  font-weight: 500;
-}
-.task-list-page .filter-form .filter-item .filter-options .option-item {
+.task-list-page .content .loading-more.data-v-5360aefc {
   display: flex;
   align-items: center;
-  margin-bottom: 15rpx;
+  justify-content: center;
+  padding: 40rpx;
+  gap: 16rpx;
 }
-.task-list-page .filter-form .filter-item .filter-options .option-item text {
-  margin-left: 15rpx;
+.task-list-page .content .loading-more text.data-v-5360aefc {
   font-size: 26rpx;
-  color: #333;
+  color: #999;
 }

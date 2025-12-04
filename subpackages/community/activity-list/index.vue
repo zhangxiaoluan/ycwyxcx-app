@@ -33,7 +33,7 @@
             <text class="user-name">{{ post.userName }}</text>
             <text class="post-time">{{ formatTime(post.createdAt) }}</text>
           </view>
-          <view class="post-status" :class="getStatusClass(post.status)">
+          <view class="post-status" :class="'post-status-' + post.status">
             {{ getStatusText(post.status) }}
           </view>
         </view>
@@ -50,7 +50,7 @@
           <view class="image-grid" v-if="post.mediaList[0].type === 0">
             <view
               class="image-item"
-              :class="getImageGridClass(post.mediaList.length)"
+              :class="post.mediaList.length === 1 ? 'grid-single' : (post.mediaList.length === 2 ? 'grid-double' : (post.mediaList.length <= 4 ? 'grid-four' : 'grid-nine'))"
               v-for="(media, index) in post.mediaList.slice(0, 9)"
               :key="media.id"
               @click.stop="previewImage(post.mediaList, index)">
@@ -76,11 +76,11 @@
             <text class="interaction-text" :class="{ liked: post.isLiked }">{{ post.likes || 0 }}</text>
           </view>
           <view class="interaction-item" @click.stop="goToPostDetail(post, 'comment')">
-            <u-icon name="message-circle" size="20" color="#999"></u-icon>
+            <u-icon name="eye" size="20" color="#999"></u-icon>
             <text class="interaction-text">{{ post.commentsCount || 0 }}</text>
           </view>
           <view class="interaction-item" @click.stop="sharePost(post)">
-            <u-icon name="share-2" size="20" color="#999"></u-icon>
+            <u-icon name="share" size="20" color="#999"></u-icon>
             <text class="interaction-text">分享</text>
           </view>
           <!-- 操作按钮（仅自己的动态显示） -->
@@ -173,19 +173,17 @@ export default {
         }
 
         const response = await getPostList(params)
-
-        if (response.data && response.data.records) {
-          const newPosts = response.data.records
-
-          if (reset) {
-            this.posts = newPosts
-          } else {
-            this.posts = [...this.posts, ...newPosts]
-          }
-
-          this.hasMore = newPosts.length >= this.size
-          this.page++
+        let records = response.records || []
+        console.log(response)
+        const newPosts = records
+        if (reset) {
+          this.posts = newPosts
+        } else {
+          this.posts = [...this.posts, ...newPosts]
         }
+
+        this.hasMore = newPosts.length >= this.size
+        this.page++
       } catch (error) {
         console.error('加载动态列表失败:', error)
         uni.showToast({
@@ -534,19 +532,19 @@ export default {
       font-size: 22rpx;
       color: white;
 
-      &.status-normal {
+      &.post-status-0 {
         background-color: #07c160;
       }
 
-      &.status-pending {
+      &.post-status-1 {
         background-color: #ff9500;
       }
 
-      &.status-rejected {
+      &.post-status-2 {
         background-color: #ff4d4f;
       }
 
-      &.status-deleted {
+      &.post-status-3 {
         background-color: #999;
       }
     }

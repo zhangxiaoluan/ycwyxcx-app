@@ -2,11 +2,6 @@
   <view class="family-members-page">
 
 
-          <button class="add-btn" @click="addMember">
-            <u-icon name="plus" size="20" color="#fff"></u-icon>
-            <text>添加成员</text>
-          </button>
-
     <view class="content">
       <view class="members-list" v-if="familyMembers.length > 0">
         <view
@@ -104,6 +99,7 @@
 </template>
 
 <script>
+import {familyMembers} from "@/api/list/family-members";
 export default {
   data() {
     return {
@@ -150,7 +146,15 @@ export default {
       ]
     }
   },
+  onLoad() {
+    this.getFamilyMembers()
+  },
   methods: {
+    getFamilyMembers(){
+      familyMembers().then(res => {
+        console.log(11, res)
+      })
+    },
     addMember() {
       this.isEditing = false
       this.currentMemberId = null

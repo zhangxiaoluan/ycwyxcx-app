@@ -19325,18 +19325,10 @@ exports.default = _default;
 /* 162 */,
 /* 163 */,
 /* 164 */,
-/* 165 */,
-/* 166 */,
-/* 167 */,
-/* 168 */,
-/* 169 */,
-/* 170 */,
-/* 171 */,
-/* 172 */,
-/* 173 */
-/*!*******************************************************************************!*\
-  !*** /Users/salvater/web/kai-nan/zhi-hui-wu-ye/ycwyxcx-app/api/list/login.js ***!
-  \*******************************************************************************/
+/* 165 */
+/*!******************************************************************************!*\
+  !*** /Users/salvater/web/kai-nan/zhi-hui-wu-ye/ycwyxcx-app/api/list/home.js ***!
+  \******************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -19346,113 +19338,26 @@ exports.default = _default;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.Login = Login;
-exports.authLogin = authLogin;
-exports.loginWithoutPwd = loginWithoutPwd;
-exports.setPassword = setPassword;
-exports.setUser = setUser;
-exports.sign = sign;
-exports.signInfo = signInfo;
-exports.signRecords = signRecords;
-exports.signStatus = signStatus;
-exports.userMe = userMe;
-var _request = __webpack_require__(/*! ../request */ 174);
-// 登录
-function Login(params) {
+exports.articleCarousel = articleCarousel;
+exports.getArticleDetail = getArticleDetail;
+var _request = __webpack_require__(/*! ../request */ 166);
+function articleCarousel() {
   var json = {
-    url: '/app/auth/wechat/login',
-    method: 'post',
-    data: params
-  };
-  return (0, _request.sendRequest)(json);
-}
-
-// 查询当前登录用户信息
-function userMe() {
-  var json = {
-    url: '/app/system/user/me',
+    url: '/app/community/article/carousel',
     method: 'get'
   };
   return (0, _request.sendRequest)(json);
 }
-
-// 签到
-function sign() {
+function getArticleDetail(id) {
   var json = {
-    url: '/app/points/sign',
-    method: 'post'
-  };
-  return (0, _request.sendRequest)(json);
-}
-
-// 签到状态
-function signStatus() {
-  var json = {
-    url: '/app/points/sign/status',
+    url: "/app/community/article/".concat(id),
     method: 'get'
-  };
-  return (0, _request.sendRequest)(json);
-}
-
-// 积分信息i
-function signInfo() {
-  var json = {
-    url: '/app/points/info',
-    method: 'get'
-  };
-  return (0, _request.sendRequest)(json);
-}
-
-// 积分信息i
-function signRecords() {
-  var json = {
-    url: '/app/points/records',
-    method: 'get'
-  };
-  return (0, _request.sendRequest)(json);
-}
-
-// 登出
-function authLogin() {
-  var json = {
-    url: '/app/auth/logout',
-    method: 'post'
-  };
-  return (0, _request.sendRequest)(json);
-}
-
-// 修改登录密码
-function setPassword(params) {
-  var json = {
-    url: '/app/auth/change/password',
-    method: 'post',
-    data: params
-  };
-  return (0, _request.sendRequest)(json);
-}
-
-// 修改用户信息
-function setUser(params) {
-  var json = {
-    url: '/app/system/user/',
-    method: 'put',
-    data: params
-  };
-  return (0, _request.sendRequest)(json);
-}
-
-// 对接电信单点登录
-function loginWithoutPwd(params) {
-  var json = {
-    url: '/app/auth/loginWithoutPwd',
-    method: 'get',
-    data: params
   };
   return (0, _request.sendRequest)(json);
 }
 
 /***/ }),
-/* 174 */
+/* 166 */
 /*!****************************************************************************!*\
   !*** /Users/salvater/web/kai-nan/zhi-hui-wu-ye/ycwyxcx-app/api/request.js ***!
   \****************************************************************************/
@@ -19472,7 +19377,7 @@ var _asyncToGenerator2 = _interopRequireDefault(__webpack_require__(/*! @babel/r
 var _defineProperty2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/defineProperty */ 11));
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { (0, _defineProperty2.default)(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
-var BASE_URL = 'http://81.71.98.7:8802';
+var BASE_URL = 'http://62.234.35.7:8802';
 var sendRequest = function sendRequest(target, config) {
   var token = uni.getStorageSync('token');
   if (!target.url) throw new Error('url地址不能为空');
@@ -19598,7 +19503,7 @@ var sendUpload = /*#__PURE__*/function () {
           case 0:
             return _context.abrupt("return", new Promise(function (resolve, reject) {
               uni.uploadFile({
-                url: url,
+                url: BASE_URL + url,
                 filePath: filePath,
                 file: file,
                 name: 'file',
@@ -19634,7 +19539,7 @@ var sendUploads = /*#__PURE__*/function () {
           case 0:
             return _context2.abrupt("return", new Promise(function (resolve, reject) {
               uni.uploadFile({
-                url: url,
+                url: BASE_URL + url,
                 files: fileList,
                 success: function success(res) {
                   var data = JSON.parse(res.data);
@@ -19667,7 +19572,138 @@ exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"]))
 
 /***/ }),
-/* 175 */,
+/* 167 */,
+/* 168 */,
+/* 169 */,
+/* 170 */,
+/* 171 */,
+/* 172 */,
+/* 173 */,
+/* 174 */,
+/* 175 */
+/*!*******************************************************************************!*\
+  !*** /Users/salvater/web/kai-nan/zhi-hui-wu-ye/ycwyxcx-app/api/list/login.js ***!
+  \*******************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.Login = Login;
+exports.authLogin = authLogin;
+exports.loginWithoutPwd = loginWithoutPwd;
+exports.setPassword = setPassword;
+exports.setUser = setUser;
+exports.sign = sign;
+exports.signInfo = signInfo;
+exports.signRecords = signRecords;
+exports.signStatus = signStatus;
+exports.uploadFile = uploadFile;
+exports.userMe = userMe;
+var _request = __webpack_require__(/*! ../request */ 166);
+// 登录
+function Login(params) {
+  var json = {
+    url: '/app/auth/wechat/login',
+    method: 'post',
+    data: params
+  };
+  return (0, _request.sendRequest)(json);
+}
+
+// 查询当前登录用户信息
+function userMe() {
+  var json = {
+    url: '/app/system/user/me',
+    method: 'get'
+  };
+  return (0, _request.sendRequest)(json);
+}
+
+// 签到
+function sign() {
+  var json = {
+    url: '/app/points/sign',
+    method: 'post'
+  };
+  return (0, _request.sendRequest)(json);
+}
+
+// 签到状态
+function signStatus() {
+  var json = {
+    url: '/app/points/sign/status',
+    method: 'get'
+  };
+  return (0, _request.sendRequest)(json);
+}
+
+// 积分信息i
+function signInfo() {
+  var json = {
+    url: '/app/points/info',
+    method: 'get'
+  };
+  return (0, _request.sendRequest)(json);
+}
+
+// 积分信息i
+function signRecords() {
+  var json = {
+    url: '/app/points/records',
+    method: 'get'
+  };
+  return (0, _request.sendRequest)(json);
+}
+
+// 登出
+function authLogin() {
+  var json = {
+    url: '/app/auth/logout',
+    method: 'post'
+  };
+  return (0, _request.sendRequest)(json);
+}
+
+// 修改登录密码
+function setPassword(params) {
+  var json = {
+    url: '/app/auth/change/password',
+    method: 'post',
+    data: params
+  };
+  return (0, _request.sendRequest)(json);
+}
+
+// 修改用户信息
+function setUser(params) {
+  var json = {
+    url: '/app/system/user/',
+    method: 'put',
+    data: params
+  };
+  return (0, _request.sendRequest)(json);
+}
+
+// 对接电信单点登录
+function loginWithoutPwd(params) {
+  var json = {
+    url: '/app/auth/loginWithoutPwd',
+    method: 'get',
+    data: params
+  };
+  return (0, _request.sendRequest)(json);
+}
+function uploadFile(filePath, file) {
+  var url = '/app/common/storage/upload';
+  return (0, _request.sendUpload)(url, filePath, file);
+}
+
+/***/ }),
 /* 176 */,
 /* 177 */,
 /* 178 */,
@@ -19675,7 +19711,8 @@ exports.default = _default;
 /* 180 */,
 /* 181 */,
 /* 182 */,
-/* 183 */
+/* 183 */,
+/* 184 */
 /*!*********************************************************************************!*\
   !*** /Users/salvater/web/kai-nan/zhi-hui-wu-ye/ycwyxcx-app/pages/login/auth.js ***!
   \*********************************************************************************/
@@ -19693,7 +19730,7 @@ exports.wechatLogin = exports.refreshToken = exports.logout = exports.getUserInf
 var _regenerator = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/regenerator */ 56));
 var _defineProperty2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/defineProperty */ 11));
 var _asyncToGenerator2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ 58));
-var _request = __webpack_require__(/*! @/api/request */ 174);
+var _request = __webpack_require__(/*! @/api/request */ 166);
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { (0, _defineProperty2.default)(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
 var Appid = 'wx8d760a578b35bf6f';
@@ -20069,7 +20106,6 @@ exports.getAuth = getAuth;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"]))
 
 /***/ }),
-/* 184 */,
 /* 185 */,
 /* 186 */,
 /* 187 */,
@@ -20085,7 +20121,8 @@ exports.getAuth = getAuth;
 /* 197 */,
 /* 198 */,
 /* 199 */,
-/* 200 */
+/* 200 */,
+/* 201 */
 /*!***************************************************************************************!*\
   !*** /Users/salvater/web/kai-nan/zhi-hui-wu-ye/ycwyxcx-app/api/list/house-binding.js ***!
   \***************************************************************************************/
@@ -20098,13 +20135,14 @@ exports.getAuth = getAuth;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.getBinding = getBinding;
 exports.getBuildings = getBuildings;
 exports.getCommunities = getCommunities;
 exports.getRooms = getRooms;
 exports.houseBindings = houseBindings;
 exports.houseBindingsDel = houseBindingsDel;
 exports.submitHouseBinding = submitHouseBinding;
-var _request = __webpack_require__(/*! ../request */ 174);
+var _request = __webpack_require__(/*! ../request */ 166);
 // 绑定记录
 function houseBindings(params) {
   var json = {
@@ -20120,6 +20158,15 @@ function houseBindingsDel(bindingId) {
   var json = {
     url: '/app/property/binding/unbind/' + bindingId,
     method: 'post'
+  };
+  return (0, _request.sendRequest)(json);
+}
+
+// 通过的绑定
+function getBinding() {
+  var json = {
+    url: '/app/property/binding/approved-bindings',
+    method: 'get'
   };
   return (0, _request.sendRequest)(json);
 }
@@ -20169,7 +20216,6 @@ function submitHouseBinding(params) {
 }
 
 /***/ }),
-/* 201 */,
 /* 202 */,
 /* 203 */,
 /* 204 */,
@@ -20186,7 +20232,32 @@ function submitHouseBinding(params) {
 /* 215 */,
 /* 216 */,
 /* 217 */,
-/* 218 */,
+/* 218 */
+/*!****************************************************************************************!*\
+  !*** /Users/salvater/web/kai-nan/zhi-hui-wu-ye/ycwyxcx-app/api/list/family-members.js ***!
+  \****************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.familyMembers = familyMembers;
+var _request = __webpack_require__(/*! ../request */ 166);
+//
+function familyMembers(params) {
+  var json = {
+    url: '/app/property/binding/family-members',
+    method: 'get',
+    data: params
+  };
+  return (0, _request.sendRequest)(json);
+}
+
+/***/ }),
 /* 219 */,
 /* 220 */,
 /* 221 */,
@@ -20227,7 +20298,64 @@ function submitHouseBinding(params) {
 /* 256 */,
 /* 257 */,
 /* 258 */,
-/* 259 */,
+/* 259 */
+/*!*************************************************************************************!*\
+  !*** /Users/salvater/web/kai-nan/zhi-hui-wu-ye/ycwyxcx-app/api/list/points-mall.js ***!
+  \*************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.exchangeProduct = exchangeProduct;
+exports.getCategories = getCategories;
+exports.getExchangeRecords = getExchangeRecords;
+exports.getProducts = getProducts;
+var _request = __webpack_require__(/*! ../request */ 166);
+// ��F�{��
+function getCategories() {
+  var json = {
+    url: '/app/points/mall/categories',
+    method: 'get'
+  };
+  return (0, _request.sendRequest)(json);
+}
+
+// ��F�h��
+function getProducts(params) {
+  var json = {
+    url: '/app/points/mall/products',
+    method: 'get',
+    data: params
+  };
+  return (0, _request.sendRequest)(json);
+}
+
+// QbF�
+function exchangeProduct(params) {
+  var json = {
+    url: '/app/points/mall/exchange',
+    method: 'post',
+    data: params
+  };
+  return (0, _request.sendRequest)(json);
+}
+
+// ��Qb�U
+function getExchangeRecords(params) {
+  var json = {
+    url: '/app/points/mall/exchange/records',
+    method: 'get',
+    data: params
+  };
+  return (0, _request.sendRequest)(json);
+}
+
+/***/ }),
 /* 260 */,
 /* 261 */,
 /* 262 */,
@@ -20236,7 +20364,123 @@ function submitHouseBinding(params) {
 /* 265 */,
 /* 266 */,
 /* 267 */,
-/* 268 */,
+/* 268 */
+/*!*******************************************************************************!*\
+  !*** /Users/salvater/web/kai-nan/zhi-hui-wu-ye/ycwyxcx-app/api/list/tasks.js ***!
+  \*******************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.cancelTask = cancelTask;
+exports.completeTask = completeTask;
+exports.getMyPublishedTasks = getMyPublishedTasks;
+exports.getMyTakenTasks = getMyTakenTasks;
+exports.getTaskDetail = getTaskDetail;
+exports.getTaskList = getTaskList;
+exports.getTaskStatuses = getTaskStatuses;
+exports.getTaskTypes = getTaskTypes;
+exports.publishTask = publishTask;
+exports.takeTask = takeTask;
+var _request = __webpack_require__(/*! ../request */ 166);
+// 获取任务列表
+function getTaskList() {
+  var json = {
+    url: '/app/community/task/list',
+    method: 'get'
+  };
+  return (0, _request.sendRequest)(json);
+}
+
+// 获取任务详情
+function getTaskDetail(taskId) {
+  var json = {
+    url: "/app/community/task/detail/".concat(taskId),
+    method: 'get'
+  };
+  return (0, _request.sendRequest)(json);
+}
+
+// 领取任务
+function takeTask(params) {
+  var json = {
+    url: "/app/community/task/take",
+    method: 'post',
+    data: params
+  };
+  return (0, _request.sendRequest)(json);
+}
+
+// 获取我发布的任务
+function getMyPublishedTasks() {
+  var json = {
+    url: '/app/community/task/my-published',
+    method: 'get'
+  };
+  return (0, _request.sendRequest)(json);
+}
+
+// 获取我已领取的任务
+function getMyTakenTasks() {
+  var json = {
+    url: '/app/community/task/my-taken',
+    method: 'get'
+  };
+  return (0, _request.sendRequest)(json);
+}
+
+// 获取任务状态列表
+function getTaskStatuses() {
+  var json = {
+    url: '/app/community/task/task-statuses',
+    method: 'get'
+  };
+  return (0, _request.sendRequest)(json);
+}
+
+// 获取任务类型列表
+function getTaskTypes() {
+  var json = {
+    url: '/app/community/task/task-types',
+    method: 'get'
+  };
+  return (0, _request.sendRequest)(json);
+}
+
+// 取消任务
+function cancelTask(taskId) {
+  var json = {
+    url: "/app/community/task/cancel/".concat(taskId),
+    method: 'post'
+  };
+  return (0, _request.sendRequest)(json);
+}
+
+// 完成任务
+function completeTask(taskId) {
+  var json = {
+    url: "/app/community/task/complete/".concat(taskId),
+    method: 'post'
+  };
+  return (0, _request.sendRequest)(json);
+}
+
+// 发布任务
+function publishTask(data) {
+  var json = {
+    url: '/app/community/task/publish',
+    method: 'post',
+    data: data
+  };
+  return (0, _request.sendRequest)(json);
+}
+
+/***/ }),
 /* 269 */,
 /* 270 */,
 /* 271 */,
@@ -20253,7 +20497,35 @@ function submitHouseBinding(params) {
 /* 282 */,
 /* 283 */,
 /* 284 */,
-/* 285 */,
+/* 285 */
+/*!********************************************************************************!*\
+  !*** /Users/salvater/web/kai-nan/zhi-hui-wu-ye/ycwyxcx-app/api/list/upload.js ***!
+  \********************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.uploadFile = uploadFile;
+exports.uploadFiles = uploadFiles;
+var _request = __webpack_require__(/*! ../request */ 166);
+// 上传头像 单张
+function uploadFile(filePath, file) {
+  var url = '/app/common/storage/upload';
+  return (0, _request.sendUpload)(url, filePath, file);
+}
+
+// 上传图片多张
+function uploadFiles(fileList) {
+  var url = '/app/common/storage/uploads';
+  return (0, _request.sendUploads)(url, fileList);
+}
+
+/***/ }),
 /* 286 */,
 /* 287 */,
 /* 288 */,
@@ -20278,7 +20550,56 @@ function submitHouseBinding(params) {
 /* 307 */,
 /* 308 */,
 /* 309 */,
-/* 310 */,
+/* 310 */
+/*!********************************************************************************!*\
+  !*** /Users/salvater/web/kai-nan/zhi-hui-wu-ye/ycwyxcx-app/api/list/notice.js ***!
+  \********************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.categories = categories;
+exports.categoriesList = categoriesList;
+exports.categoriesRead = categoriesRead;
+exports.categoriesReadAll = categoriesReadAll;
+var _request = __webpack_require__(/*! ../request */ 166);
+function categories() {
+  var json = {
+    url: "/app/announcement/categories",
+    method: 'get'
+  };
+  return (0, _request.sendRequest)(json);
+}
+function categoriesList(params) {
+  var json = {
+    url: "/app/announcement/list",
+    method: 'get',
+    data: params
+  };
+  return (0, _request.sendRequest)(json);
+}
+function categoriesRead(id) {
+  var json = {
+    url: "/app/announcement/".concat(id, "/read"),
+    method: 'post'
+  };
+  return (0, _request.sendRequest)(json);
+}
+function categoriesReadAll(params) {
+  var json = {
+    url: "/app/announcement/batch/read",
+    method: 'post',
+    data: params
+  };
+  return (0, _request.sendRequest)(json);
+}
+
+/***/ }),
 /* 311 */,
 /* 312 */,
 /* 313 */,
@@ -20295,7 +20616,112 @@ function submitHouseBinding(params) {
 /* 324 */,
 /* 325 */,
 /* 326 */,
-/* 327 */,
+/* 327 */
+/*!***************************************************************************************!*\
+  !*** /Users/salvater/web/kai-nan/zhi-hui-wu-ye/ycwyxcx-app/api/list/activity-list.js ***!
+  \***************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.createPost = createPost;
+exports.deletePost = deletePost;
+exports.getLikedPosts = getLikedPosts;
+exports.getMyPosts = getMyPosts;
+exports.getPostDetail = getPostDetail;
+exports.getPostList = getPostList;
+exports.likePost = likePost;
+exports.unlikePost = unlikePost;
+exports.uploadMedia = uploadMedia;
+var _request = __webpack_require__(/*! ../request */ 166);
+// 获取社区动态列表
+function getPostList(params) {
+  var json = {
+    url: '/app/community/post/list',
+    method: 'post',
+    data: params
+  };
+  return (0, _request.sendRequest)(json);
+}
+
+// 获取社区动态详情
+function getPostDetail(postId) {
+  var json = {
+    url: '/app/community/post/' + postId,
+    method: 'get'
+  };
+  return (0, _request.sendRequest)(json);
+}
+
+// 点赞动态
+function likePost(postId) {
+  var json = {
+    url: '/app/community/post/like/' + postId,
+    method: 'post'
+  };
+  return (0, _request.sendRequest)(json);
+}
+
+// 取消点赞
+function unlikePost(postId) {
+  var json = {
+    url: '/app/community/post/unlike/' + postId,
+    method: 'post'
+  };
+  return (0, _request.sendRequest)(json);
+}
+
+// 发布社区动态
+function createPost(params) {
+  var json = {
+    url: '/app/community/post/create',
+    method: 'post',
+    data: params
+  };
+  return (0, _request.sendRequest)(json);
+}
+
+// 获取我的动态列表
+function getMyPosts(params) {
+  var json = {
+    url: '/app/community/post/my',
+    method: 'post',
+    data: params
+  };
+  return (0, _request.sendRequest)(json);
+}
+
+// 删除我的动态
+function deletePost(postId) {
+  var json = {
+    url: '/app/community/post/delete/' + postId,
+    method: 'post'
+  };
+  return (0, _request.sendRequest)(json);
+}
+
+// 获取我的点赞列表
+function getLikedPosts(params) {
+  var json = {
+    url: '/app/community/post/liked',
+    method: 'post',
+    data: params
+  };
+  return (0, _request.sendRequest)(json);
+}
+
+// 上传媒体文件
+function uploadMedia(filePath, file) {
+  var url = '/app/community/upload/media';
+  return (0, _request.sendUpload)(url, filePath, file);
+}
+
+/***/ }),
 /* 328 */,
 /* 329 */,
 /* 330 */,
@@ -20304,7 +20730,194 @@ function submitHouseBinding(params) {
 /* 333 */,
 /* 334 */,
 /* 335 */,
-/* 336 */
+/* 336 */,
+/* 337 */,
+/* 338 */,
+/* 339 */,
+/* 340 */,
+/* 341 */,
+/* 342 */,
+/* 343 */,
+/* 344 */,
+/* 345 */,
+/* 346 */,
+/* 347 */,
+/* 348 */,
+/* 349 */,
+/* 350 */,
+/* 351 */,
+/* 352 */,
+/* 353 */,
+/* 354 */,
+/* 355 */,
+/* 356 */,
+/* 357 */,
+/* 358 */,
+/* 359 */,
+/* 360 */,
+/* 361 */,
+/* 362 */,
+/* 363 */,
+/* 364 */,
+/* 365 */,
+/* 366 */,
+/* 367 */,
+/* 368 */
+/*!********************************************************************************!*\
+  !*** /Users/salvater/web/kai-nan/zhi-hui-wu-ye/ycwyxcx-app/api/list/repair.js ***!
+  \********************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.getRepairCategories = getRepairCategories;
+exports.getRepairList = getRepairList;
+exports.getRepairProgress = getRepairProgress;
+exports.submitRepairRate = submitRepairRate;
+exports.submitRepairRequest = submitRepairRequest;
+var _request = __webpack_require__(/*! ../request */ 166);
+// 获取报修分类
+function getRepairCategories() {
+  var json = {
+    url: '/app/repair/categories',
+    method: 'get'
+  };
+  return (0, _request.sendRequest)(json);
+}
+
+// 获取报修列表
+function getRepairList(params) {
+  var json = {
+    url: '/app/repair/list',
+    method: 'post',
+    data: params
+  };
+  return (0, _request.sendRequest)(json);
+}
+
+// 提交报修申请
+function submitRepairRequest(data) {
+  var json = {
+    url: '/app/repair/request',
+    method: 'post',
+    data: data
+  };
+  return (0, _request.sendRequest)(json);
+}
+
+// 获取报修进度
+function getRepairProgress(requestId) {
+  var json = {
+    url: "/app/repair/progress/".concat(requestId),
+    method: 'get'
+  };
+  return (0, _request.sendRequest)(json);
+}
+
+// 提交报修评价
+function submitRepairRate(id, data) {
+  var json = {
+    url: "/app/repair/rate/".concat(id),
+    method: 'post',
+    data: data
+  };
+  return (0, _request.sendRequest)(json);
+}
+
+/***/ }),
+/* 369 */,
+/* 370 */,
+/* 371 */,
+/* 372 */,
+/* 373 */,
+/* 374 */,
+/* 375 */,
+/* 376 */,
+/* 377 */,
+/* 378 */,
+/* 379 */,
+/* 380 */,
+/* 381 */,
+/* 382 */,
+/* 383 */,
+/* 384 */,
+/* 385 */,
+/* 386 */,
+/* 387 */,
+/* 388 */,
+/* 389 */,
+/* 390 */,
+/* 391 */,
+/* 392 */,
+/* 393 */,
+/* 394 */,
+/* 395 */,
+/* 396 */,
+/* 397 */,
+/* 398 */,
+/* 399 */,
+/* 400 */,
+/* 401 */,
+/* 402 */,
+/* 403 */,
+/* 404 */,
+/* 405 */,
+/* 406 */,
+/* 407 */,
+/* 408 */,
+/* 409 */,
+/* 410 */,
+/* 411 */,
+/* 412 */,
+/* 413 */,
+/* 414 */,
+/* 415 */,
+/* 416 */,
+/* 417 */
+/*!*************************************************************************************!*\
+  !*** /Users/salvater/web/kai-nan/zhi-hui-wu-ye/ycwyxcx-app/api/list/convenience.js ***!
+  \*************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.categoriesList = categoriesList;
+exports.categoriesType = categoriesType;
+var _request = __webpack_require__(/*! ../request */ 166);
+function categoriesType() {
+  var json = {
+    url: '/app/convenient/phone/categories',
+    method: 'get'
+  };
+  return (0, _request.sendRequest)(json);
+}
+function categoriesList(id) {
+  var json = {
+    url: '/app/convenient/phone/category/' + id,
+    method: 'get'
+  };
+  return (0, _request.sendRequest)(json);
+}
+
+/***/ }),
+/* 418 */,
+/* 419 */,
+/* 420 */,
+/* 421 */,
+/* 422 */,
+/* 423 */,
+/* 424 */,
+/* 425 */
 /*!*************************************************************************************************************!*\
   !*** /Users/salvater/web/kai-nan/zhi-hui-wu-ye/ycwyxcx-app/uni_modules/uview-ui/components/u-icon/icons.js ***!
   \*************************************************************************************************************/
@@ -20535,7 +21148,7 @@ var _default = {
 exports.default = _default;
 
 /***/ }),
-/* 337 */
+/* 426 */
 /*!*************************************************************************************************************!*\
   !*** /Users/salvater/web/kai-nan/zhi-hui-wu-ye/ycwyxcx-app/uni_modules/uview-ui/components/u-icon/props.js ***!
   \*************************************************************************************************************/
@@ -20642,14 +21255,14 @@ exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"]))
 
 /***/ }),
-/* 338 */,
-/* 339 */,
-/* 340 */,
-/* 341 */,
-/* 342 */,
-/* 343 */,
-/* 344 */,
-/* 345 */
+/* 427 */,
+/* 428 */,
+/* 429 */,
+/* 430 */,
+/* 431 */,
+/* 432 */,
+/* 433 */,
+/* 434 */
 /*!*********************************************************************************************************************!*\
   !*** /Users/salvater/web/kai-nan/zhi-hui-wu-ye/ycwyxcx-app/uni_modules/uview-ui/components/u-loading-icon/props.js ***!
   \*********************************************************************************************************************/
@@ -20726,14 +21339,14 @@ exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"]))
 
 /***/ }),
-/* 346 */,
-/* 347 */,
-/* 348 */,
-/* 349 */,
-/* 350 */,
-/* 351 */,
-/* 352 */,
-/* 353 */
+/* 435 */,
+/* 436 */,
+/* 437 */,
+/* 438 */,
+/* 439 */,
+/* 440 */,
+/* 441 */,
+/* 442 */
 /*!***********************************************************************************************************************!*\
   !*** /Users/salvater/web/kai-nan/zhi-hui-wu-ye/ycwyxcx-app/uni_modules/uview-ui/components/u-checkbox-group/props.js ***!
   \***********************************************************************************************************************/
@@ -20830,14 +21443,14 @@ exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"]))
 
 /***/ }),
-/* 354 */,
-/* 355 */,
-/* 356 */,
-/* 357 */,
-/* 358 */,
-/* 359 */,
-/* 360 */,
-/* 361 */
+/* 443 */,
+/* 444 */,
+/* 445 */,
+/* 446 */,
+/* 447 */,
+/* 448 */,
+/* 449 */,
+/* 450 */
 /*!*****************************************************************************************************************!*\
   !*** /Users/salvater/web/kai-nan/zhi-hui-wu-ye/ycwyxcx-app/uni_modules/uview-ui/components/u-checkbox/props.js ***!
   \*****************************************************************************************************************/
@@ -20924,14 +21537,14 @@ exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"]))
 
 /***/ }),
-/* 362 */,
-/* 363 */,
-/* 364 */,
-/* 365 */,
-/* 366 */,
-/* 367 */,
-/* 368 */,
-/* 369 */
+/* 451 */,
+/* 452 */,
+/* 453 */,
+/* 454 */,
+/* 455 */,
+/* 456 */,
+/* 457 */,
+/* 458 */
 /*!**************************************************************************************************************!*\
   !*** /Users/salvater/web/kai-nan/zhi-hui-wu-ye/ycwyxcx-app/uni_modules/uview-ui/components/u-modal/props.js ***!
   \**************************************************************************************************************/
@@ -21038,14 +21651,14 @@ exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"]))
 
 /***/ }),
-/* 370 */,
-/* 371 */,
-/* 372 */,
-/* 373 */,
-/* 374 */,
-/* 375 */,
-/* 376 */,
-/* 377 */
+/* 459 */,
+/* 460 */,
+/* 461 */,
+/* 462 */,
+/* 463 */,
+/* 464 */,
+/* 465 */,
+/* 466 */
 /*!**************************************************************************************************************!*\
   !*** /Users/salvater/web/kai-nan/zhi-hui-wu-ye/ycwyxcx-app/uni_modules/uview-ui/components/u-popup/props.js ***!
   \**************************************************************************************************************/
@@ -21142,14 +21755,14 @@ exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"]))
 
 /***/ }),
-/* 378 */,
-/* 379 */,
-/* 380 */,
-/* 381 */,
-/* 382 */,
-/* 383 */,
-/* 384 */,
-/* 385 */
+/* 467 */,
+/* 468 */,
+/* 469 */,
+/* 470 */,
+/* 471 */,
+/* 472 */,
+/* 473 */,
+/* 474 */
 /*!*************************************************************************************************************!*\
   !*** /Users/salvater/web/kai-nan/zhi-hui-wu-ye/ycwyxcx-app/uni_modules/uview-ui/components/u-line/props.js ***!
   \*************************************************************************************************************/
@@ -21200,14 +21813,14 @@ exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"]))
 
 /***/ }),
-/* 386 */,
-/* 387 */,
-/* 388 */,
-/* 389 */,
-/* 390 */,
-/* 391 */,
-/* 392 */,
-/* 393 */
+/* 475 */,
+/* 476 */,
+/* 477 */,
+/* 478 */,
+/* 479 */,
+/* 480 */,
+/* 481 */,
+/* 482 */
 /*!****************************************************************************************************************!*\
   !*** /Users/salvater/web/kai-nan/zhi-hui-wu-ye/ycwyxcx-app/uni_modules/uview-ui/components/u-overlay/props.js ***!
   \****************************************************************************************************************/
@@ -21249,14 +21862,14 @@ exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"]))
 
 /***/ }),
-/* 394 */,
-/* 395 */,
-/* 396 */,
-/* 397 */,
-/* 398 */,
-/* 399 */,
-/* 400 */,
-/* 401 */
+/* 483 */,
+/* 484 */,
+/* 485 */,
+/* 486 */,
+/* 487 */,
+/* 488 */,
+/* 489 */,
+/* 490 */
 /*!*******************************************************************************************************************!*\
   !*** /Users/salvater/web/kai-nan/zhi-hui-wu-ye/ycwyxcx-app/uni_modules/uview-ui/components/u-transition/props.js ***!
   \*******************************************************************************************************************/
@@ -21298,7 +21911,7 @@ exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"]))
 
 /***/ }),
-/* 402 */
+/* 491 */
 /*!************************************************************************************************************************!*\
   !*** /Users/salvater/web/kai-nan/zhi-hui-wu-ye/ycwyxcx-app/uni_modules/uview-ui/components/u-transition/transition.js ***!
   \************************************************************************************************************************/
@@ -21315,7 +21928,7 @@ Object.defineProperty(exports, "__esModule", {
 exports.default = void 0;
 var _regenerator = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/regenerator */ 56));
 var _asyncToGenerator2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ 58));
-var _nvueAniMap = _interopRequireDefault(__webpack_require__(/*! ./nvue.ani-map.js */ 403));
+var _nvueAniMap = _interopRequireDefault(__webpack_require__(/*! ./nvue.ani-map.js */ 492));
 // 定义一个一定时间后自动成功的promise，让调用nextTick方法处，进入下一个then方法
 var nextTick = function nextTick() {
   return new Promise(function (resolve) {
@@ -21407,7 +22020,7 @@ var _default = {
 exports.default = _default;
 
 /***/ }),
-/* 403 */
+/* 492 */
 /*!**************************************************************************************************************************!*\
   !*** /Users/salvater/web/kai-nan/zhi-hui-wu-ye/ycwyxcx-app/uni_modules/uview-ui/components/u-transition/nvue.ani-map.js ***!
   \**************************************************************************************************************************/
@@ -21600,14 +22213,14 @@ var _default = {
 exports.default = _default;
 
 /***/ }),
-/* 404 */,
-/* 405 */,
-/* 406 */,
-/* 407 */,
-/* 408 */,
-/* 409 */,
-/* 410 */,
-/* 411 */
+/* 493 */,
+/* 494 */,
+/* 495 */,
+/* 496 */,
+/* 497 */,
+/* 498 */,
+/* 499 */,
+/* 500 */
 /*!*******************************************************************************************************************!*\
   !*** /Users/salvater/web/kai-nan/zhi-hui-wu-ye/ycwyxcx-app/uni_modules/uview-ui/components/u-status-bar/props.js ***!
   \*******************************************************************************************************************/
@@ -21633,14 +22246,14 @@ exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"]))
 
 /***/ }),
-/* 412 */,
-/* 413 */,
-/* 414 */,
-/* 415 */,
-/* 416 */,
-/* 417 */,
-/* 418 */,
-/* 419 */
+/* 501 */,
+/* 502 */,
+/* 503 */,
+/* 504 */,
+/* 505 */,
+/* 506 */,
+/* 507 */,
+/* 508 */
 /*!********************************************************************************************************************!*\
   !*** /Users/salvater/web/kai-nan/zhi-hui-wu-ye/ycwyxcx-app/uni_modules/uview-ui/components/u-safe-bottom/props.js ***!
   \********************************************************************************************************************/
@@ -21658,211 +22271,6 @@ var _default = {
   props: {}
 };
 exports.default = _default;
-
-/***/ }),
-/* 420 */,
-/* 421 */,
-/* 422 */,
-/* 423 */,
-/* 424 */,
-/* 425 */,
-/* 426 */,
-/* 427 */,
-/* 428 */,
-/* 429 */,
-/* 430 */,
-/* 431 */,
-/* 432 */,
-/* 433 */,
-/* 434 */,
-/* 435 */,
-/* 436 */,
-/* 437 */,
-/* 438 */,
-/* 439 */,
-/* 440 */,
-/* 441 */,
-/* 442 */,
-/* 443 */,
-/* 444 */,
-/* 445 */,
-/* 446 */,
-/* 447 */,
-/* 448 */,
-/* 449 */,
-/* 450 */,
-/* 451 */,
-/* 452 */,
-/* 453 */,
-/* 454 */,
-/* 455 */
-/*!*************************************************************************************!*\
-  !*** /Users/salvater/web/kai-nan/zhi-hui-wu-ye/ycwyxcx-app/api/list/points-mall.js ***!
-  \*************************************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.exchangeProduct = exchangeProduct;
-exports.getCategories = getCategories;
-exports.getExchangeRecords = getExchangeRecords;
-exports.getProducts = getProducts;
-var _request = __webpack_require__(/*! ../request */ 174);
-// ��F�{��
-function getCategories() {
-  var json = {
-    url: '/app/points/mall/categories',
-    method: 'get'
-  };
-  return (0, _request.sendRequest)(json);
-}
-
-// ��F�h��
-function getProducts(params) {
-  var json = {
-    url: '/app/points/mall/products',
-    method: 'get',
-    data: params
-  };
-  return (0, _request.sendRequest)(json);
-}
-
-// QbF�
-function exchangeProduct(params) {
-  var json = {
-    url: '/app/points/mall/exchange',
-    method: 'post',
-    data: params
-  };
-  return (0, _request.sendRequest)(json);
-}
-
-// ��Qb�U
-function getExchangeRecords(params) {
-  var json = {
-    url: '/app/points/mall/exchange/records',
-    method: 'get',
-    data: params
-  };
-  return (0, _request.sendRequest)(json);
-}
-
-/***/ }),
-/* 456 */,
-/* 457 */,
-/* 458 */,
-/* 459 */,
-/* 460 */,
-/* 461 */,
-/* 462 */
-/*!***************************************************************************************!*\
-  !*** /Users/salvater/web/kai-nan/zhi-hui-wu-ye/ycwyxcx-app/api/list/activity-list.js ***!
-  \***************************************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.createPost = createPost;
-exports.deletePost = deletePost;
-exports.getLikedPosts = getLikedPosts;
-exports.getMyPosts = getMyPosts;
-exports.getPostDetail = getPostDetail;
-exports.getPostList = getPostList;
-exports.likePost = likePost;
-exports.unlikePost = unlikePost;
-exports.uploadMedia = uploadMedia;
-var _request = __webpack_require__(/*! ../request */ 174);
-// 获取社区动态列表
-function getPostList(params) {
-  var json = {
-    url: '/app/community/post/list',
-    method: 'post',
-    data: params
-  };
-  return (0, _request.sendRequest)(json);
-}
-
-// 获取社区动态详情
-function getPostDetail(postId) {
-  var json = {
-    url: '/app/community/post/' + postId,
-    method: 'get'
-  };
-  return (0, _request.sendRequest)(json);
-}
-
-// 点赞动态
-function likePost(postId) {
-  var json = {
-    url: '/app/community/post/like/' + postId,
-    method: 'post'
-  };
-  return (0, _request.sendRequest)(json);
-}
-
-// 取消点赞
-function unlikePost(postId) {
-  var json = {
-    url: '/app/community/post/unlike/' + postId,
-    method: 'post'
-  };
-  return (0, _request.sendRequest)(json);
-}
-
-// 发布社区动态
-function createPost(params) {
-  var json = {
-    url: '/app/community/post/create',
-    method: 'post',
-    data: params
-  };
-  return (0, _request.sendRequest)(json);
-}
-
-// 获取我的动态列表
-function getMyPosts(params) {
-  var json = {
-    url: '/app/community/post/my',
-    method: 'post',
-    data: params
-  };
-  return (0, _request.sendRequest)(json);
-}
-
-// 删除我的动态
-function deletePost(postId) {
-  var json = {
-    url: '/app/community/post/delete/' + postId,
-    method: 'post'
-  };
-  return (0, _request.sendRequest)(json);
-}
-
-// 获取我的点赞列表
-function getLikedPosts(params) {
-  var json = {
-    url: '/app/community/post/liked',
-    method: 'post',
-    data: params
-  };
-  return (0, _request.sendRequest)(json);
-}
-
-// 上传媒体文件
-function uploadMedia(filePath, file) {
-  var url = '/app/community/upload/media';
-  return (0, _request.sendUpload)(url, filePath, file);
-}
 
 /***/ })
 ]]);

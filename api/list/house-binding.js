@@ -21,6 +21,17 @@ export function houseBindingsDel(bindingId) {
 }
 
 
+// 通过的绑定
+export function getBinding() {
+    const json = {
+        url: '/app/property/binding/approved-bindings',
+        method: 'get'
+    }
+    return sendRequest(json)
+}
+
+
+
 
 
 // 获取小区列表
