@@ -1,0 +1,328 @@
+@charset "UTF-8";
+/**
+ * 这里是uni-app内置的常用样式变量
+ *
+ * uni-app 官方扩展插件及插件市场（https://ext.dcloud.net.cn）上很多三方插件均使用了这些样式变量
+ * 如果你是插件开发者，建议你使用scss预处理，并在插件代码中直接使用这些变量（无需 import 这个文件），方便用户通过搭积木的方式开发整体风格一致的App
+ *
+ */
+/**
+ * 如果你是App开发者（插件使用者），你可以通过修改这些变量来定制自己的插件主题，实现自定义主题功能
+ *
+ * 如果你的项目同样使用了scss预处理，你也可以直接在你的 scss 代码中使用如下变量，同时无需 import 这个文件
+ */
+/* 颜色变量 */
+/* 行为相关颜色 */
+/* 文字基本颜色 */
+/* 背景颜色 */
+/* 边框颜色 */
+/* 尺寸变量 */
+/* 文字尺寸 */
+/* 图片尺寸 */
+/* Border Radius */
+/* 水平间距 */
+/* 垂直间距 */
+/* 透明度 */
+/* 文章场景相关 */
+.repair-detail-page.data-v-5e04b0da {
+  min-height: 100vh;
+  background-color: #f5f5f5;
+}
+.header.data-v-5e04b0da {
+  background: linear-gradient(135deg, #3b5598 0%, #2c3e50 100%);
+  padding: 20rpx 30rpx 40rpx;
+}
+.header .title.data-v-5e04b0da {
+  font-size: 36rpx;
+  font-weight: 600;
+  color: #fff;
+}
+.content.data-v-5e04b0da {
+  padding: 20rpx;
+}
+.info-section.data-v-5e04b0da, .section.data-v-5e04b0da {
+  background: #fff;
+  border-radius: 16rpx;
+  padding: 30rpx;
+  margin-bottom: 20rpx;
+}
+.section-title.data-v-5e04b0da {
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+  margin-bottom: 30rpx;
+  padding-bottom: 16rpx;
+  border-bottom: 2rpx solid #f0f0f0;
+}
+.section-title text.data-v-5e04b0da {
+  font-size: 30rpx;
+  font-weight: 600;
+  color: #333;
+}
+.info-item.data-v-5e04b0da {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24rpx;
+}
+.info-item.data-v-5e04b0da:last-child {
+  margin-bottom: 0;
+}
+.info-item .label.data-v-5e04b0da {
+  font-size: 26rpx;
+  color: #666;
+  min-width: 160rpx;
+}
+.info-item .value.data-v-5e04b0da {
+  font-size: 26rpx;
+  color: #333;
+  flex: 1;
+  text-align: right;
+}
+.urgency-badge.data-v-5e04b0da {
+  padding: 8rpx 16rpx;
+  border-radius: 8rpx;
+  font-size: 22rpx;
+}
+.urgency-badge.urgency-1.data-v-5e04b0da {
+  background: #e6f7ff;
+  color: #1890ff;
+}
+.urgency-badge.urgency-2.data-v-5e04b0da {
+  background: #fff7e6;
+  color: #fa8c16;
+}
+.urgency-badge.urgency-3.data-v-5e04b0da {
+  background: #fff1f0;
+  color: #f5222d;
+}
+.status-badge.data-v-5e04b0da {
+  padding: 8rpx 16rpx;
+  border-radius: 8rpx;
+  font-size: 22rpx;
+}
+.status-badge.status-1.data-v-5e04b0da {
+  background: #f6f6f6;
+  color: #999;
+}
+.status-badge.status-2.data-v-5e04b0da, .status-badge.status-3.data-v-5e04b0da {
+  background: #e6f7ff;
+  color: #1890ff;
+}
+.status-badge.status-4.data-v-5e04b0da {
+  background: #f6ffed;
+  color: #52c41a;
+}
+.problem-content .problem-title.data-v-5e04b0da {
+  font-size: 30rpx;
+  font-weight: 600;
+  color: #333;
+  display: block;
+  margin-bottom: 16rpx;
+}
+.problem-content .problem-desc.data-v-5e04b0da {
+  font-size: 26rpx;
+  color: #666;
+  line-height: 1.6;
+}
+.image-grid.data-v-5e04b0da {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16rpx;
+}
+.image-grid .image-item.data-v-5e04b0da {
+  width: 200rpx;
+  height: 200rpx;
+  border-radius: 12rpx;
+  overflow: hidden;
+}
+.image-grid .image-item image.data-v-5e04b0da {
+  width: 100%;
+  height: 100%;
+}
+.rating-info.data-v-5e04b0da {
+  display: flex;
+  align-items: center;
+  gap: 24rpx;
+  margin-bottom: 20rpx;
+}
+.rating-info .rating-stars.data-v-5e04b0da {
+  display: flex;
+  gap: 8rpx;
+}
+.rating-info .rating-text.data-v-5e04b0da {
+  font-size: 26rpx;
+  color: #666;
+}
+.feedback-content.data-v-5e04b0da {
+  margin-bottom: 16rpx;
+}
+.feedback-content .feedback-label.data-v-5e04b0da {
+  font-size: 26rpx;
+  color: #666;
+  display: block;
+  margin-bottom: 8rpx;
+}
+.feedback-content .feedback-text.data-v-5e04b0da {
+  font-size: 26rpx;
+  color: #333;
+  line-height: 1.6;
+}
+.feedback-time text.data-v-5e04b0da {
+  font-size: 24rpx;
+  color: #999;
+}
+.progress-list .progress-item.data-v-5e04b0da {
+  display: flex;
+  gap: 20rpx;
+  margin-bottom: 30rpx;
+  position: relative;
+}
+.progress-list .progress-item.data-v-5e04b0da:last-child {
+  margin-bottom: 0;
+}
+.progress-list .progress-item.data-v-5e04b0da:last-child::after {
+  display: none;
+}
+.progress-list .progress-item.data-v-5e04b0da::after {
+  content: "";
+  position: absolute;
+  left: 14rpx;
+  top: 32rpx;
+  width: 2rpx;
+  height: calc(100% + 20rpx);
+  background: #f0f0f0;
+}
+.progress-list .progress-item .progress-dot.data-v-5e04b0da {
+  width: 30rpx;
+  height: 30rpx;
+  border-radius: 50%;
+  background: #f0f0f0;
+  margin-top: 4rpx;
+  position: relative;
+  z-index: 1;
+}
+.progress-list .progress-item .progress-dot.active.data-v-5e04b0da {
+  background: #52c41a;
+}
+.progress-list .progress-item .progress-content.data-v-5e04b0da {
+  flex: 1;
+  padding-bottom: 20rpx;
+}
+.progress-list .progress-item .progress-content .progress-header.data-v-5e04b0da {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12rpx;
+}
+.progress-list .progress-item .progress-content .progress-header .progress-status.data-v-5e04b0da {
+  font-size: 28rpx;
+  font-weight: 500;
+  color: #333;
+}
+.progress-list .progress-item .progress-content .progress-header .progress-time.data-v-5e04b0da {
+  font-size: 24rpx;
+  color: #999;
+}
+.progress-list .progress-item .progress-content .progress-operator.data-v-5e04b0da {
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+  margin-bottom: 12rpx;
+}
+.progress-list .progress-item .progress-content .progress-operator text.data-v-5e04b0da {
+  font-size: 24rpx;
+  color: #666;
+}
+.progress-list .progress-item .progress-content .progress-operator .operator-type.data-v-5e04b0da {
+  background: #f0f5ff;
+  color: #3b5598;
+  padding: 4rpx 8rpx;
+  border-radius: 4rpx;
+  font-size: 20rpx;
+}
+.progress-list .progress-item .progress-content .progress-desc.data-v-5e04b0da {
+  font-size: 26rpx;
+  color: #666;
+  line-height: 1.6;
+  margin-bottom: 12rpx;
+}
+.progress-list .progress-item .progress-content .progress-images.data-v-5e04b0da {
+  display: flex;
+  gap: 12rpx;
+}
+.progress-list .progress-item .progress-content .progress-images image.data-v-5e04b0da {
+  width: 100rpx;
+  height: 100rpx;
+  border-radius: 8rpx;
+}
+.progress-list .progress-item .progress-content .progress-images .more-images.data-v-5e04b0da {
+  width: 100rpx;
+  height: 100rpx;
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: 8rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.progress-list .progress-item .progress-content .progress-images .more-images text.data-v-5e04b0da {
+  color: #fff;
+  font-size: 20rpx;
+}
+.actions-section.data-v-5e04b0da {
+  display: flex;
+  gap: 20rpx;
+  margin-top: 20rpx;
+}
+.actions-section .action-btn.data-v-5e04b0da {
+  flex: 1;
+  height: 88rpx;
+  border-radius: 44rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 30rpx;
+  font-weight: 500;
+  border: none;
+}
+.actions-section .action-btn.primary.data-v-5e04b0da {
+  background: linear-gradient(135deg, #3b5598 0%, #2c3e50 100%);
+  color: #fff;
+}
+.actions-section .action-btn.primary u-icon.data-v-5e04b0da {
+  margin-right: 12rpx;
+}
+.actions-section .action-btn.secondary.data-v-5e04b0da {
+  background: #fff;
+  color: #3b5598;
+  border: 2rpx solid #3b5598;
+}
+.actions-section .action-btn.secondary u-icon.data-v-5e04b0da {
+  margin-right: 12rpx;
+}
+.loading-state.data-v-5e04b0da, .error-state.data-v-5e04b0da {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  padding: 40rpx;
+}
+.loading-state text.data-v-5e04b0da, .error-state text.data-v-5e04b0da {
+  font-size: 28rpx;
+  color: #999;
+  margin-top: 20rpx;
+}
+.loading-state .error-text.data-v-5e04b0da, .error-state .error-text.data-v-5e04b0da {
+  color: #666;
+  margin-bottom: 40rpx;
+}
+.loading-state .retry-btn.data-v-5e04b0da, .error-state .retry-btn.data-v-5e04b0da {
+  height: 80rpx;
+  background: #3b5598;
+  color: #fff;
+  border-radius: 40rpx;
+  padding: 0 60rpx;
+  font-size: 28rpx;
+  border: none;
+}
