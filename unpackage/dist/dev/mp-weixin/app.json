@@ -12,7 +12,8 @@
         "house-binding/house-binding",
         "house-binding/house-bindings",
         "family-members/family-members",
-        "identity-verification/identity-verification"
+        "identity-verification/identity-verification",
+        "property/index"
       ]
     },
     {
@@ -64,7 +65,8 @@
     {
       "root": "subpackages/home",
       "pages": [
-        "article-detail"
+        "article-detail",
+        "security-checkin/security-checkin"
       ]
     },
     {
@@ -117,6 +119,13 @@
     }
   },
   "lazyCodeLoading": "requiredComponents",
-  "permission": {},
+  "permission": {
+    "scope.userLocation": {
+      "desc": "您的位置信息将用于安保打卡位置记录"
+    }
+  },
+  "requiredPrivateInfos": [
+    "getLocation"
+  ],
   "usingComponents": {}
 }

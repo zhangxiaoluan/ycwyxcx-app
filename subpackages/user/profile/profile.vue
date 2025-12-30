@@ -48,7 +48,7 @@
               disabled
               v-model="userInfo.cellphone"
               class="cell-input"
-              placeholder="请输入昵称"
+              placeholder="请输入电话号码"
           />
         </view>
       </view>

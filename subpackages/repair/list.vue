@@ -1,23 +1,5 @@
 <template>
   <view class="repair-list-page">
-    <view class="header">
-      <text class="title">报修管理</text>
-      <view class="repair-stats">
-        <view class="stat-item">
-          <text class="stat-value">{{ repairStats.pending }}</text>
-          <text class="stat-label">处理中</text>
-        </view>
-        <view class="stat-item">
-          <text class="stat-value">{{ repairStats.completed }}</text>
-          <text class="stat-label">已完成</text>
-        </view>
-        <view class="stat-item">
-          <text class="stat-value">{{ repairStats.total }}</text>
-          <text class="stat-label">总报修</text>
-        </view>
-      </view>
-    </view>
-
     <view class="content">
       <view class="filter-tabs">
         <view
@@ -75,7 +57,7 @@
             <text class="repair-title">{{ item.title }}</text>
             <text class="repair-desc" v-if="item.description">{{ item.description }}</text>
             <view class="repair-location" v-if="item.location">
-              <u-icon name="map-pin" size="14" color="#666"></u-icon>
+              <u-icon name="map" size="14" color="#666"></u-icon>
               <text>{{ item.location }}</text>
             </view>
           </view>
@@ -98,22 +80,22 @@
               <text class="create-time">申请时间：{{ formatTime(item.createdAt) }}</text>
               <text class="request-no">单号：{{ item.requestNo }}</text>
             </view>
-            <view class="actions">
-              <button
-                class="action-btn-small"
-                v-if="item.status === 4 && item.canRate"
-                @click.stop="rateRepair(item)"
-              >
-                评价
-              </button>
-              <button
-                class="action-btn-small"
-                @click.stop="viewProgress(item)"
-                v-if="item.status !== 1"
-              >
-                进度
-              </button>
-            </view>
+<!--            <view class="actions">-->
+<!--              <button-->
+<!--                class="action-btn-small"-->
+<!--                v-if="item.status === 4 && item.canRate"-->
+<!--                @click.stop="rateRepair(item)"-->
+<!--              >-->
+<!--                评价-->
+<!--              </button>-->
+<!--              <button-->
+<!--                class="action-btn-small"-->
+<!--                @click.stop="viewProgress(item)"-->
+<!--                v-if="item.status !== 1"-->
+<!--              >-->
+<!--                进度-->
+<!--              </button>-->
+<!--            </view>-->
           </view>
         </view>
       </view>
@@ -121,8 +103,9 @@
       <view class="empty-state" v-else-if="!loading">
         <u-icon name="warning" size="64" color="#ddd"></u-icon>
         <text class="empty-text">暂无报修记录</text>
-        <button class="empty-btn" @click="applyRepair">申请报修</button>
       </view>
+
+      <button class="empty-btn" @click="applyRepair">申请报修</button>
 
       <view class="loading-more" v-if="loading && filteredRepairs.length > 0">
         <u-loading-icon mode="circle" color="#3b5598"></u-loading-icon>
@@ -309,43 +292,9 @@ export default {
 <style scoped lang="scss">
 .repair-list-page {
   min-height: 100vh;
-  background-color: #f5f5f5;
+  background: linear-gradient(to right, #e0ecfa 0%, #f4f6f9 50%, #f6f4fc 100%);
 }
 
-.header {
-  background: linear-gradient(135deg, #3b5598 0%, #2c3e50 100%);
-  padding: 20rpx 30rpx 40rpx;
-
-  .title {
-    font-size: 36rpx;
-    font-weight: 600;
-    color: #fff;
-    display: block;
-    margin-bottom: 20rpx;
-  }
-
-  .repair-stats {
-    display: flex;
-    gap: 40rpx;
-
-    .stat-item {
-      text-align: center;
-
-      .stat-value {
-        font-size: 32rpx;
-        font-weight: 600;
-        color: #fff;
-        display: block;
-        margin-bottom: 8rpx;
-      }
-
-      .stat-label {
-        font-size: 24rpx;
-        color: rgba(255, 255, 255, 0.8);
-      }
-    }
-  }
-}
 
 .content {
   padding: 20rpx;
@@ -406,7 +355,7 @@ export default {
     border-radius: 16rpx;
     padding: 30rpx;
     margin-bottom: 20rpx;
-    box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.1);
+    //box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.1);
 
     .item-header {
       display: flex;
@@ -543,7 +492,7 @@ export default {
           font-size: 22rpx;
           color: #999;
           display: block;
-          margin-bottom: 4rpx;
+          margin-bottom: 10rpx;
         }
       }
 
@@ -552,12 +501,15 @@ export default {
         gap: 16rpx;
 
         .action-btn-small {
-          padding: 12rpx 24rpx;
+          //padding: 12rpx 24rpx;
           background: #f0f5ff;
           color: #3b5598;
-          border-radius: 20rpx;
+          border-radius: 10rpx;
           font-size: 24rpx;
           border: none;
+          &:after{
+            border: none;
+          }
         }
       }
     }
@@ -567,27 +519,28 @@ export default {
 .empty-state {
   text-align: center;
   padding: 100rpx 40rpx;
-
   .empty-text {
     font-size: 28rpx;
     color: #999;
     display: block;
     margin: 40rpx 0 60rpx;
   }
-
   .u-icon{
     justify-content: center;
   }
+}
 
-  .empty-btn {
-    height: 80rpx;
-    background: #3b5598;
-    color: #fff;
-    border-radius: 40rpx;
-    padding: 0 60rpx;
-    font-size: 28rpx;
-    border: none;
-  }
+.empty-btn {
+  height: 80rpx;
+  background: #3b5598;
+  color: #fff;
+  border-radius: 40rpx;
+  padding: 0 60rpx;
+  font-size: 28rpx;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .loading-more {

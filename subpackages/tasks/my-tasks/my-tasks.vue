@@ -100,7 +100,7 @@
         <text class="empty-text">暂无{{ currentTab === 'published' ? '发布' : '领取' }}的任务</text>
         <text class="empty-desc">{{ currentTab === 'published' ? '快去发布第一个任务吧' : '快去参与社区任务吧' }}</text>
         <button class="empty-action-btn" @click="publishTask" v-if="currentTab === 'published'">
-          <u-icon name="plus" size="20" color="#3b5598"></u-icon>
+          <u-icon name="plus" size="20" color="#ffffff"></u-icon>
           <text>发布任务</text>
         </button>
       </view>
@@ -268,7 +268,7 @@ export default {
 
 <style scoped lang="scss">
 .my-tasks-page {
-  background: #f5f5f5;
+  background: linear-gradient(to right, #e0ecfa 0%, #f4f6f9 50%, #f6f4fc 100%);
   min-height: 100vh;
 
   .header {
@@ -548,8 +548,8 @@ export default {
         background: #3b5598;
         color: white;
         border: none;
-        border-radius: 20rpx;
-        padding: 20rpx 40rpx;
+        padding: 8rpx 30rpx;
+        border-radius: 15rpx;
         font-size: 28rpx;
         font-weight: 600;
         display: inline-flex;

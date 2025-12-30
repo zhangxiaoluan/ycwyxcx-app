@@ -1,9 +1,5 @@
 <template>
   <view class="repair-detail-page" v-if="repairInfo">
-    <view class="header">
-      <text class="title">报修详情</text>
-    </view>
-
     <view class="content">
       <!-- 基本信息 -->
       <view class="info-section">
@@ -189,27 +185,6 @@
           </view>
         </view>
       </view>
-
-      <!-- 操作按钮 -->
-      <view class="actions-section" v-if="showActions">
-        <button
-          class="action-btn primary"
-          v-if="repairInfo.status === 4 && repairInfo.canRate"
-          @click="rateRepair"
-        >
-          <u-icon name="star" size="16" color="#fff"></u-icon>
-          <text>评价服务</text>
-        </button>
-
-        <button
-          class="action-btn secondary"
-          @click="viewProgress"
-          v-if="repairInfo.status !== 1"
-        >
-          <u-icon name="clock" size="16" color="#3b5598"></u-icon>
-          <text>查看进度</text>
-        </button>
-      </view>
     </view>
   </view>
 
@@ -318,16 +293,6 @@ export default {
         urls: images,
         current: current
       })
-    },
-    rateRepair() {
-      uni.navigateTo({
-        url: `/subpackages/repair/rate?id=${this.repairId}`
-      })
-    },
-    viewProgress() {
-      uni.navigateTo({
-        url: `/subpackages/repair/progress?requestId=${this.repairInfo.id}&requestNo=${this.repairInfo.requestNo}`
-      })
     }
   }
 }
@@ -336,7 +301,7 @@ export default {
 <style scoped lang="scss">
 .repair-detail-page {
   min-height: 100vh;
-  background-color: #f5f5f5;
+  background: linear-gradient(to right, #e0ecfa 0%, #f4f6f9 50%, #f6f4fc 100%);
 }
 
 .header {

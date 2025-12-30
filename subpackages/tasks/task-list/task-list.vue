@@ -233,7 +233,7 @@ export default {
 
 <style scoped lang="scss">
 .task-list-page {
-  background: #f5f5f5;
+  background: linear-gradient(to right, #e0ecfa 0%, #f4f6f9 50%, #f6f4fc 100%);
   min-height: 100vh;
 
   .header {

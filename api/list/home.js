@@ -16,3 +16,12 @@ export function getArticleDetail(id) {
     }
     return sendRequest(json)
 }
+
+export function securityCheckin(data) {
+    const json = {
+        url: '/app/api/security-checkin',
+        method: 'post',
+        data: data
+    }
+    return sendRequest(json)
+}

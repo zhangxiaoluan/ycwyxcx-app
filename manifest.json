@@ -94,7 +94,12 @@
             "minified" : true,
             "postcss" : true
         },
-        "permission" : {}
+        "permission" : {
+            "scope.userLocation" : {
+                "desc" : "您的位置信息将用于安保打卡位置记录"
+            }
+        },
+        "requiredPrivateInfos" : [ "getLocation" ]
     },
     "mp-alipay" : {
         "usingComponents" : true
@@ -109,21 +114,33 @@
         "enable" : false
     },
     "vueVersion" : "2",
-    "h5": {
-      "devServer": {
-		"port": 8690,
-        "proxy": {
-          "/app" : {
-            "target" : "http://62.234.35.7:8802",
-            "changeOrigin" : "ture",
-            "secure" : true,
-            "pathRewrite" : {
-              "^/app" : "/app/"
-            }
-          }
+    "h5" : {
+        "devServer" : {
+            "port" : 8690,
+            "proxy" : {
+                "/app" : {
+                    "target" : "http://62.234.35.7:8802",
+                    "changeOrigin" : "ture",
+                    "secure" : true,
+                    "pathRewrite" : {
+                        "^/app" : "/app/"
+                    }
+                },
+              "/ws" : {
+                "target" : "https://apis.map.qq.com",
+                "changeOrigin" : "ture",
+                "secure" : true
+              }
+            },
+            "https" : false
         },
-        "https": false
-      }
+        "sdkConfigs" : {
+            "maps" : {
+                "tencent" : {
+                    "key" : "B3HBZ-DBPWU-YSZVK-GSVGQ-UQIWO-V6FE7"
+                }
+            }
+        }
     }
 }
 // "usingComponents": true,

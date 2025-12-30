@@ -106,6 +106,14 @@
 					</view>
 				</view>
 
+        <view class="action-item" @click="goToProperty">
+          <view class="action-icon">
+            <u-icon name="kefu-ermai" size="20" color="#3b5598"></u-icon>
+          </view>
+          <text class="action-text">成为物业</text>
+          <u-icon name="arrow-right" size="14" color="#ccc"></u-icon>
+        </view>
+
 				<view class="action-item" @click="goToSettings">
 					<view class="action-icon">
 						<u-icon name="setting" size="20" color="#3b5598"></u-icon>
@@ -187,8 +195,7 @@
 </template>
 
 <script>
-	import{ userMe } from '@/api/list/login.js'
-  import {sign, signInfo, signStatus} from "../../api/list/login";
+  import {sign, signInfo, userMe, signStatus} from "../../api/list/login";
 	export default {
 		data() {
 			return {
@@ -342,7 +349,12 @@
         })
       },
 
-
+      // 成为物业
+      goToProperty(){
+        uni.navigateTo({
+          url: '/subpackages/user/property/index'
+        })
+      },
 
 			// 我的任务
 			goToOrders() {

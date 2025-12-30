@@ -1,31 +1,29 @@
 <template>
   <view class="task-publish-page">
-
-
     <view class="content">
+
       <view class="form-section">
         <view class="form-item required">
           <text class="form-label">任务类型</text>
-          <view class="type-selector">
-            <view
-              class="type-item"
-              :class="{ active: formData.taskType === item.value }"
-              v-for="item in taskTypes"
-              :key="item.value"
-              @click="selectType(item.value)"
-            >
-              <text>{{ item.label }}</text>
+          <picker
+              :value="formData.taskType"
+              :range="taskTypes"
+              range-key="label"
+              @change="onTaskTypeChange"
+          >
+            <view class="picker">
+              {{ formData.taskTypeName || "请选择任务类型" }}
             </view>
-          </view>
+          </picker>
         </view>
 
         <view class="form-item required">
           <text class="form-label">任务标题</text>
           <input
-            v-model="formData.title"
-            class="form-input"
-            placeholder="请简要描述您的任务需求"
-            maxlength="50"
+              v-model="formData.title"
+              class="form-input"
+              placeholder="请简要描述您的任务需求"
+              maxlength="50"
           />
           <text class="input-count">{{ formData.title.length }}/50</text>
         </view>
@@ -33,10 +31,10 @@
         <view class="form-item required">
           <text class="form-label">任务描述</text>
           <textarea
-            v-model="formData.content"
-            class="form-textarea"
-            placeholder="请详细描述您的任务需求，包括具体要求、注意事项等"
-            maxlength="500"
+              v-model="formData.content"
+              class="form-textarea"
+              placeholder="请详细描述您的任务需求，包括具体要求、注意事项等"
+              maxlength="500"
           ></textarea>
           <text class="input-count">{{ formData.content.length }}/500</text>
         </view>
@@ -44,29 +42,29 @@
         <view class="form-item required">
           <text class="form-label">联系电话</text>
           <input
-            v-model="formData.contactPhone"
-            class="form-input"
-            placeholder="请输入联系电话"
-            type="number"
+              v-model="formData.contactPhone"
+              class="form-input"
+              placeholder="请输入联系电话"
+              type="number"
           />
         </view>
 
         <view class="form-item required">
           <text class="form-label">联系地址</text>
           <input
-            v-model="formData.contactAddress"
-            class="form-input"
-            placeholder="请输入详细地址"
+              v-model="formData.contactAddress"
+              class="form-input"
+              placeholder="请输入详细地址"
           />
         </view>
 
         <view class="form-item required">
           <text class="form-label">截止时间</text>
           <picker
-            mode="date"
-            :value="formData.deadlineTime"
-            :start="getMinDate()"
-            @change="onDeadlineTimeChange"
+              mode="date"
+              :value="formData.deadlineTime"
+              :start="getMinDate()"
+              @change="onDeadlineTimeChange"
           >
             <view class="picker">
               {{ formData.deadlineTime || '请选择截止时间' }}
@@ -78,20 +76,20 @@
         <view class="form-item required">
           <text class="form-label">积分奖励</text>
           <input
-            v-model="formData.rewardPoints"
-            class="form-input"
-            placeholder="请输入积分奖励数量"
-            type="number"
+              v-model="formData.rewardPoints"
+              class="form-input"
+              placeholder="请输入积分奖励数量"
+              type="number"
           />
         </view>
 
         <view class="form-item">
           <text class="form-label">备注</text>
           <textarea
-            v-model="formData.remark"
-            class="form-textarea"
-            placeholder="请输入备注信息（选填）"
-            maxlength="200"
+              v-model="formData.remark"
+              class="form-textarea"
+              placeholder="请输入备注信息（选填）"
+              maxlength="200"
           ></textarea>
           <text class="input-count">{{ formData.remark.length }}/200</text>
         </view>
@@ -117,7 +115,7 @@
       </view>
 
       <view class="submit-section">
-        <button class="submit-btn" @click="submitTask" :disabled="!canSubmit || submitting">
+        <button class="submit-btn" @click="submitTask" :disabled="submitting">
           <u-icon name="checkmark" size="16" color="#fff" v-if="!submitting"></u-icon>
           <u-loading-icon mode="circle" color="#fff" size="16" v-else></u-loading-icon>
           <text>{{ submitting ? '提交中...' : '发布任务' }}</text>
@@ -128,22 +126,21 @@
 </template>
 
 <script>
-import { publishTask } from '@/api/list/tasks'
 import {uploadFile} from "@/api/list/upload";
-import {getTaskTypes} from "../../../api/list/tasks";
-
+import {getTaskTypes, publishTask} from "../../../api/list/tasks";
 export default {
   name: 'task-publish',
   data() {
     return {
       formData: {
-        taskType: 1,
-        title: '',
-        content: '',
+        taskType: null,
+        taskTypeName: null,
+        deadlineTime: null,
+        rewardPoints: null,
         contactPhone: '',
+        content: '',
+        title: '',
         contactAddress: '',
-        deadlineTime: '',
-        rewardPoints: '',
         remark: '',
         taskImages: []
       },
@@ -152,29 +149,23 @@ export default {
       deadlineError: false
     }
   },
-  computed: {
-    canSubmit() {
-      return this.formData.taskType &&
-             this.formData.title.trim() &&
-             this.formData.content.trim() &&
-             this.formData.contactPhone.trim() &&
-             this.formData.contactAddress.trim() &&
-             this.formData.deadlineTime &&
-             !this.deadlineError &&
-             this.formData.rewardPoints > 0
-    },
-  },
   onLoad() {
     this.isGetTaskTypes()
   },
   methods: {
-    isGetTaskTypes(){
+
+    // 任务类型
+    isGetTaskTypes() {
       getTaskTypes().then(res => {
         this.taskTypes = res || []
       })
     },
-    selectType(value) {
-      this.formData.taskType = value
+
+    // 选择任务
+    onTaskTypeChange(e) {
+      let index = e.detail.value
+      this.formData.taskType = index
+      this.formData.taskTypeName = this.taskTypes[index]?.label || e.detail.value
     },
 
     // 获取最小可选日期（今天）
@@ -212,7 +203,7 @@ export default {
           try {
             const uploadRes = await uploadFile(file.path, file)
             let url = uploadRes.url
-            if (url){
+            if (url) {
               this.formData.taskImages.push(url)
             }
           } catch (error) {
@@ -224,10 +215,12 @@ export default {
       }
     },
 
+    // 删除图片
     deleteImage(index) {
       this.formData.taskImages.splice(index, 1)
     },
 
+    // 查看图片
     previewImage(current) {
       uni.previewImage({
         urls: this.formData.taskImages,
@@ -235,41 +228,67 @@ export default {
       })
     },
 
+    // 验证
+    handleVerify(){
+      let f = this.formData
+      let status = false
+      if (!f.taskTypeName){
+        uni.showToast({ title: '任务类型不能为空', icon: 'none' })
+        return status = true
+      }
+
+      if (!f.title){
+        uni.showToast({ title: '任务标题不能为空', icon: 'none' })
+        return status = true
+      }
+
+      if (!f.content){
+        uni.showToast({ title: '任务描述不能为空', icon: 'none' })
+        return status = true
+      }
+
+      if (!f.contactPhone){
+        uni.showToast({ title: '联系电话不能为空', icon: 'none' })
+        return status = true
+      }
+
+      if (!f.contactAddress){
+        uni.showToast({ title: '联系地址不能为空', icon: 'none' })
+        return status = true
+      }
+
+      if (!f.deadlineTime){
+        uni.showToast({ title: '截止时间不能为空', icon: 'none' })
+        return status = true
+      }
+
+      if (!f.rewardPoints){
+        uni.showToast({ title: '积分奖励不能为空', icon: 'none' })
+        return status = true
+      }
+
+      return status
+    },
+
+    // 提交
     async submitTask() {
-      if (!this.canSubmit || this.submitting) return
-
-      this.submitting = true
-
       try {
+        if (await this.handleVerify()) return
         const submitData = {
-          taskType: this.formData.taskType,
-          title: this.formData.title.trim(),
-          content: this.formData.content.trim(),
-          contactPhone: this.formData.contactPhone.trim(),
-          contactAddress: this.formData.contactAddress.trim(),
+          ...this.formData,
           deadlineTime: this.formData.deadlineTime + ' 00:00:00',
           rewardPoints: parseInt(this.formData.rewardPoints),
-          remark: this.formData.remark.trim(),
           taskImages: this.formData.taskImages.length > 0 ? this.formData.taskImages : undefined
         }
+        this.submitting = true
 
         await publishTask(submitData)
 
-        uni.showToast({
-          title: '发布成功',
-          icon: 'success'
-        })
+        uni.showToast({ title: '发布成功', icon: 'success' })
 
-        setTimeout(() => {
-          uni.navigateBack()
-        }, 1500)
+        setTimeout(() => { uni.navigateBack() }, 1500)
 
-      } catch (error) {
-        uni.showToast({
-          title: '发布失败',
-          icon: 'none'
-        })
-      } finally {
+      }finally {
         this.submitting = false
       }
     }
@@ -280,9 +299,8 @@ export default {
 <style scoped lang="scss">
 .task-publish-page {
   min-height: 100vh;
-  background-color: #f5f5f5;
+  background: linear-gradient(to right, #e0ecfa 0%, #f4f6f9 50%, #f6f4fc 100%);
 }
-
 
 
 .content {
@@ -335,6 +353,7 @@ export default {
 .form-textarea {
   height: 200rpx;
   resize: none;
+  width: auto;
 }
 
 .input-count {
@@ -345,33 +364,6 @@ export default {
   margin-top: 8rpx;
 }
 
-.type-selector {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 16rpx;
-
-  .type-item {
-    padding: 20rpx 32rpx;
-    border: 2rpx solid #e8e8e8;
-    border-radius: 12rpx;
-    background: #fafafa;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: all 0.3s;
-
-    &.active {
-      background: #3b5598;
-      border-color: #3b5598;
-      color: #fff;
-    }
-
-    text {
-      font-size: 26rpx;
-    }
-  }
-}
 
 .picker {
   padding: 24rpx;
@@ -396,11 +388,12 @@ export default {
   }
 
   .image-item {
-    width: 160rpx;
-    height: 160rpx;
+    width: 180rpx;
+    height: 180rpx;
     border-radius: 12rpx;
     overflow: hidden;
     position: relative;
+    border: 1px solid red;
 
     image {
       width: 100%;
@@ -423,8 +416,8 @@ export default {
   }
 
   .upload-btn {
-    width: 160rpx;
-    height: 160rpx;
+    width: 180rpx;
+    height: 180rpx;
     border: 2rpx dashed #ddd;
     border-radius: 12rpx;
     display: flex;
@@ -451,7 +444,7 @@ export default {
   padding: 40rpx 0;
 }
 
-uni-button[disabled]:not([type]), uni-button[disabled][type=default]{
+uni-button[disabled]:not([type]), uni-button[disabled][type=default] {
   color: #fff;
   opacity: 0.7;
 }

@@ -26,36 +26,7 @@
 /* 文章场景相关 */
 .repair-list-page.data-v-6c6493e0 {
   min-height: 100vh;
-  background-color: #f5f5f5;
-}
-.header.data-v-6c6493e0 {
-  background: linear-gradient(135deg, #3b5598 0%, #2c3e50 100%);
-  padding: 20rpx 30rpx 40rpx;
-}
-.header .title.data-v-6c6493e0 {
-  font-size: 36rpx;
-  font-weight: 600;
-  color: #fff;
-  display: block;
-  margin-bottom: 20rpx;
-}
-.header .repair-stats.data-v-6c6493e0 {
-  display: flex;
-  gap: 40rpx;
-}
-.header .repair-stats .stat-item.data-v-6c6493e0 {
-  text-align: center;
-}
-.header .repair-stats .stat-item .stat-value.data-v-6c6493e0 {
-  font-size: 32rpx;
-  font-weight: 600;
-  color: #fff;
-  display: block;
-  margin-bottom: 8rpx;
-}
-.header .repair-stats .stat-item .stat-label.data-v-6c6493e0 {
-  font-size: 24rpx;
-  color: rgba(255, 255, 255, 0.8);
+  background: linear-gradient(to right, #e0ecfa 0%, #f4f6f9 50%, #f6f4fc 100%);
 }
 .content.data-v-6c6493e0 {
   padding: 20rpx;
@@ -106,7 +77,6 @@
   border-radius: 16rpx;
   padding: 30rpx;
   margin-bottom: 20rpx;
-  box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.1);
 }
 .repair-list .repair-item .item-header.data-v-6c6493e0 {
   display: flex;
@@ -223,18 +193,20 @@
   font-size: 22rpx;
   color: #999;
   display: block;
-  margin-bottom: 4rpx;
+  margin-bottom: 10rpx;
 }
 .repair-list .repair-item .item-footer .actions.data-v-6c6493e0 {
   display: flex;
   gap: 16rpx;
 }
 .repair-list .repair-item .item-footer .actions .action-btn-small.data-v-6c6493e0 {
-  padding: 12rpx 24rpx;
   background: #f0f5ff;
   color: #3b5598;
-  border-radius: 20rpx;
+  border-radius: 10rpx;
   font-size: 24rpx;
+  border: none;
+}
+.repair-list .repair-item .item-footer .actions .action-btn-small.data-v-6c6493e0:after {
   border: none;
 }
 .empty-state.data-v-6c6493e0 {
@@ -250,7 +222,7 @@
 .empty-state .u-icon.data-v-6c6493e0 {
   justify-content: center;
 }
-.empty-state .empty-btn.data-v-6c6493e0 {
+.empty-btn.data-v-6c6493e0 {
   height: 80rpx;
   background: #3b5598;
   color: #fff;
@@ -258,6 +230,9 @@
   padding: 0 60rpx;
   font-size: 28rpx;
   border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 .loading-more.data-v-6c6493e0 {
   display: flex;

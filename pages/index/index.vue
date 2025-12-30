@@ -59,19 +59,22 @@
         <text class="section-title">服务中心</text>
       </view>
       <view class="function-grid">
-        <view class="function-card payment" @click="goToPayments">
-          <view class="function-icon">
-            <view class="icon-bg payment-bg">
-              <u-icon name="coupon" size="24" color="#fff"></u-icon>
-            </view>
-          </view>
-          <text class="function-title">缴费管理</text>
-          <text class="function-subtitle">4项费用</text>
-          <view class="function-badge" v-if="propertyFeeStatus === 'overdue'">
-            <text>待缴费</text>
-          </view>
-        </view>
 
+        <!-- 缴费管理 -->
+<!--        <view class="function-card payment" @click="goToPayments">-->
+<!--          <view class="function-icon">-->
+<!--            <view class="icon-bg payment-bg">-->
+<!--              <u-icon name="coupon" size="24" color="#fff"></u-icon>-->
+<!--            </view>-->
+<!--          </view>-->
+<!--          <text class="function-title">缴费管理</text>-->
+<!--          <text class="function-subtitle">4项费用</text>-->
+<!--          <view class="function-badge" v-if="propertyFeeStatus === 'overdue'">-->
+<!--            <text>待缴费</text>-->
+<!--          </view>-->
+<!--        </view>-->
+
+        <!-- 保修服务 -->
         <view class="function-card repair" @click="goToRepairs">
           <view class="function-icon">
             <view class="icon-bg repair-bg">
@@ -85,6 +88,7 @@
           </view>
         </view>
 
+        <!-- 公告通知 -->
         <view class="function-card notice" @click="goToNotices">
           <view class="function-icon">
             <view class="icon-bg notice-bg">
@@ -98,6 +102,7 @@
           </view>
         </view>
 
+        <!-- 便民服务 -->
         <view class="function-card convenience" @click="goToConvenience">
           <view class="function-icon">
             <view class="icon-bg convenience-bg">
@@ -114,7 +119,7 @@
     <view class="convenience-section">
       <view class="section-header">
         <text class="section-title">其他服务</text>
-<!--        <text class="more-text" @click="goToConvenience">查看全部 ></text>-->
+        <!--  <text class="more-text" @click="goToConvenience">查看全部 ></text>  -->
       </view>
       <view class="service-grid">
         <view class="service-item" v-for="service in convenienceServices.slice(0, 8)" :key="service.id" @click="goToService(service)">
@@ -169,8 +174,7 @@
 </template>
 
 <script>
-import {articleCarousel} from "../../api/list/home";
-
+import {articleCarousel} from "@/api/list/home";
 export default {
   data() {
     return {
@@ -204,12 +208,13 @@ export default {
         { id: 4, name: '门锁维修', icon: 'lock', color: '#9c27b0' }
       ],
       convenienceServices: [
-        { id: 1, name: '访客登记', icon: 'home', color: '#3b5598', bgColor: 'rgba(59, 85, 152, 0.1)' },
-        { id: 2, name: '快递代收', icon: 'home', color: '#ff6b35', bgColor: 'rgba(255, 107, 53, 0.1)' },
+        // { id: 1, name: '访客登记', icon: 'home', color: '#3b5598', bgColor: 'rgba(59, 85, 152, 0.1)' },
+        // { id: 2, name: '快递代收', icon: 'home', color: '#ff6b35', bgColor: 'rgba(255, 107, 53, 0.1)' },
         { id: 3, name: '社区活动', icon: 'home', color: '#07c160', bgColor: 'rgba(7, 193, 96, 0.1)' },
-        { id: 4, name: '周边商家', icon: 'home', color: '#f5222d', bgColor: 'rgba(245, 34, 45, 0.1)' },
-        { id: 5, name: '家政服务', icon: 'home', color: '#9c27b0', bgColor: 'rgba(156, 39, 176, 0.1)' },
-        { id: 6, name: '车辆管理', icon: 'car', color: '#ff6b35', bgColor: 'rgba(255, 107, 53, 0.1)' }
+        // { id: 4, name: '周边商家', icon: 'home', color: '#f5222d', bgColor: 'rgba(245, 34, 45, 0.1)' },
+        // { id: 5, name: '家政服务', icon: 'home', color: '#9c27b0', bgColor: 'rgba(156, 39, 176, 0.1)' },
+        // { id: 6, name: '车辆管理', icon: 'car', color: '#ff6b35', bgColor: 'rgba(255, 107, 53, 0.1)' },
+        { id: 7, name: '安保打卡', icon: 'map', color: '#e74c3c', bgColor: 'rgba(231, 76, 60, 0.1)' }
       ],
       notices: [
         {
@@ -368,6 +373,11 @@ export default {
           break
         case '车辆管理':
           uni.navigateTo({ url: '/subpackages/vehicle/vehicle-manage' })
+          break
+        case '安保打卡':
+          uni.navigateTo({
+            url: '/subpackages/home/security-checkin/security-checkin'
+          })
           break
       }
     },

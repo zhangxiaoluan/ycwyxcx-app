@@ -1,6 +1,6 @@
 import { sendRequest } from '../request'
 
-// ·ÖFÁ{¥ã
+//
 export function getCategories() {
   const json = {
     url: '/app/points/mall/categories',
@@ -9,7 +9,7 @@ export function getCategories() {
   return sendRequest(json)
 }
 
-// ·ÖFÁh¥ã
+
 export function getProducts(params) {
   const json = {
     url: '/app/points/mall/products',
@@ -19,7 +19,7 @@ export function getProducts(params) {
   return sendRequest(json)
 }
 
-// QbFÁ
+
 export function exchangeProduct(params) {
   const json = {
     url: '/app/points/mall/exchange',
@@ -29,7 +29,7 @@ export function exchangeProduct(params) {
   return sendRequest(json)
 }
 
-// ·ÖQb°U
+
 export function getExchangeRecords(params) {
   const json = {
     url: '/app/points/mall/exchange/records',

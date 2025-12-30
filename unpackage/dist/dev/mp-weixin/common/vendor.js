@@ -840,9 +840,9 @@ function populateParameters(result) {
     appVersion: "1.0.0",
     appVersionCode: "100",
     appLanguage: getAppLanguage(hostLanguage),
-    uniCompileVersion: "4.85",
-    uniCompilerVersion: "4.85",
-    uniRuntimeVersion: "4.85",
+    uniCompileVersion: "4.87",
+    uniCompilerVersion: "4.87",
+    uniRuntimeVersion: "4.87",
     uniPlatform: undefined || "mp-weixin",
     deviceBrand: deviceBrand,
     deviceModel: model,
@@ -948,9 +948,9 @@ var getAppBaseInfo = {
       hostTheme: theme,
       isUniAppX: false,
       uniPlatform: undefined || "mp-weixin",
-      uniCompileVersion: "4.85",
-      uniCompilerVersion: "4.85",
-      uniRuntimeVersion: "4.85"
+      uniCompileVersion: "4.87",
+      uniCompilerVersion: "4.87",
+      uniRuntimeVersion: "4.87"
     }));
   }
 };
@@ -19340,6 +19340,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.articleCarousel = articleCarousel;
 exports.getArticleDetail = getArticleDetail;
+exports.securityCheckin = securityCheckin;
 var _request = __webpack_require__(/*! ../request */ 166);
 function articleCarousel() {
   var json = {
@@ -19352,6 +19353,14 @@ function getArticleDetail(id) {
   var json = {
     url: "/app/community/article/".concat(id),
     method: 'get'
+  };
+  return (0, _request.sendRequest)(json);
+}
+function securityCheckin(data) {
+  var json = {
+    url: '/app/api/security-checkin',
+    method: 'post',
+    data: data
   };
   return (0, _request.sendRequest)(json);
 }
@@ -19371,13 +19380,15 @@ var _interopRequireDefault = __webpack_require__(/*! @babel/runtime/helpers/inte
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.wxSendRequest = exports.sendUploads = exports.sendUpload = exports.sendRequest = exports.default = void 0;
+exports.wxSendRequest = exports.txSendRequest = exports.sendUploads = exports.sendUpload = exports.sendRequest = void 0;
 var _regenerator = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/regenerator */ 56));
 var _asyncToGenerator2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ 58));
 var _defineProperty2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/defineProperty */ 11));
+var _utils = __webpack_require__(/*! @/utils */ 167);
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { (0, _defineProperty2.default)(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
 var BASE_URL = 'http://62.234.35.7:8802';
+var TX_BASE_URL = 'https://apis.map.qq.com';
 var sendRequest = function sendRequest(target, config) {
   var token = uni.getStorageSync('token');
   if (!target.url) throw new Error('url地址不能为空');
@@ -19562,17 +19573,128 @@ var sendUploads = /*#__PURE__*/function () {
     return _ref2.apply(this, arguments);
   };
 }();
+
+// 腾讯地图接口请求
 exports.sendUploads = sendUploads;
-var _default = {
-  sendRequest: sendRequest,
-  sendUpload: sendUpload,
-  sendUploads: sendUploads
+var txSendRequest = function txSendRequest(target, config) {
+  if (!target.url) throw new Error('url地址不能为空');
+  var key = 'B3HBZ-DBPWU-YSZVK-GSVGQ-UQIWO-V6FE7';
+  var result = null;
+  var method = target.method.toUpperCase();
+  switch (method) {
+    case 'POST':
+    case 'PUT':
+      result = target.data;
+      break;
+    case 'GET':
+      target.url = (0, _utils.setObjToUrlParams)(target.url, _objectSpread({
+        key: key
+      }, target.data));
+      break;
+  }
+  return new Promise(function (resolve, reject) {
+    var json = _objectSpread({
+      url: TX_BASE_URL + target.url,
+      data: result,
+      method: method
+    }, config);
+    return uni.request(_objectSpread(_objectSpread({}, json), {}, {
+      success: function success(res) {
+        var data = res.data || {};
+        var status = Number(data.status);
+        if (status === 0) {
+          resolve(data.result);
+        } else {
+          uni.showToast({
+            title: data.message,
+            icon: 'none'
+          });
+          resolve(data);
+        }
+      },
+      fail: function fail(err) {
+        uni.showToast({
+          title: '请求数据异常',
+          icon: 'none'
+        });
+        reject(err.errMsg);
+      }
+    }));
+  });
 };
-exports.default = _default;
+exports.txSendRequest = txSendRequest;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"]))
 
 /***/ }),
-/* 167 */,
+/* 167 */
+/*!****************************************************************************!*\
+  !*** /Users/salvater/web/kai-nan/zhi-hui-wu-ye/ycwyxcx-app/utils/index.js ***!
+  \****************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _interopRequireDefault = __webpack_require__(/*! @babel/runtime/helpers/interopRequireDefault */ 4);
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.processObjectValues = processObjectValues;
+exports.setObjToUrlParams = setObjToUrlParams;
+var _slicedToArray2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/slicedToArray */ 5));
+var _typeof2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/typeof */ 13));
+/**
+ * 将对象作为参数添加到URL中
+ * @param baseUrl url
+ * @param obj
+ * @returns {string}
+ * eg:
+ *  let obj = {a: '3', b: '4', c: ['1','2']}
+ *  setObjToUrlParams('www.baidu.com', obj)
+ *  ==>www.baidu.com?a=3&b=4&c=1,2
+ */
+function setObjToUrlParams(baseUrl, obj) {
+  var parameters = '';
+  for (var key in obj) {
+    var value = obj[key];
+    if (Array.isArray(value)) {
+      parameters += "".concat(key, "=").concat(encodeURIComponent(value.join(',')), "&");
+    } else {
+      parameters += "".concat(key, "=").concat(encodeURIComponent(value), "&");
+    }
+  }
+  parameters = parameters.replace(/&$/, '');
+  return /\?$/.test(baseUrl) ? baseUrl + parameters : baseUrl.replace(/\/?$/, parameters ? '?' : '') + parameters;
+}
+
+/**
+ * 处理对象值，保持key不变
+ * @param {Object} obj - 原始对象
+ * @param {Function} handler - 值处理函数，参数：(value, key)，返回处理后的值
+ * @returns {Object} 处理后的新对象
+ */
+function processObjectValues(obj, handler) {
+  // 空值校验
+  if ((0, _typeof2.default)(obj) !== 'object' || obj === null) return {};
+
+  // 方法1：Object.keys + 遍历（基础版）
+  // const newObj = {};
+  // Object.keys(obj).forEach(key => {
+  //   newObj[key] = handler(obj[key], key); // 调用处理函数
+  // });
+  // return newObj;
+
+  // 方法2：Object.fromEntries + Object.entries（简洁版，ES2019+）
+  return Object.fromEntries(Object.entries(obj).map(function (_ref) {
+    var _ref2 = (0, _slicedToArray2.default)(_ref, 2),
+      key = _ref2[0],
+      value = _ref2[1];
+    return [key, handler(value, key)];
+  }));
+}
+
+/***/ }),
 /* 168 */,
 /* 169 */,
 /* 170 */,
@@ -19580,7 +19702,8 @@ exports.default = _default;
 /* 172 */,
 /* 173 */,
 /* 174 */,
-/* 175 */
+/* 175 */,
+/* 176 */
 /*!*******************************************************************************!*\
   !*** /Users/salvater/web/kai-nan/zhi-hui-wu-ye/ycwyxcx-app/api/list/login.js ***!
   \*******************************************************************************/
@@ -19704,7 +19827,6 @@ function uploadFile(filePath, file) {
 }
 
 /***/ }),
-/* 176 */,
 /* 177 */,
 /* 178 */,
 /* 179 */,
@@ -19712,7 +19834,8 @@ function uploadFile(filePath, file) {
 /* 181 */,
 /* 182 */,
 /* 183 */,
-/* 184 */
+/* 184 */,
+/* 185 */
 /*!*********************************************************************************!*\
   !*** /Users/salvater/web/kai-nan/zhi-hui-wu-ye/ycwyxcx-app/pages/login/auth.js ***!
   \*********************************************************************************/
@@ -20106,7 +20229,6 @@ exports.getAuth = getAuth;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"]))
 
 /***/ }),
-/* 185 */,
 /* 186 */,
 /* 187 */,
 /* 188 */,
@@ -20122,7 +20244,8 @@ exports.getAuth = getAuth;
 /* 198 */,
 /* 199 */,
 /* 200 */,
-/* 201 */
+/* 201 */,
+/* 202 */
 /*!***************************************************************************************!*\
   !*** /Users/salvater/web/kai-nan/zhi-hui-wu-ye/ycwyxcx-app/api/list/house-binding.js ***!
   \***************************************************************************************/
@@ -20216,7 +20339,6 @@ function submitHouseBinding(params) {
 }
 
 /***/ }),
-/* 202 */,
 /* 203 */,
 /* 204 */,
 /* 205 */,
@@ -20232,7 +20354,8 @@ function submitHouseBinding(params) {
 /* 215 */,
 /* 216 */,
 /* 217 */,
-/* 218 */
+/* 218 */,
+/* 219 */
 /*!****************************************************************************************!*\
   !*** /Users/salvater/web/kai-nan/zhi-hui-wu-ye/ycwyxcx-app/api/list/family-members.js ***!
   \****************************************************************************************/
@@ -20258,7 +20381,6 @@ function familyMembers(params) {
 }
 
 /***/ }),
-/* 219 */,
 /* 220 */,
 /* 221 */,
 /* 222 */,
@@ -20275,7 +20397,53 @@ function familyMembers(params) {
 /* 233 */,
 /* 234 */,
 /* 235 */,
-/* 236 */,
+/* 236 */
+/*!******************************************************************************!*\
+  !*** /Users/salvater/web/kai-nan/zhi-hui-wu-ye/ycwyxcx-app/api/list/user.js ***!
+  \******************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.geocoderLocation = geocoderLocation;
+exports.propertyApply = propertyApply;
+exports.propertyRoles = propertyRoles;
+var _request = __webpack_require__(/*! ../request */ 166);
+// 物业申请
+function propertyApply(params) {
+  var json = {
+    url: '/app/property/application/apply',
+    method: 'post',
+    data: params
+  };
+  return (0, _request.sendRequest)(json);
+}
+
+// 物业申请角色
+function propertyRoles() {
+  var json = {
+    url: '/app/property/application/roles',
+    method: 'get'
+  };
+  return (0, _request.sendRequest)(json);
+}
+
+// 根据经纬度进行地址逆解析
+function geocoderLocation(params) {
+  var json = {
+    url: '/ws/geocoder/v1/',
+    method: 'get',
+    data: params
+  };
+  return (0, _request.txSendRequest)(json);
+}
+
+/***/ }),
 /* 237 */,
 /* 238 */,
 /* 239 */,
@@ -20298,7 +20466,17 @@ function familyMembers(params) {
 /* 256 */,
 /* 257 */,
 /* 258 */,
-/* 259 */
+/* 259 */,
+/* 260 */,
+/* 261 */,
+/* 262 */,
+/* 263 */,
+/* 264 */,
+/* 265 */,
+/* 266 */,
+/* 267 */,
+/* 268 */,
+/* 269 */
 /*!*************************************************************************************!*\
   !*** /Users/salvater/web/kai-nan/zhi-hui-wu-ye/ycwyxcx-app/api/list/points-mall.js ***!
   \*************************************************************************************/
@@ -20316,7 +20494,7 @@ exports.getCategories = getCategories;
 exports.getExchangeRecords = getExchangeRecords;
 exports.getProducts = getProducts;
 var _request = __webpack_require__(/*! ../request */ 166);
-// ��F�{��
+//
 function getCategories() {
   var json = {
     url: '/app/points/mall/categories',
@@ -20324,8 +20502,6 @@ function getCategories() {
   };
   return (0, _request.sendRequest)(json);
 }
-
-// ��F�h��
 function getProducts(params) {
   var json = {
     url: '/app/points/mall/products',
@@ -20334,8 +20510,6 @@ function getProducts(params) {
   };
   return (0, _request.sendRequest)(json);
 }
-
-// QbF�
 function exchangeProduct(params) {
   var json = {
     url: '/app/points/mall/exchange',
@@ -20344,8 +20518,6 @@ function exchangeProduct(params) {
   };
   return (0, _request.sendRequest)(json);
 }
-
-// ��Qb�U
 function getExchangeRecords(params) {
   var json = {
     url: '/app/points/mall/exchange/records',
@@ -20356,15 +20528,15 @@ function getExchangeRecords(params) {
 }
 
 /***/ }),
-/* 260 */,
-/* 261 */,
-/* 262 */,
-/* 263 */,
-/* 264 */,
-/* 265 */,
-/* 266 */,
-/* 267 */,
-/* 268 */
+/* 270 */,
+/* 271 */,
+/* 272 */,
+/* 273 */,
+/* 274 */,
+/* 275 */,
+/* 276 */,
+/* 277 */,
+/* 278 */
 /*!*******************************************************************************!*\
   !*** /Users/salvater/web/kai-nan/zhi-hui-wu-ye/ycwyxcx-app/api/list/tasks.js ***!
   \*******************************************************************************/
@@ -20481,23 +20653,23 @@ function publishTask(data) {
 }
 
 /***/ }),
-/* 269 */,
-/* 270 */,
-/* 271 */,
-/* 272 */,
-/* 273 */,
-/* 274 */,
-/* 275 */,
-/* 276 */,
-/* 277 */,
-/* 278 */,
 /* 279 */,
 /* 280 */,
 /* 281 */,
 /* 282 */,
 /* 283 */,
 /* 284 */,
-/* 285 */
+/* 285 */,
+/* 286 */,
+/* 287 */,
+/* 288 */,
+/* 289 */,
+/* 290 */,
+/* 291 */,
+/* 292 */,
+/* 293 */,
+/* 294 */,
+/* 295 */
 /*!********************************************************************************!*\
   !*** /Users/salvater/web/kai-nan/zhi-hui-wu-ye/ycwyxcx-app/api/list/upload.js ***!
   \********************************************************************************/
@@ -20526,16 +20698,6 @@ function uploadFiles(fileList) {
 }
 
 /***/ }),
-/* 286 */,
-/* 287 */,
-/* 288 */,
-/* 289 */,
-/* 290 */,
-/* 291 */,
-/* 292 */,
-/* 293 */,
-/* 294 */,
-/* 295 */,
 /* 296 */,
 /* 297 */,
 /* 298 */,
@@ -20550,7 +20712,17 @@ function uploadFiles(fileList) {
 /* 307 */,
 /* 308 */,
 /* 309 */,
-/* 310 */
+/* 310 */,
+/* 311 */,
+/* 312 */,
+/* 313 */,
+/* 314 */,
+/* 315 */,
+/* 316 */,
+/* 317 */,
+/* 318 */,
+/* 319 */,
+/* 320 */
 /*!********************************************************************************!*\
   !*** /Users/salvater/web/kai-nan/zhi-hui-wu-ye/ycwyxcx-app/api/list/notice.js ***!
   \********************************************************************************/
@@ -20600,23 +20772,23 @@ function categoriesReadAll(params) {
 }
 
 /***/ }),
-/* 311 */,
-/* 312 */,
-/* 313 */,
-/* 314 */,
-/* 315 */,
-/* 316 */,
-/* 317 */,
-/* 318 */,
-/* 319 */,
-/* 320 */,
 /* 321 */,
 /* 322 */,
 /* 323 */,
 /* 324 */,
 /* 325 */,
 /* 326 */,
-/* 327 */
+/* 327 */,
+/* 328 */,
+/* 329 */,
+/* 330 */,
+/* 331 */,
+/* 332 */,
+/* 333 */,
+/* 334 */,
+/* 335 */,
+/* 336 */,
+/* 337 */
 /*!***************************************************************************************!*\
   !*** /Users/salvater/web/kai-nan/zhi-hui-wu-ye/ycwyxcx-app/api/list/activity-list.js ***!
   \***************************************************************************************/
@@ -20722,16 +20894,6 @@ function uploadMedia(filePath, file) {
 }
 
 /***/ }),
-/* 328 */,
-/* 329 */,
-/* 330 */,
-/* 331 */,
-/* 332 */,
-/* 333 */,
-/* 334 */,
-/* 335 */,
-/* 336 */,
-/* 337 */,
 /* 338 */,
 /* 339 */,
 /* 340 */,
@@ -20762,7 +20924,17 @@ function uploadMedia(filePath, file) {
 /* 365 */,
 /* 366 */,
 /* 367 */,
-/* 368 */
+/* 368 */,
+/* 369 */,
+/* 370 */,
+/* 371 */,
+/* 372 */,
+/* 373 */,
+/* 374 */,
+/* 375 */,
+/* 376 */,
+/* 377 */,
+/* 378 */
 /*!********************************************************************************!*\
   !*** /Users/salvater/web/kai-nan/zhi-hui-wu-ye/ycwyxcx-app/api/list/repair.js ***!
   \********************************************************************************/
@@ -20830,16 +21002,6 @@ function submitRepairRate(id, data) {
 }
 
 /***/ }),
-/* 369 */,
-/* 370 */,
-/* 371 */,
-/* 372 */,
-/* 373 */,
-/* 374 */,
-/* 375 */,
-/* 376 */,
-/* 377 */,
-/* 378 */,
 /* 379 */,
 /* 380 */,
 /* 381 */,
@@ -20878,7 +21040,25 @@ function submitRepairRate(id, data) {
 /* 414 */,
 /* 415 */,
 /* 416 */,
-/* 417 */
+/* 417 */,
+/* 418 */,
+/* 419 */,
+/* 420 */,
+/* 421 */,
+/* 422 */,
+/* 423 */,
+/* 424 */,
+/* 425 */,
+/* 426 */,
+/* 427 */,
+/* 428 */,
+/* 429 */,
+/* 430 */,
+/* 431 */,
+/* 432 */,
+/* 433 */,
+/* 434 */,
+/* 435 */
 /*!*************************************************************************************!*\
   !*** /Users/salvater/web/kai-nan/zhi-hui-wu-ye/ycwyxcx-app/api/list/convenience.js ***!
   \*************************************************************************************/
@@ -20910,14 +21090,14 @@ function categoriesList(id) {
 }
 
 /***/ }),
-/* 418 */,
-/* 419 */,
-/* 420 */,
-/* 421 */,
-/* 422 */,
-/* 423 */,
-/* 424 */,
-/* 425 */
+/* 436 */,
+/* 437 */,
+/* 438 */,
+/* 439 */,
+/* 440 */,
+/* 441 */,
+/* 442 */,
+/* 443 */
 /*!*************************************************************************************************************!*\
   !*** /Users/salvater/web/kai-nan/zhi-hui-wu-ye/ycwyxcx-app/uni_modules/uview-ui/components/u-icon/icons.js ***!
   \*************************************************************************************************************/
@@ -21148,7 +21328,7 @@ var _default = {
 exports.default = _default;
 
 /***/ }),
-/* 426 */
+/* 444 */
 /*!*************************************************************************************************************!*\
   !*** /Users/salvater/web/kai-nan/zhi-hui-wu-ye/ycwyxcx-app/uni_modules/uview-ui/components/u-icon/props.js ***!
   \*************************************************************************************************************/
@@ -21255,14 +21435,14 @@ exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"]))
 
 /***/ }),
-/* 427 */,
-/* 428 */,
-/* 429 */,
-/* 430 */,
-/* 431 */,
-/* 432 */,
-/* 433 */,
-/* 434 */
+/* 445 */,
+/* 446 */,
+/* 447 */,
+/* 448 */,
+/* 449 */,
+/* 450 */,
+/* 451 */,
+/* 452 */
 /*!*********************************************************************************************************************!*\
   !*** /Users/salvater/web/kai-nan/zhi-hui-wu-ye/ycwyxcx-app/uni_modules/uview-ui/components/u-loading-icon/props.js ***!
   \*********************************************************************************************************************/
@@ -21339,14 +21519,14 @@ exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"]))
 
 /***/ }),
-/* 435 */,
-/* 436 */,
-/* 437 */,
-/* 438 */,
-/* 439 */,
-/* 440 */,
-/* 441 */,
-/* 442 */
+/* 453 */,
+/* 454 */,
+/* 455 */,
+/* 456 */,
+/* 457 */,
+/* 458 */,
+/* 459 */,
+/* 460 */
 /*!***********************************************************************************************************************!*\
   !*** /Users/salvater/web/kai-nan/zhi-hui-wu-ye/ycwyxcx-app/uni_modules/uview-ui/components/u-checkbox-group/props.js ***!
   \***********************************************************************************************************************/
@@ -21443,14 +21623,14 @@ exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"]))
 
 /***/ }),
-/* 443 */,
-/* 444 */,
-/* 445 */,
-/* 446 */,
-/* 447 */,
-/* 448 */,
-/* 449 */,
-/* 450 */
+/* 461 */,
+/* 462 */,
+/* 463 */,
+/* 464 */,
+/* 465 */,
+/* 466 */,
+/* 467 */,
+/* 468 */
 /*!*****************************************************************************************************************!*\
   !*** /Users/salvater/web/kai-nan/zhi-hui-wu-ye/ycwyxcx-app/uni_modules/uview-ui/components/u-checkbox/props.js ***!
   \*****************************************************************************************************************/
@@ -21537,14 +21717,14 @@ exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"]))
 
 /***/ }),
-/* 451 */,
-/* 452 */,
-/* 453 */,
-/* 454 */,
-/* 455 */,
-/* 456 */,
-/* 457 */,
-/* 458 */
+/* 469 */,
+/* 470 */,
+/* 471 */,
+/* 472 */,
+/* 473 */,
+/* 474 */,
+/* 475 */,
+/* 476 */
 /*!**************************************************************************************************************!*\
   !*** /Users/salvater/web/kai-nan/zhi-hui-wu-ye/ycwyxcx-app/uni_modules/uview-ui/components/u-modal/props.js ***!
   \**************************************************************************************************************/
@@ -21651,14 +21831,14 @@ exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"]))
 
 /***/ }),
-/* 459 */,
-/* 460 */,
-/* 461 */,
-/* 462 */,
-/* 463 */,
-/* 464 */,
-/* 465 */,
-/* 466 */
+/* 477 */,
+/* 478 */,
+/* 479 */,
+/* 480 */,
+/* 481 */,
+/* 482 */,
+/* 483 */,
+/* 484 */
 /*!**************************************************************************************************************!*\
   !*** /Users/salvater/web/kai-nan/zhi-hui-wu-ye/ycwyxcx-app/uni_modules/uview-ui/components/u-popup/props.js ***!
   \**************************************************************************************************************/
@@ -21755,14 +21935,14 @@ exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"]))
 
 /***/ }),
-/* 467 */,
-/* 468 */,
-/* 469 */,
-/* 470 */,
-/* 471 */,
-/* 472 */,
-/* 473 */,
-/* 474 */
+/* 485 */,
+/* 486 */,
+/* 487 */,
+/* 488 */,
+/* 489 */,
+/* 490 */,
+/* 491 */,
+/* 492 */
 /*!*************************************************************************************************************!*\
   !*** /Users/salvater/web/kai-nan/zhi-hui-wu-ye/ycwyxcx-app/uni_modules/uview-ui/components/u-line/props.js ***!
   \*************************************************************************************************************/
@@ -21813,14 +21993,14 @@ exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"]))
 
 /***/ }),
-/* 475 */,
-/* 476 */,
-/* 477 */,
-/* 478 */,
-/* 479 */,
-/* 480 */,
-/* 481 */,
-/* 482 */
+/* 493 */,
+/* 494 */,
+/* 495 */,
+/* 496 */,
+/* 497 */,
+/* 498 */,
+/* 499 */,
+/* 500 */
 /*!****************************************************************************************************************!*\
   !*** /Users/salvater/web/kai-nan/zhi-hui-wu-ye/ycwyxcx-app/uni_modules/uview-ui/components/u-overlay/props.js ***!
   \****************************************************************************************************************/
@@ -21862,14 +22042,14 @@ exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"]))
 
 /***/ }),
-/* 483 */,
-/* 484 */,
-/* 485 */,
-/* 486 */,
-/* 487 */,
-/* 488 */,
-/* 489 */,
-/* 490 */
+/* 501 */,
+/* 502 */,
+/* 503 */,
+/* 504 */,
+/* 505 */,
+/* 506 */,
+/* 507 */,
+/* 508 */
 /*!*******************************************************************************************************************!*\
   !*** /Users/salvater/web/kai-nan/zhi-hui-wu-ye/ycwyxcx-app/uni_modules/uview-ui/components/u-transition/props.js ***!
   \*******************************************************************************************************************/
@@ -21911,7 +22091,7 @@ exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"]))
 
 /***/ }),
-/* 491 */
+/* 509 */
 /*!************************************************************************************************************************!*\
   !*** /Users/salvater/web/kai-nan/zhi-hui-wu-ye/ycwyxcx-app/uni_modules/uview-ui/components/u-transition/transition.js ***!
   \************************************************************************************************************************/
@@ -21928,7 +22108,7 @@ Object.defineProperty(exports, "__esModule", {
 exports.default = void 0;
 var _regenerator = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/regenerator */ 56));
 var _asyncToGenerator2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ 58));
-var _nvueAniMap = _interopRequireDefault(__webpack_require__(/*! ./nvue.ani-map.js */ 492));
+var _nvueAniMap = _interopRequireDefault(__webpack_require__(/*! ./nvue.ani-map.js */ 510));
 // 定义一个一定时间后自动成功的promise，让调用nextTick方法处，进入下一个then方法
 var nextTick = function nextTick() {
   return new Promise(function (resolve) {
@@ -22020,7 +22200,7 @@ var _default = {
 exports.default = _default;
 
 /***/ }),
-/* 492 */
+/* 510 */
 /*!**************************************************************************************************************************!*\
   !*** /Users/salvater/web/kai-nan/zhi-hui-wu-ye/ycwyxcx-app/uni_modules/uview-ui/components/u-transition/nvue.ani-map.js ***!
   \**************************************************************************************************************************/
@@ -22213,14 +22393,14 @@ var _default = {
 exports.default = _default;
 
 /***/ }),
-/* 493 */,
-/* 494 */,
-/* 495 */,
-/* 496 */,
-/* 497 */,
-/* 498 */,
-/* 499 */,
-/* 500 */
+/* 511 */,
+/* 512 */,
+/* 513 */,
+/* 514 */,
+/* 515 */,
+/* 516 */,
+/* 517 */,
+/* 518 */
 /*!*******************************************************************************************************************!*\
   !*** /Users/salvater/web/kai-nan/zhi-hui-wu-ye/ycwyxcx-app/uni_modules/uview-ui/components/u-status-bar/props.js ***!
   \*******************************************************************************************************************/
@@ -22246,14 +22426,14 @@ exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"]))
 
 /***/ }),
-/* 501 */,
-/* 502 */,
-/* 503 */,
-/* 504 */,
-/* 505 */,
-/* 506 */,
-/* 507 */,
-/* 508 */
+/* 519 */,
+/* 520 */,
+/* 521 */,
+/* 522 */,
+/* 523 */,
+/* 524 */,
+/* 525 */,
+/* 526 */
 /*!********************************************************************************************************************!*\
   !*** /Users/salvater/web/kai-nan/zhi-hui-wu-ye/ycwyxcx-app/uni_modules/uview-ui/components/u-safe-bottom/props.js ***!
   \********************************************************************************************************************/

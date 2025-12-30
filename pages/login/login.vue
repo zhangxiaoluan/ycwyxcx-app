@@ -167,7 +167,8 @@ export default {
     // 登录请求后台接口
     toLogin() {
       let $that = this
-      Login(this.userForm).then(res => {
+      let query = { cellphone: this.userForm.cellphone, openid: this.userForm.openid }
+      Login(query).then(res => {
         let token = res.token || ''
         uni.setStorage({
           key: 'token',

@@ -96,7 +96,7 @@
       </view>
 
       <view class="submit-section">
-        <button class="submit-btn" @click="submitRepair" :disabled="!canSubmit">
+        <button class="submit-btn" @click="submitRepair">
           <u-icon name="checkmark" size="16" color="#fff" v-if="canSubmit"></u-icon>
           <text>提交报修申请</text>
         </button>
@@ -108,9 +108,9 @@
       <view class="category-modal">
         <view class="modal-header">
           <text class="modal-title">选择报修分类</text>
-          <button class="close-btn" @click="showCategoryModal = false">
+          <view class="close-btn" @click="showCategoryModal = false">
             <u-icon name="close" size="20" color="#999"></u-icon>
-          </button>
+          </view>
         </view>
         <view class="category-list">
           <view
@@ -120,9 +120,9 @@
             :key="item.id"
             @click="selectCategory(item)"
           >
-            <view class="category-icon" v-if="item.icon">
-              <u-icon :name="item.icon" size="24" color="#3b5598"></u-icon>
-            </view>
+<!--            <view class="category-icon" v-if="item.icon">-->
+<!--              <u-icon :name="item.icon" size="24" color="#3b5598"></u-icon>-->
+<!--            </view>-->
             <view class="category-info">
               <text class="category-name">{{ item.name }}</text>
               <text class="category-desc" v-if="item.description">{{ item.description }}</text>
@@ -191,6 +191,7 @@ export default {
     async loadCategories() {
       try {
         const res = await getRepairCategories()
+        console.log(11, res)
         this.categories = res || []
       } catch (error) {
         uni.showToast({
@@ -306,7 +307,7 @@ export default {
 <style scoped lang="scss">
 .repair-apply-page {
   min-height: 100vh;
-  background-color: #f5f5f5;
+  background: linear-gradient(to right, #e0ecfa 0%, #f4f6f9 50%, #f6f4fc 100%);
 }
 
 

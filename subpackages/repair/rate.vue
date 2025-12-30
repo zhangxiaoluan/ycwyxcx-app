@@ -363,7 +363,7 @@ export default {
 <style scoped lang="scss">
 .page-container {
   min-height: 100vh;
-  background-color: #f5f5f5;
+  background: linear-gradient(to right, #e0ecfa 0%, #f4f6f9 50%, #f6f4fc 100%);
 }
 
 .repair-rate-page {

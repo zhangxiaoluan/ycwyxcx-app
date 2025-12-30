@@ -30,10 +30,6 @@ export function getBinding() {
     return sendRequest(json)
 }
 
-
-
-
-
 // 获取小区列表
 export function getCommunities() {
     const json = {

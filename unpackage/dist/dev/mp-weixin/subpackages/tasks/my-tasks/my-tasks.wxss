@@ -25,7 +25,7 @@
 /* 透明度 */
 /* 文章场景相关 */
 .my-tasks-page.data-v-4ac9da8e {
-  background: #f5f5f5;
+  background: linear-gradient(to right, #e0ecfa 0%, #f4f6f9 50%, #f6f4fc 100%);
   min-height: 100vh;
 }
 .my-tasks-page .header.data-v-4ac9da8e {
@@ -264,8 +264,8 @@
   background: #3b5598;
   color: white;
   border: none;
-  border-radius: 20rpx;
-  padding: 20rpx 40rpx;
+  padding: 8rpx 30rpx;
+  border-radius: 15rpx;
   font-size: 28rpx;
   font-weight: 600;
   display: inline-flex;
