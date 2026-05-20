@@ -119,7 +119,8 @@
             "port" : 8690,
             "proxy" : {
                 "/app" : {
-                    "target" : "http://62.234.35.7:8802",
+                    // "target" : "http://62.234.35.7:8802",
+                    "target": "http://127.0.0.1:8802",
                     "changeOrigin" : "ture",
                     "secure" : true,
                     "pathRewrite" : {
