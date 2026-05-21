@@ -1,7 +1,7 @@
 {
-    "name" : "police-app",
-    "appid" : "__UNI__EEB2FE8",
-    "description" : "",
+    "name" : "ycwyxcx-app",
+    "appid" : "__UNI__8B3B7FB",
+    "description" : "智慧物业",
     "versionName" : "1.0.0",
     "versionCode" : "100",
     "transformPx" : false,
@@ -120,18 +120,18 @@
             "proxy" : {
                 "/app" : {
                     // "target" : "http://62.234.35.7:8802",
-                    "target": "http://127.0.0.1:8802",
+                    "target" : "http://127.0.0.1:8802",
                     "changeOrigin" : "ture",
                     "secure" : true,
                     "pathRewrite" : {
                         "^/app" : "/app/"
                     }
                 },
-              "/ws" : {
-                "target" : "https://apis.map.qq.com",
-                "changeOrigin" : "ture",
-                "secure" : true
-              }
+                "/ws" : {
+                    "target" : "https://apis.map.qq.com",
+                    "changeOrigin" : "ture",
+                    "secure" : true
+                }
             },
             "https" : false
         },
