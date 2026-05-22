@@ -2,7 +2,7 @@
   <view class="house-binding-page">
     <view class="content">
       <view class="form-section">
-        <!-- 手机号输入 -->
+        <!-- 真实姓名 -->
         <view class="form-item">
           <text class="label">真实姓名</text>
           <input
@@ -14,7 +14,7 @@
           />
         </view>
 
-        <!-- 手机号输入 -->
+        <!-- 手机号 -->
         <view class="form-item">
           <text class="label">手机号</text>
           <input
@@ -23,6 +23,36 @@
             type="number"
             placeholder="请输入手机号"
             maxlength="11"
+          />
+        </view>
+
+        <!-- 性别 -->
+        <view class="form-item">
+          <text class="label">性别</text>
+          <picker
+            @change="onGenderChange"
+            :value="genderIndex"
+            :range="genderList"
+            range-key="name"
+          >
+            <view class="picker-content">
+              <text class="picker-text" :class="{ placeholder: genderIndex === null }">
+                {{ genderIndex !== null ? genderList[genderIndex].name : '请选择性别' }}
+              </text>
+              <text class="picker-arrow">▼</text>
+            </view>
+          </picker>
+        </view>
+
+        <!-- 年龄 -->
+        <view class="form-item">
+          <text class="label">年龄</text>
+          <input
+            v-model="formData.age"
+            class="input"
+            type="number"
+            placeholder="请输入年龄"
+            maxlength="3"
           />
         </view>
 
@@ -89,16 +119,39 @@
           <picker
             @change="onRelationChange"
             :value="relationIndex"
-            :range="relationList"
+            :range="currentRelationList"
             range-key="name"
+            :disabled="currentRelationList.length === 0"
           >
             <view class="picker-content">
               <text class="picker-text" :class="{ placeholder: !selectedRelation }">
-                {{ selectedRelation ? selectedRelation.name : '请选择业主关系' }}
+                {{ selectedRelation ? selectedRelation.name : (formData.roomId ? '请选择业主关系' : '请先选择房间') }}
               </text>
               <text class="picker-arrow">▼</text>
             </view>
           </picker>
+          <text v-if="!currentRoomHasOwner && formData.roomId" class="hint-text">该房间暂无业主，请先以业主身份绑定</text>
+        </view>
+
+        <!-- 车牌号 -->
+        <view class="form-item">
+          <text class="label">车牌号（选填）</text>
+          <view class="plate-list">
+            <view class="plate-row" v-for="(plate, index) in plateNumbers" :key="index">
+              <input
+                v-model="plateNumbers[index]"
+                class="input plate-input"
+                placeholder="请输入车牌号"
+                maxlength="10"
+              />
+              <view class="plate-remove" @click="removePlate(index)" v-if="plateNumbers.length > 1">
+                <text class="remove-text">删除</text>
+              </view>
+            </view>
+          </view>
+          <view class="add-plate" @click="addPlate" v-if="plateNumbers.length < 5">
+            <text class="add-plate-text">+ 添加车牌</text>
+          </view>
         </view>
 
         <!-- 备注 -->
@@ -128,25 +181,33 @@
 </template>
 
 <script>
-import { getCommunities, getBuildings, getRooms, submitHouseBinding } from '../../../api/list/house-binding.js'
+import { getCommunities, getBuildings, getRooms, submitHouseBinding, addUserPlate, getUserPlates } from '../../../api/list/house-binding.js'
 
 export default {
   data() {
     return {
-      // 表单数据 - 包含所有需要提交的字段
       formData: {
-        realName: '',     // 真实姓名
-        phone: '',        // 手机号
-        communityId: '',  // 小区ID
-        communityName: '',// 小区名称
-        buildingId: '',   // 楼栋ID
-        buildingName: '', // 楼栋名称
-        roomId: '',       // 房间ID
-        roomName: '',     // 房间名称
-        relationType: '', // 业主关系ID
-        relationName: '', // 业主关系名称
-        remark: ''        // 备注
+        realName: '',
+        phone: '',
+        gender: null,
+        age: '',
+        communityId: '',
+        communityName: '',
+        buildingId: '',
+        buildingName: '',
+        roomId: '',
+        roomName: '',
+        relationType: '',
+        relationName: '',
+        remark: ''
       },
+
+      // 性别
+      genderList: [
+        { id: 1, name: '男' },
+        { id: 2, name: '女' }
+      ],
+      genderIndex: null,
 
       // 小区相关
       communityList: [],
@@ -161,7 +222,7 @@ export default {
       roomIndex: null,
 
       // 业主关系
-      relationList: [
+      allRelationList: [
         { id: 1, name: '业主' },
         { id: 2, name: '家人' },
         { id: 3, name: '租客' },
@@ -169,70 +230,54 @@ export default {
       ],
       relationIndex: null,
 
+      // 业主校验
+      currentRoomHasOwner: false,
+
+      // 车牌号
+      plateNumbers: [''],
+
       // 加载状态
       isLoading: false
     }
   },
 
   computed: {
-    // 当前选中的小区
     selectedCommunity() {
       return this.communityList[this.communityIndex] || null
     },
-
-    // 当前选中的楼栋
     selectedBuilding() {
       return this.buildingList[this.buildingIndex] || null
     },
-
-    // 当前选中的房间
     selectedRoom() {
       return this.roomList[this.roomIndex] || null
     },
-
-    // 当前选中的业主关系
-    selectedRelation() {
-      return this.relationList[this.relationIndex] || null
+    currentRelationList() {
+      if (!this.formData.roomId) return []
+      if (!this.currentRoomHasOwner) {
+        return [{ id: 1, name: '业主' }]
+      }
+      return this.allRelationList
     },
-
-    // 是否可以提交
+    selectedRelation() {
+      return this.currentRelationList[this.relationIndex] || null
+    },
     canSubmit() {
-      let realName = this.formData.realName
-      let phone = this.formData.phone
-      let communityId = this.formData.communityId
-      let buildingId = this.formData.buildingId
-      let roomId = this.formData.roomId
-      let relationType = this.formData.relationType
-      // remark 保持非必填
-
-      // 调试信息 - 在开发时检查各字段状态
-      console.log('表单验证状态:', {
-        realName: !!realName,
-        phone: !!phone,
-        communityId: !!communityId,
-        buildingId: !!buildingId,
-        roomId: !!roomId,
-        relationType: !!relationType,
-        canSubmit: !!(realName && phone && communityId && buildingId && roomId && relationType)
-      })
-
-      return realName && phone && communityId && buildingId && roomId && relationType
+      let { realName, phone, gender, age, communityId, buildingId, roomId, relationType } = this.formData
+      return realName && phone && gender && age && communityId && buildingId && roomId && relationType
     }
   },
 
   onLoad() {
-    let wyUserInfo =uni.getStorageSync('wyUserInfo')
+    let wyUserInfo = uni.getStorageSync('wyUserInfo')
     this.formData.phone = wyUserInfo.cellphone
     this.initPage()
   },
 
   methods: {
-    // 初始化页面
     async initPage() {
       await this.loadCommunities()
     },
 
-    // 加载小区列表
     async loadCommunities() {
       try {
         const result = await getCommunities()
@@ -245,10 +290,8 @@ export default {
       }
     },
 
-    // 加载楼栋列表
     async loadBuildings(communityId) {
       if (!communityId) return
-
       try {
         const result = await getBuildings(communityId)
         if (result && Array.isArray(result)) {
@@ -256,17 +299,12 @@ export default {
         }
       } catch (error) {
         console.error('获取楼栋列表失败:', error)
-        uni.showToast({
-          title: '获取楼栋列表失败',
-          icon: 'none'
-        })
+        uni.showToast({ title: '获取楼栋列表失败', icon: 'none' })
       }
     },
 
-    // 加载房间列表
     async loadRooms(communityId, buildingId) {
       if (!communityId || !buildingId) return
-
       try {
         const result = await getRooms(communityId, buildingId)
         if (result && Array.isArray(result)) {
@@ -274,118 +312,128 @@ export default {
         }
       } catch (error) {
         console.error('获取房间列表失败:', error)
-        uni.showToast({
-          title: '获取房间列表失败',
-          icon: 'none'
-        })
+        uni.showToast({ title: '获取房间列表失败', icon: 'none' })
       }
     },
 
-    // 小区选择变化
+    onGenderChange(e) {
+      this.genderIndex = e.detail.value
+      const selected = this.genderList[this.genderIndex]
+      if (selected) {
+        this.formData.gender = selected.id
+      }
+    },
+
     onCommunityChange(e) {
       this.communityIndex = e.detail.value
       const selected = this.communityList[this.communityIndex]
-
       if (selected) {
-        // 更新formData
         this.formData.communityId = selected.id
         this.formData.communityName = selected.name
-
-        // 清空下级选择
         this.formData.buildingId = ''
         this.formData.buildingName = ''
         this.formData.roomId = ''
         this.formData.roomName = ''
-
         this.buildingList = []
         this.roomList = []
         this.buildingIndex = null
         this.roomIndex = null
-
+        this.resetRelation()
         this.loadBuildings(selected.id)
       }
     },
 
-    // 楼栋选择变化
     onBuildingChange(e) {
       this.buildingIndex = e.detail.value
       const selected = this.buildingList[this.buildingIndex]
-
       if (selected) {
-        // 更新formData
         this.formData.buildingId = selected.id
         this.formData.buildingName = selected.name
-
-        // 清空下级选择
         this.formData.roomId = ''
         this.formData.roomName = ''
-
         this.roomList = []
         this.roomIndex = null
-
+        this.resetRelation()
         this.loadRooms(this.formData.communityId, selected.id)
       }
     },
 
-    // 房间选择变化
     onRoomChange(e) {
       this.roomIndex = e.detail.value
       const selected = this.roomList[this.roomIndex]
-
       if (selected) {
-        // 更新formData
         this.formData.roomId = selected.id
-        // 使用roomNumber字段保持一致性，如果没有则使用name作为备选
         this.formData.roomName = selected.roomNumber || selected.name
+        // 业主校验
+        this.currentRoomHasOwner = !!selected.hasOwner
+        this.relationIndex = null
+        this.formData.relationType = ''
+        this.formData.relationName = ''
       }
     },
 
-    // 业主关系选择变化
+    resetRelation() {
+      this.relationIndex = null
+      this.formData.relationType = ''
+      this.formData.relationName = ''
+      this.currentRoomHasOwner = false
+    },
+
     onRelationChange(e) {
       this.relationIndex = e.detail.value
-      const selected = this.relationList[this.relationIndex]
-
+      const selected = this.currentRelationList[this.relationIndex]
       if (selected) {
-        // 更新formData
         this.formData.relationType = selected.id
         this.formData.relationName = selected.name
       }
     },
 
-    // 提交绑定
+    addPlate() {
+      if (this.plateNumbers.length < 5) {
+        this.plateNumbers.push('')
+      }
+    },
+
+    removePlate(index) {
+      this.plateNumbers.splice(index, 1)
+    },
+
     async submitBinding() {
       if (!this.canSubmit) {
-        uni.showToast({
-          title: '请完善所有必填信息',
-          icon: 'none'
-        })
+        uni.showToast({ title: '请完善所有必填信息', icon: 'none' })
         return
       }
 
       try {
         uni.showLoading({ title: '提交中...' })
-
-        // 直接提交formData
         const result = await submitHouseBinding(this.formData)
 
-        uni.hideLoading()
+        // 提交车牌号
+        const validPlates = this.plateNumbers.filter(p => p && p.trim())
+        if (validPlates.length > 0 && result) {
+          for (const plate of validPlates) {
+            try {
+              await addUserPlate({ plateNumber: plate.trim() })
+            } catch (e) {
+              console.error('添加车牌失败:', e)
+            }
+          }
+        }
 
+        uni.hideLoading()
         if (result) {
           uni.showToast({ title: '绑定成功', icon: 'success' })
-          setTimeout(() => { uni.navigateTo({ url: '/subpackages/user/house-binding/house-bindings' })
+          setTimeout(() => {
+            uni.navigateTo({ url: '/subpackages/user/house-binding/house-bindings' })
           }, 1500)
         }
       } catch (error) {
         uni.hideLoading()
         console.error('提交绑定失败:', error)
-        uni.showToast({
-          title: error.message || '提交失败，请重试',
-          icon: 'none'
-        })
+        uni.showToast({ title: error.message || '提交失败，请重试', icon: 'none' })
       }
     },
-
-    }
+  }
 }
 </script>
 
@@ -413,8 +461,13 @@ export default {
           font-weight: 500;
         }
 
+        .hint-text {
+          display: block;
+          font-size: 24rpx;
+          color: #e6a23c;
+          margin-top: 10rpx;
+        }
 
-        // 选择器样式
         .picker-content {
           display: flex;
           align-items: center;
@@ -436,11 +489,9 @@ export default {
           .picker-arrow {
             font-size: 20rpx;
             color: #999;
-            transition: transform 0.3s;
           }
         }
 
-        // 输入框样式
         .input {
           height: 80rpx;
           border-bottom: 1rpx solid #e0e0e0;
@@ -448,7 +499,38 @@ export default {
           font-size: 28rpx;
         }
 
-        // 文本域样式
+        .plate-list {
+          .plate-row {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15rpx;
+
+            .plate-input {
+              flex: 1;
+            }
+
+            .plate-remove {
+              margin-left: 20rpx;
+              padding: 10rpx 20rpx;
+
+              .remove-text {
+                font-size: 24rpx;
+                color: #e6a23c;
+              }
+            }
+          }
+        }
+
+        .add-plate {
+          margin-top: 10rpx;
+          padding: 15rpx 0;
+
+          .add-plate-text {
+            font-size: 28rpx;
+            color: #3b5598;
+          }
+        }
+
         .textarea {
           width: 100%;
           min-height: 120rpx;
@@ -461,7 +543,6 @@ export default {
         }
       }
 
-      // 提交按钮样式
       .submit-btn {
         width: 100%;
         height: 80rpx;
@@ -472,12 +553,10 @@ export default {
         font-size: 28rpx;
         font-weight: 600;
         margin-top: 20rpx;
-        transition: all 0.3s;
         display: flex;
         align-items: center;
         justify-content: center;
         letter-spacing: 2rpx;
-
 
         &.disabled {
           background: rgba(59, 85, 152, 0.8);

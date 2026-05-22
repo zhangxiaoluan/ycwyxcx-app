@@ -69,3 +69,31 @@ export function submitHouseBinding(params) {
     return sendRequest(json)
 }
 
+// 获取用户车牌列表
+export function getUserPlates() {
+    const json = {
+        url: '/app/plate/list',
+        method: 'get'
+    }
+    return sendRequest(json)
+}
+
+// 添加车牌
+export function addUserPlate(params) {
+    const json = {
+        url: '/app/plate/add',
+        method: 'post',
+        data: params
+    }
+    return sendRequest(json)
+}
+
+// 删除车牌
+export function deleteUserPlate(id) {
+    const json = {
+        url: '/app/plate/' + id,
+        method: 'delete'
+    }
+    return sendRequest(json)
+}
+

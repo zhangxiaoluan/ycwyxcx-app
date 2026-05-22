@@ -46,6 +46,12 @@
   margin-bottom: 15rpx;
   font-weight: 500;
 }
+.house-binding-page .content .form-section .form-item .hint-text {
+  display: block;
+  font-size: 24rpx;
+  color: #e6a23c;
+  margin-top: 10rpx;
+}
 .house-binding-page .content .form-section .form-item .picker-content {
   display: flex;
   align-items: center;
@@ -65,15 +71,36 @@
 .house-binding-page .content .form-section .form-item .picker-content .picker-arrow {
   font-size: 20rpx;
   color: #999;
-  transition: -webkit-transform 0.3s;
-  transition: transform 0.3s;
-  transition: transform 0.3s, -webkit-transform 0.3s;
 }
 .house-binding-page .content .form-section .form-item .input {
   height: 80rpx;
   border-bottom: 1rpx solid #e0e0e0;
   padding: 0 20rpx;
   font-size: 28rpx;
+}
+.house-binding-page .content .form-section .form-item .plate-list .plate-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 15rpx;
+}
+.house-binding-page .content .form-section .form-item .plate-list .plate-row .plate-input {
+  flex: 1;
+}
+.house-binding-page .content .form-section .form-item .plate-list .plate-row .plate-remove {
+  margin-left: 20rpx;
+  padding: 10rpx 20rpx;
+}
+.house-binding-page .content .form-section .form-item .plate-list .plate-row .plate-remove .remove-text {
+  font-size: 24rpx;
+  color: #e6a23c;
+}
+.house-binding-page .content .form-section .form-item .add-plate {
+  margin-top: 10rpx;
+  padding: 15rpx 0;
+}
+.house-binding-page .content .form-section .form-item .add-plate .add-plate-text {
+  font-size: 28rpx;
+  color: #3b5598;
 }
 .house-binding-page .content .form-section .form-item .textarea {
   width: 100%;
@@ -95,7 +122,6 @@
   font-size: 28rpx;
   font-weight: 600;
   margin-top: 20rpx;
-  transition: all 0.3s;
   display: flex;
   align-items: center;
   justify-content: center;

@@ -6,7 +6,7 @@ const TX_BASE_URL = ''
 // #endif
 
 // #ifdef MP-WEIXIN
-const BASE_URL = 'http://127.0.0.1:8802'
+const BASE_URL = 'http://127.0.0.1:18802'
 const TX_BASE_URL = 'https://apis.map.qq.com'
 // #endif
 
